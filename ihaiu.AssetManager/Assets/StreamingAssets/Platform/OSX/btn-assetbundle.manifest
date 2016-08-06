@@ -1,0 +1,19 @@
+ManifestFileVersion: 0
+CRC: 3774420921
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 93f19f9a6c7c6a3657cb232cc6434f58
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 9dea23ffc7e96552740e12d1ee5309d8
+HashAppended: 0
+ClassTypes:
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 213
+  Script: {instanceID: 0}
+Assets:
+- Assets/Game/Art/UI/btn_red.png
+- Assets/Game/Art/UI/btn_blue.png
+Dependencies: []

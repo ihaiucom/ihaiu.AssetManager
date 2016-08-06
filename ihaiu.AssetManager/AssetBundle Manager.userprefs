@@ -1,0 +1,26 @@
+﻿<Properties StartupItem="Assembly-CSharp.csproj">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Ihaiu/Scripts/Game/GameConstConfig.cs">
+    <Files>
+      <File FileName="Assets/Ihaiu/Scripts/AssetManager/AssetManagerSetting.cs" Line="1" Column="1" />
+      <File FileName="Assets/Ihaiu/Editor/AssetManager/BuildAssetBundle_Config.cs" Line="1" Column="1" />
+      <File FileName="Assets/Ihaiu/Editor/AssetManager/BuildAssetBundle_Lua.cs" Line="1" Column="1" />
+      <File FileName="Assets/Ihaiu/Scripts/AssetManager/AssetManager_AssetInfo.cs" Line="1" Column="1" />
+      <File FileName="Assets/Ihaiu/Editor/AssetManager/BuildAssetBundle.cs" Line="1" Column="1" />
+      <File FileName="Assets/Ihaiu/Scripts/Version/AssetBundleInfoList.cs" Line="1" Column="1" />
+      <File FileName="Assets/Ihaiu/Scripts/Version/AssetFile.cs" Line="1" Column="1" />
+      <File FileName="Assets/Ihaiu/Scripts/Version/AssetBundleInfo.cs" Line="1" Column="1" />
+      <File FileName="Assets/Ihaiu/Scripts/Version/AssetFileList.cs" Line="1" Column="1" />
+      <File FileName="Assets/Ihaiu/Scripts/AssetManager/AssetInfo.cs" Line="1" Column="1" />
+      <File FileName="Assets/Ihaiu/Editor/AssetManager/FilesCsvForStreamingAssets.cs" Line="136" Column="10" />
+      <File FileName="Assets/Ihaiu/Scripts/Game/GameConst.cs" Line="14" Column="40" />
+      <File FileName="Assets/Ihaiu/Scripts/Game/GameConstConfig.cs" Line="32" Column="41" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches>
+    <Watch file="../../../../svn/git/GameCR/Assets/Game/Scripts/CC/Runtime/AssetManager/ManifestAssetBundleManager.cs" line="225" offsetX="979" offsetY="3360" expression="url" liveUpdate="False" />
+  </MonoDevelop.Ide.DebuggingService.PinnedWatches>
+</Properties>

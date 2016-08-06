@@ -1,0 +1,8 @@
+{
+    "CleanupDataPath": false,
+    "DevelopMode": true,
+    "AppName": "ihaiu",
+    "AppPrefix": "ihaiu_",
+    "WebUrl": "http://www.ihaiu.com/",
+    "Version": "0.0.0"
+}

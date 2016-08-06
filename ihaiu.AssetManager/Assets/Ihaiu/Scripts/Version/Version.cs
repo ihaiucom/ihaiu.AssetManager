@@ -1,0 +1,209 @@
+﻿using System;
+
+namespace Ihaiu
+{
+    /** 版本号 (git version) */
+    public class Version
+    {
+
+        /** 第一部分为主版本号 */
+        [HelpAttribute("主版本号")]
+        public int master = 1;
+
+
+        /** 第二部分为次版本号 */
+        [HelpAttribute("次版本号")]
+        public int minor = 0;
+
+
+        /** 第三部分为修订版 */
+        [HelpAttribute("修订版")]
+        public int revised = 0;
+
+
+        [HelpAttribute("软件版本阶段说明")]
+        public VersionStages stages = VersionStages.Beta;
+
+
+        [HelpAttribute("版本类型")]
+        public VersionType verType = 0;
+
+
+        public bool Equals(Version b)
+        {
+            return  master == b.master &&
+                minor == b.minor &&
+                revised == b.revised &&
+                stages == b.stages &&
+                verType == b.verType
+                ;
+        }
+
+        public int Comparer(Version b)
+        {
+            if (master != b.master)
+            {
+                return master - b.master;
+            }
+
+            if (minor != b.minor)
+            {
+                return minor - b.minor;
+            }
+
+            if (revised != b.revised)
+            {
+                return revised - b.revised;
+            }
+
+            if (stages != b.stages)
+            {
+                return (int)stages - (int)b.stages;
+            }
+
+            return 0;
+        }
+
+        public void Copy(Version b)
+        {
+            master = b.master;
+            minor = b.minor;
+            revised = b.revised;
+            stages = b.stages;
+            verType = b.verType;
+        }
+
+
+        public override string ToString()
+        {
+            return string.Format("{4}-ver{0:D2}.{1:D2}.{2:D2}_{3}", master, minor, revised, GetStagesTxt(stages), GetVerTypeTxt(verType));
+        }
+
+
+        public string ToConfig()
+        {
+            return string.Format("{0:D1}.{1:D1}.{2:D1}", master, minor, revised);
+        }
+
+
+        public Version Parse(string str)
+        {
+            str = str.ToLower().Replace("version:", "").Replace("version", "").Replace("ver", "").Replace("v", "");
+            string[] arr = str.Split('-');
+            if (arr.Length > 1)
+            {
+                string typeText = arr[0];
+                verType = GetVerType(typeText);
+                str = arr[1];
+            }
+            else
+            {
+                str = arr[0];
+            }
+
+            arr = str.Split('_');
+            if (arr.Length > 1)
+            {
+                string stageTxt = arr[1];
+                stages = GetStages(stageTxt);
+            }
+
+            arr = arr[0].Split('.');
+            master  = Convert.ToInt32(arr[0]);
+            minor   = Convert.ToInt32(arr[1]);
+            revised = Convert.ToInt32(arr[2]);
+            return this;
+        }
+
+
+
+
+        public static string GetStagesTxt(VersionStages stages)
+        {
+            switch(stages)
+            {
+                case VersionStages.Base:
+                    return "base";
+
+                case VersionStages.Alpha:
+                    return "alpha";
+
+                case VersionStages.Beta:
+                    return "beta";
+
+                case VersionStages.RC:
+                    return "rc";
+
+                case VersionStages.Release:
+                    return "release";
+
+                default:
+                    return "beta";
+            }
+        }
+
+        public static VersionStages GetStages(string stagesTxt)
+        {
+            stagesTxt = stagesTxt.ToLower();
+
+            switch(stagesTxt)
+            {
+                case "base":
+                    return VersionStages.Base;
+
+                case "alpha":
+                    return VersionStages.Alpha;
+
+                case "beta":
+                    return VersionStages.Beta;
+
+                case "rc":
+                    return VersionStages.RC;
+
+                case "release":
+                    return VersionStages.Release;
+
+                default:
+                    return VersionStages.Beta;
+            }
+        }
+
+
+
+        public static string GetVerTypeTxt(VersionType type)
+        {
+            switch(type)
+            {
+                case VersionType.Patch:
+                    return "patch";
+                case VersionType.App:
+                default:
+                    return "app";
+            }
+        }
+
+        public static VersionType GetVerType(string txt)
+        {
+            txt = txt.ToLower();
+
+            switch(txt)
+            {
+                case "patch":
+                    return VersionType.Patch;
+
+                case "app":
+                default:
+                    return VersionType.App;
+
+            }
+        }
+
+
+        public static int SortComparer(Version a, Version b)
+        {
+            return a.Comparer(b);
+        }
+
+
+    }
+}
