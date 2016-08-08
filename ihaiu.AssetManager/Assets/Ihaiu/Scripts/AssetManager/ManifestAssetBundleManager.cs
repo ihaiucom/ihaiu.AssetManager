@@ -59,12 +59,8 @@ namespace Ihaiu.Assets
             return assetManager.StartCoroutine_Auto (routine);
         }
 
-        public void LoadManifest()
-        {
-            StartCoroutine(OnLoadManifest());
-        }
-
-        IEnumerator OnLoadManifest()
+      
+        public IEnumerator LoadManifest()
         {
             WWW www = new WWW(manifestPath);
             yield return www;

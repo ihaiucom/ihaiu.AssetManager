@@ -10,6 +10,7 @@ namespace Ihaiu.Assets
 {
     public class VersionManager : MonoBehaviour
     {
+        public bool yieldbreak = false;
         private Version appVer = new Version();
         private Version curVer = new Version();
         private Version serverVer = new Version();
@@ -44,7 +45,7 @@ namespace Ihaiu.Assets
         }
 
 
-        IEnumerator CheckVersion()
+        public IEnumerator CheckVersion()
         {
             yield return StartCoroutine(ReadGameConst_Streaming());
 
@@ -102,6 +103,7 @@ namespace Ihaiu.Assets
                 {
                     case VersionCheckState.DownApp:
                         OnNeedDownApp(serverVersionInfo.downLoadUrl);
+                        yieldbreak = true;
                         break;
 
                     case VersionCheckState.HotUpdate:

@@ -10,10 +10,10 @@ namespace Ihaiu.Assets
         ManifestAssetBundleManager  manifestAssetBundleManager;
 
 
-        void InitManifest()
+        public IEnumerator InitManifest()
         {
             manifestAssetBundleManager =  new ManifestAssetBundleManager(this, AssetManagerSetting.ManifestURL);
-            manifestAssetBundleManager.LoadManifest();
+            yield return StartCoroutine(manifestAssetBundleManager.LoadManifest());
         }
 
         internal void OnLoadManifest(IAssetBundleManager manifest)

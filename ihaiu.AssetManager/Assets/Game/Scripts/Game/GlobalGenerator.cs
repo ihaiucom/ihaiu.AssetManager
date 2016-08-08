@@ -17,8 +17,6 @@ namespace Games {
         /// </summary>
         public void InitGameMangager() {
             string name = "GameManagers";
-            //SoundManager.Instance.PlayMusicBg("main_city.mp3");
-            //SoundManager.Instance.PlaySound("main.mp3");
             GameObject manager = GameObject.Find(name);
             if (manager == null) {
                 manager = new GameObject(name);

@@ -33,7 +33,6 @@ namespace Ihaiu.Assets
                 ParseInfo(www.text, AssetLoadType.AssetBundle);
             }
 
-            InitManifest();
         }
 
         private void ParseInfo(string p, AssetLoadType loadType)

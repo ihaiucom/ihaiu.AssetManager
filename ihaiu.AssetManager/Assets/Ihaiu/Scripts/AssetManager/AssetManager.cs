@@ -28,14 +28,13 @@ namespace Ihaiu.Assets
         void Awake()
         {
             _Instance = this;
-            Initialize();
         }
 
 
-        public void Initialize()
+        public IEnumerator Initialize()
         {
-            InitManifest();
-//            StartCoroutine(ReadFiles());
+            yield return StartCoroutine(InitManifest());
+            yield return StartCoroutine(ReadFiles());
         }
 
 
