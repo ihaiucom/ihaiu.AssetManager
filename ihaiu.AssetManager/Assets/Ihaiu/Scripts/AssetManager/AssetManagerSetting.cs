@@ -9,17 +9,14 @@ namespace Ihaiu.Assets
         public static string BytesExt = ".txt";
         public static string AssetbundleExt = "-assetbundle";
 
-        public static string MResourcesRoot      = "Assets/Game/MResources";
+        public static string PersistentAssetListName    = "PersistentAssetList.csv";
+        public static string FilesName                  = "files.csv";
+        public static string AssetBundleListName        = "AssetBundleList.csv";
+        public static string AssetListName              = "AssetList.csv";
+        public static string UpdateAssetListName        = "UpdateAssetListName.csv";
+        public static string GameConstName              = "game_const.csv";
 
-        public static string ConfigRoot         = "Assets/Game/Config";
-        public static string ConfigBytesRoot    = "Assets/Game/ConfigBytes";
 
-
-        public static string LuaRoot            = "Assets/Game/Lua";
-        public static string LuaBytesRoot       = "Assets/Game/LuaBytes";
-
-        public static string PathRoot = Application.streamingAssetsPath + "/";
-        public static string URLRoot = "file:///" + Application.streamingAssetsPath + "/";
 
         public static string RootPathStreaming
         {
@@ -34,16 +31,13 @@ namespace Ihaiu.Assets
             get
             {
                 #if UNITY_EDITOR
-                if(Application.isEditor)
+                if(TestVersionMode)
                 {
-                    if(TestVersionMode)
-                    {
-                        return Application.dataPath + "/../res/";
-                    }
-                    else
-                    {
-                        return RootPathStreaming;
-                    }
+                    return Application.dataPath + "/../res/";
+                }
+                else
+                {
+                    return RootPathStreaming;
                 }
                 #endif
 
@@ -61,6 +55,39 @@ namespace Ihaiu.Assets
             }
         }
 
+        public static string RootUrlStreaming
+        {
+            get
+            {
+                if (Application.platform == RuntimePlatform.Android) 
+                {
+                    return RootPathStreaming;
+                }
+                else
+                {
+                    return "file:///" + RootPathStreaming;
+                }
+            }
+        }
+
+
+        public static string RootUrlPersistent
+        {
+            get
+            {
+                return "file:///" + RootPathPersistent;
+            }
+        }
+
+        public static string GameConstUrl_Streaming     = RootUrlStreaming      + GameConstName;
+        public static string GameConstUrl_Persistent    = RootUrlPersistent     + GameConstName;
+
+        public static string AssetFileListPath = RootPathPersistent + AssetListName;
+        public static string PersistentAssetFileListPath = RootPathPersistent + PersistentAssetListName;
+
+
+        public static AssetFileList persistentAssetFileList = new AssetFileList();
+
 
         /** 是否严格 */
         public static bool IsStrict = true;
@@ -75,17 +102,16 @@ namespace Ihaiu.Assets
          */
         public static string GetAbsoluteURL(string path)
         {
-            return URLRoot + path;
+            if (persistentAssetFileList.Has(path))
+            {
+                return RootUrlPersistent + path;
+            }
+            else
+            {
+                return RootUrlStreaming + path;
+            }
         }
 
-        /** 获取绝对路径
-         * path = "Platform/IOS/config.assetbundle"
-         * return "xxxx/Platform/IOS/config.assetbundle";
-         */
-        public static string GetAbsolutePath(string path)
-        {
-            return PathRoot + path;
-        }
 
 
 
@@ -117,20 +143,11 @@ namespace Ihaiu.Assets
         }
 
         #region files.csv
-        public static string FileCsvForResource = "Assets/Game/Resources/files.csv";
 
         /** 资源列表文件路径
          * return "files.csv" in "Resources" directory
          */
         public static string AssetlistForResource = "files";
-
-        public static string FileCsvForStreaming
-        {
-            get
-            {
-                return GetAbsolutePath(GetPlatformPath("{0}/files.csv"));
-            }
-        }
 
         /** 资源列表文件路径
          * return "StreamingAssets/Platform/IOS/files.csv"
@@ -153,6 +170,11 @@ namespace Ihaiu.Assets
             return root + GetPlatformPath("{0}/files.csv");
         }
         #endregion files.csv
+
+        public static string GetServerVersionInfoURL(string root)
+        {
+            return root + "version_" + Platform.PlatformDirectoryName.ToLower();
+        }
 
 
 
@@ -177,15 +199,18 @@ namespace Ihaiu.Assets
         }
 
 
+        public const string ObjType_Sprite         = "Sprite";
+        public const string ObjType_GameObject     = "GameObject";
+
         /** 获取资源Type */
         public static System.Type GetObjType(string objType)
         {
             switch(objType)
             {
-                case "Sprite":
+                case ObjType_Sprite:
                     return typeof(Sprite);
 
-                case "GameObject":
+                case ObjType_GameObject:
                     return typeof(GameObject);
 
                 default:

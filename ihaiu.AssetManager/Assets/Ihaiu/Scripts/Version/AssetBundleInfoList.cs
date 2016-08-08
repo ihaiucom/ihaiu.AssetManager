@@ -24,7 +24,7 @@ namespace Ihaiu.Assets
                     for(int i = 0; i < count; i ++)
                     {
                         asset = list[i];
-                        _dict.Add(asset.path, asset);
+                        _dict.Add(asset.assetBundleName, asset);
                     }
                 }
                 return _dict;
@@ -32,16 +32,16 @@ namespace Ihaiu.Assets
         }
 
 
-        public bool Has(string path)
+        public bool Has(string assetBundleName)
         {
-            return dict.ContainsKey(path);
+            return dict.ContainsKey(assetBundleName);
         }
 
 
-        public AssetBundleInfo Get(string path)
+        public AssetBundleInfo Get(string assetBundleName)
         {
-            if(dict.ContainsKey(path))
-                return dict[path];
+            if(dict.ContainsKey(assetBundleName))
+                return dict[assetBundleName];
 
             return null;
         }
@@ -50,14 +50,14 @@ namespace Ihaiu.Assets
         {
             if (dict.ContainsKey(item.path))
             {
-                AssetBundleInfo asset = dict[item.path];
+                AssetBundleInfo asset = dict[item.assetBundleName];
                 asset.assetBundleName = item.assetBundleName;
                 asset.assetName = item.assetName;
                 asset.objType = item.objType;
             }
             else
             {
-                dict.Add(item.path, item);
+                dict.Add(item.assetBundleName, item);
                 list.Add(item);
             }
         }
@@ -67,6 +67,9 @@ namespace Ihaiu.Assets
         public void Save(string path)
         {
             PathUtil.CheckPath(path, true);
+
+            if (File.Exists(path))
+                File.Delete(path);
 
             string txt = Serialize();
 

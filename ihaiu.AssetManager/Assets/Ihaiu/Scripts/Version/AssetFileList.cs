@@ -137,5 +137,41 @@ namespace Ihaiu.Assets
             return list;
         }
 
+
+        public static List<AssetFile> Diff(AssetFileList current, AssetFileList update)
+        {
+            List<AssetFile> diffs = new List<AssetFile>();
+
+            AssetFile gameConstItem = null;
+
+            int count = update.list.Count;
+            for(int i = 0; i < count; i ++)
+            {
+                AssetFile item = update.list[i];
+
+                if (item.path == AssetManagerSetting.GameConstName)
+                {
+                    gameConstItem = item;
+                    continue;
+                }
+
+                if(!current.Has(item.path))
+                {
+                    diffs.Add(item);
+                }
+                else if(item.md5 != current.Get(item.path).md5)
+                {
+                    diffs.Add(item);
+                }
+            }
+
+            if (gameConstItem != null)
+            {
+                diffs.Add(gameConstItem);
+            }
+
+            return diffs;
+        }
+
     }
 }

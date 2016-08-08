@@ -95,5 +95,13 @@ namespace Ihaiu.Assets
         {
             AssetBundleEditor.ClearManifestHelpFile();
         }
+
+
+
+        [MenuItem("资源/Generator AssetBundle Info")]
+        public static void GeneratorAssetBundleInfo()
+        {
+            AssetBundleEditor.GeneratorAssetBundleInfo();
+        }
     }
 }

@@ -8,7 +8,38 @@ namespace Ihaiu.Assets
 {
     public partial class AssetManagerSetting 
     {
-        public static string assetbundleExt = "-assetbundle";
+
+
+        public static string MResourcesRoot      = "Assets/Game/MResources";
+
+        public static string ConfigRoot         = "Assets/Game/Config";
+        public static string ConfigBytesRoot    = "Assets/Game/ConfigBytes";
+
+
+        public static string LuaRoot            = "Assets/Game/Lua";
+        public static string LuaBytesRoot       = "Assets/Game/LuaBytes";
+
+
+
+        /** 获取绝对路径
+         * path = "Platform/IOS/config.assetbundle"
+         * return "xxxx/Platform/IOS/config.assetbundle";
+         */
+        public static string GetAbsolutePath(string path)
+        {
+            return RootPathStreaming + path;
+        }
+
+        public static string FileCsvForResource = "Assets/Game/Resources/files.csv";
+
+        public static string FileCsvForStreaming
+        {
+            get
+            {
+                return GetAbsolutePath(GetPlatformPath("{0}/files.csv"));
+            }
+        }
+
 
    
         static int m_SimulateAssetBundleInEditor = -1;

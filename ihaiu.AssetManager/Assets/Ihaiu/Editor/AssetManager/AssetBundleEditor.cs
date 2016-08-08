@@ -114,5 +114,48 @@ namespace Ihaiu.Assets
 
             EditorUtility.ClearProgressBar();
         }
+
+        public static AssetBundleInfoList GeneratorAssetBundleInfo()
+        {
+            AssetBundleInfoList infoList = new AssetBundleInfoList();
+
+            List<string> list = new List<string>();
+            PathUtil.RecursiveFile(resourceRoot, list, exts);
+
+            for(int i = 0; i < list.Count; i ++)
+            {
+                string path = list[i];
+                AssetImporter importer = AssetImporter.GetAtPath(path);
+                AssetBundleInfo item = new AssetBundleInfo();
+                item.path = path;
+                item.assetBundleName = importer.assetBundleName;
+                item.assetName = Path.GetFileName(path);
+
+
+
+                string ext = Path.GetExtension(path).ToLower();
+                if (ext == ".prefab")
+                {
+                    item.objType = AssetManagerSetting.ObjType_GameObject;
+                }
+                else if (imageExts.IndexOf(ext) != -1)
+                {
+                    TextureImporter textureImporter = TextureImporter.GetAtPath(path) as TextureImporter;
+                    if (textureImporter.textureType == TextureImporterType.Sprite)
+                    {
+                        item.objType = AssetManagerSetting.ObjType_Sprite;
+                    }
+                }
+
+
+                infoList.Add(item);
+            }
+
+            EditorUtility.ClearProgressBar();
+            infoList.Save(AssetManagerSetting.GetAbsolutePath("AssetBundleInfo.csv"));
+            AssetDatabase.Refresh();
+
+            return infoList;
+        }
     }
 }

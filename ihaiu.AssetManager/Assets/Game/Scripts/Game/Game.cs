@@ -4,13 +4,15 @@ using Ihaiu.Assets;
 
 namespace Games
 {
-    public class Game 
+    public class Game : MonoBehaviour
     {
         public static AssetManager assetManager;
 
-        public static void Init()
+
+
+        void Awake()
         {
-            assetManager = AssetManager.Instance;
+            assetManager = gameObject.AddComponent<AssetManager>();
         }
     }
 }

@@ -82,6 +82,7 @@ namespace Ihaiu.Assets
             fileList.Clear();
             Recursive(platformRoot, fileList);
 
+            AssetBundleInfoList infoList = AssetBundleEditor.GeneratorAssetBundleInfo();
           
 
             objType = "";
@@ -94,27 +95,37 @@ namespace Ihaiu.Assets
                 assetBundleName = file.Replace(platformRoot + "/", string.Empty);
                 md5 = PathUtil.md5file(file);
 
-                assetName = Path.GetFileName(file);
-                if(path.IndexOf("{0}/assets")  == 0)
+                if (infoList.Has(assetBundleName))
                 {
-                    assetName = "";
-                }
-                else if (path.IndexOf("{0}/sound")  == 0 || 
-                    path.IndexOf("{0}/image") == 0 || 
-                    path.IndexOf("{0}/shaders") == 0 || 
-                    path.IndexOf("{0}/materials") == 0 || 
-                    path.IndexOf("{0}/map/terrain") == 0 || 
-                    path.IndexOf("{0}/map/build_ground") == 0)
-                {
-                    assetName = PathUtil.ChangeExtension(assetName, string.Empty);
-                }
-                else if(path == "{0}/" + Platform.PlatformDirectoryName)
-                {
-                    assetName = "assetbundlemanifest";
+                    AssetBundleInfo info = infoList.Get(assetBundleName);
+                    assetName   = info.assetName;
+                    objType     = info.objType;
                 }
                 else
                 {
-                    assetName = PathUtil.ChangeExtension(assetName, ".prefab");
+
+                    assetName = Path.GetFileName(file);
+                    if (path.IndexOf("{0}/assets") == 0)
+                    {
+                        assetName = "";
+                    }
+                    else if (path.IndexOf("{0}/sound") == 0 ||
+                         path.IndexOf("{0}/image") == 0 ||
+                         path.IndexOf("{0}/shaders") == 0 ||
+                         path.IndexOf("{0}/materials") == 0 ||
+                         path.IndexOf("{0}/map/terrain") == 0 ||
+                         path.IndexOf("{0}/map/build_ground") == 0)
+                    {
+                        assetName = PathUtil.ChangeExtension(assetName, string.Empty);
+                    }
+                    else if (path == "{0}/" + Platform.PlatformDirectoryName)
+                    {
+                        assetName = "assetbundlemanifest";
+                    }
+                    else
+                    {
+                        assetName = PathUtil.ChangeExtension(assetName, ".prefab");
+                    }
                 }
 
 
