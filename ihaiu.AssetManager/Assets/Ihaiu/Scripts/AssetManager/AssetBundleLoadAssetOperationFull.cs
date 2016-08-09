@@ -12,8 +12,9 @@ namespace Ihaiu.Assets
         protected System.Type           m_Type;
         protected AssetBundleRequest    m_Request = null;
 
-        public AssetBundleLoadAssetOperationFull (string bundleName, string assetName, System.Type type)
+        public AssetBundleLoadAssetOperationFull (IAssetBundleManager assetBundleManager, string bundleName, string assetName, System.Type type)
         {
+            this.assetBundleManager = assetBundleManager;
             m_AssetBundleName = bundleName;
             m_AssetName = assetName;
             m_Type = type;

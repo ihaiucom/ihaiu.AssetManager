@@ -8,8 +8,6 @@ namespace Games
     public class GameConst 
 	{
 
-        public static string    GameConstFileName = "game_const.json";      //game_const.json 配置文件
-
 		public static bool      CleanupDataPath = false;
 		public static bool      DevelopMode = true;					    //开发模式
 

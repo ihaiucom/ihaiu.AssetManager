@@ -22,7 +22,7 @@ namespace Ihaiu.Assets
 			FindFolder(list, Application.dataPath);
 			if(list.Count == 0) return;
 
-            string filesPath = AssetManagerSetting.FileCsvForResource;
+            string filesPath = AssetManagerSetting.EditorFileCsvForResource;
 
 			if (File.Exists(filesPath))
 			{

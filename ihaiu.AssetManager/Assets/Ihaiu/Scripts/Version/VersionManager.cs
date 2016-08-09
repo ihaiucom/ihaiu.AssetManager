@@ -111,7 +111,7 @@ namespace Ihaiu.Assets
             }
 
 
-            yield return StartCoroutine(ReadServerVersionInfo());
+            yield return (ReadServerVersionInfo());
 
             if (serverVersionInfo != null)
             {
@@ -211,6 +211,7 @@ namespace Ihaiu.Assets
                 yield break;
             }
 
+            Debug.Log(www.text);
 
             serverVersionInfo = JsonUtility.FromJson<VersionInfo>(www.text);
 
@@ -254,7 +255,7 @@ namespace Ihaiu.Assets
             }
             else
             {       
-                Debug.LogFormat("读取game_const.json失败 ReadGameConst_Persistent url={0} error={1}  text={2}", url, www.error);
+                Debug.LogFormat("读取game_const.json失败 ReadGameConst_Persistent url={0} error={1}", url, www.error);
             }
 
             www.Dispose();
@@ -270,7 +271,7 @@ namespace Ihaiu.Assets
 
             //获取服务器端的file.csv
 
-            string updateAssetListUrl = AssetManagerSetting.GetServerUpdateAssetlistURL(rootUrl);
+            string updateAssetListUrl = AssetManagerSetting.GetServerFilesCsvURL(rootUrl);
             Debug.Log("UpdateAssetList URL: " + updateAssetListUrl);
             WWW www = new WWW(updateAssetListUrl);
             yield return www;

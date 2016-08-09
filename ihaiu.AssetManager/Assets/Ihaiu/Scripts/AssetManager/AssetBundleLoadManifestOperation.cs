@@ -5,8 +5,8 @@ namespace Ihaiu.Assets
 {
     public class AssetBundleLoadManifestOperation : AssetBundleLoadAssetOperationFull
     {
-        public AssetBundleLoadManifestOperation (string bundleName, string assetName, System.Type type)
-            : base(bundleName, assetName, type)
+        public AssetBundleLoadManifestOperation (IAssetBundleManager assetBundleManager, string bundleName, string assetName, System.Type type)
+            : base(assetBundleManager, bundleName, assetName, type)
         {
         }
 

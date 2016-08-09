@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using System.IO;
+using Ihaiu.Assets;
 
 namespace Games
 {
@@ -30,26 +31,38 @@ namespace Games
 
 
             GameConst.Version = Version;
+
+            #if UNITY_EDITOR
+            AssetManagerSetting.EditorSimulateConfig          = GameConst.DevelopMode;
+            AssetManagerSetting.EditorSimulateAssetBundle     = GameConst.DevelopMode;
+            #endif
 		}
 
 
         #if UNITY_EDITOR
         public static GameConstConfig Load()
         {
-            var f = new FileInfo(Application.streamingAssetsPath + "/" + GameConst.GameConstFileName);
-            var sr = f.OpenText();
-            var str = sr.ReadToEnd();
-            sr.Close();
+            var f = new FileInfo(Application.streamingAssetsPath + "/" + AssetManagerSetting.GameConstName);
+            if (f.Exists)
+            {
+                var sr = f.OpenText();
+                var str = sr.ReadToEnd();
+                sr.Close();
 
-            GameConstConfig config = JsonUtility.FromJson<GameConstConfig>(str);
-            return config;
+                GameConstConfig config = JsonUtility.FromJson<GameConstConfig>(str);
+                return config;
+            }
+            else
+            {
+                return new GameConstConfig();
+            }
         }
 
 
         public void Save()
         {
             string str = JsonUtility.ToJson(this, true);
-            string filesPath = Application.streamingAssetsPath + "/" + GameConst.GameConstFileName;
+            string filesPath = Application.streamingAssetsPath + "/" + AssetManagerSetting.GameConstName;
 
             PathUtil.CheckPath(filesPath, true);
             if (File.Exists(filesPath)) File.Delete(filesPath);

@@ -235,12 +235,5 @@ public class Platform {
     }
 
 
-    public static string ManifestPath
-    {
-        get
-        {
-            return "Platform/" + PlatformDirectorDict[Application.platform] + "/" + PlatformDirectorDict[Application.platform];
-        }
-    }
     
 }

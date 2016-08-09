@@ -14,8 +14,8 @@ namespace Ihaiu.Assets
 		
 		public static void Lua()
 		{
-            string luaRoot = AssetManagerSetting.LuaRoot;
-            string bytesRoot = AssetManagerSetting.LuaBytesRoot;
+            string luaRoot = AssetManagerSetting.EditorRootLua;
+            string bytesRoot = AssetManagerSetting.EditorRootLuaBytes;
 
             if (!Directory.Exists(luaRoot))
             {
@@ -50,7 +50,7 @@ namespace Ihaiu.Assets
 			List<string> luaBytesList = new List<string>();
 			RecursiveLuaBytes(bytesRoot, luaBytesList);
 
-            string assetBundleName =  "luacode" + AssetManagerSetting.AssetbundleExt;
+            string assetBundleName =  AssetManagerSetting.LuaAssetBundleName;
 
 			AssetBundleBuild[] builds = new AssetBundleBuild[1];
 			builds[0].assetBundleName =  assetBundleName;
@@ -63,7 +63,7 @@ namespace Ihaiu.Assets
 			AssetDatabase.Refresh();
 
 			string inAssetBundlePath = bytesRoot + "/" + assetBundleName;
-            string outBytesPath = AssetManagerSetting.GetBuildPlatformPath(assetBundleName);
+            string outBytesPath = AssetManagerSetting.EditorGetAbsolutePlatformPath(assetBundleName);
 			byte[] bytes = File.ReadAllBytes(inAssetBundlePath);
 
             bytes = EncryptBytes(bytes, SKey);

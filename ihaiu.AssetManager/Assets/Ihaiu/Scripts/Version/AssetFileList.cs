@@ -79,6 +79,9 @@ namespace Ihaiu.Assets
         {
             PathUtil.CheckPath(path, true);
 
+            if (File.Exists(path))
+                File.Delete(path);
+            
             string txt = Serialize();
 
             FileStream fs = new FileStream(path, FileMode.CreateNew);

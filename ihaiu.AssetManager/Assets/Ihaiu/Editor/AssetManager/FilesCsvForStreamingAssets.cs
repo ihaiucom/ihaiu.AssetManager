@@ -24,9 +24,9 @@ namespace Ihaiu.Assets
         {
             List<string> fileList = new List<string>();
 
-            string platformRoot = AssetManagerSetting.BuildPlatformRoot;
+            string platformRoot = AssetManagerSetting.EditorRootPlatform;
 
-            string filecsv = AssetManagerSetting.FileCsvForStreaming;
+            string filecsv = AssetManagerSetting.EditorFileCsvForStreaming;
             if (File.Exists(filecsv)) File.Delete(filecsv);
             PathUtil.CheckPath(filecsv);
 
@@ -109,22 +109,13 @@ namespace Ihaiu.Assets
                     {
                         assetName = "";
                     }
-                    else if (path.IndexOf("{0}/sound") == 0 ||
-                         path.IndexOf("{0}/image") == 0 ||
-                         path.IndexOf("{0}/shaders") == 0 ||
-                         path.IndexOf("{0}/materials") == 0 ||
-                         path.IndexOf("{0}/map/terrain") == 0 ||
-                         path.IndexOf("{0}/map/build_ground") == 0)
-                    {
-                        assetName = PathUtil.ChangeExtension(assetName, string.Empty);
-                    }
                     else if (path == "{0}/" + Platform.PlatformDirectoryName)
                     {
                         assetName = "assetbundlemanifest";
                     }
                     else
                     {
-                        assetName = PathUtil.ChangeExtension(assetName, ".prefab");
+                        assetName = PathUtil.ChangeExtension(assetName, string.Empty);
                     }
                 }
 

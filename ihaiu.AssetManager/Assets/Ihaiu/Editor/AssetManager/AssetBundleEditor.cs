@@ -8,7 +8,7 @@ namespace Ihaiu.Assets
 {
     public class AssetBundleEditor 
     {
-        static string resourceRoot = AssetManagerSetting.MResourcesRoot;
+        static string resourceRoot = AssetManagerSetting.EditorRootMResources;
         static string[] resourcesPaths = new string[]{
             resourceRoot,
     //        "Assets/Ihaiu/AssetManagerExampleFiles/Component"
@@ -91,7 +91,7 @@ namespace Ihaiu.Assets
 
         public static void BuildAssetBundles()
         {
-            string outputPath = AssetManagerSetting.BuildPlatformRoot;
+            string outputPath = AssetManagerSetting.EditorRootPlatform;
             PathUtil.CheckPath(outputPath, false);
             Debug.Log("outputPath=" + outputPath);
 
@@ -102,7 +102,7 @@ namespace Ihaiu.Assets
 
         public static void ClearManifestHelpFile()
         {
-            string outputPath = AssetManagerSetting.BuildPlatformRoot;
+            string outputPath = AssetManagerSetting.EditorRootPlatform;
 
             List<string> fileList = new List<string>();
             PathUtil.RecursiveFile(outputPath, fileList, new List<string>(new string[]{".manifest"}));
@@ -129,7 +129,7 @@ namespace Ihaiu.Assets
                 AssetBundleInfo item = new AssetBundleInfo();
                 item.path = path;
                 item.assetBundleName = importer.assetBundleName;
-                item.assetName = Path.GetFileName(path);
+                item.assetName = PathUtil.ChangeExtension(Path.GetFileName(path), string.Empty);
 
 
 
@@ -152,7 +152,7 @@ namespace Ihaiu.Assets
             }
 
             EditorUtility.ClearProgressBar();
-            infoList.Save(AssetManagerSetting.GetAbsolutePath("AssetBundleInfo.csv"));
+            infoList.Save(AssetManagerSetting.EditorGetAbsoluteStreamPath("AssetBundleInfo.csv"));
             AssetDatabase.Refresh();
 
             return infoList;

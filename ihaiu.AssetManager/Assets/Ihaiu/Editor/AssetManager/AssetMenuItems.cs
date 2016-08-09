@@ -5,92 +5,62 @@ namespace Ihaiu.Assets
 {
     public class AssetMenuItems 
     {
-        const string kSimulationAssetBundleMode = "资源/Simulation AssetBundle Mode";
-
-        [MenuItem(kSimulationAssetBundleMode)]
-        public static void ToggleSimulationAssetBundleMode ()
-        {
-            AssetManagerSetting.SimulateAssetBundleInEditor = !AssetManagerSetting.SimulateAssetBundleInEditor;
-        }
-
-        [MenuItem(kSimulationAssetBundleMode, true)]
-        public static bool ToggleSimulationAssetBundleModeValidate ()
-        {
-            Menu.SetChecked(kSimulationAssetBundleMode, AssetManagerSetting.SimulateAssetBundleInEditor);
-            return true;
-        }
+       
 
 
 
-        const string kSimulationConfigMode = "资源/Simulation Config Mode";
-
-        [MenuItem(kSimulationConfigMode)]
-        public static void ToggleSimulationConfigMode ()
-        {
-            AssetManagerSetting.SimulateConfigInEditor = !AssetManagerSetting.SimulateConfigInEditor;
-        }
-
-        [MenuItem(kSimulationConfigMode, true)]
-        public static bool ToggleSimulationConfigModeValidate ()
-        {
-            Menu.SetChecked(kSimulationConfigMode, AssetManagerSetting.SimulateConfigInEditor);
-            return true;
-        }
-
-
-
-        [MenuItem("资源/RemoveUnusedAssetBundleNames")]
+        [MenuItem("AssetManager/RemoveUnusedAssetBundleNames")]
         public static void RemoveUnusedAssetBundleNames()
         {
             AssetDatabase.RemoveUnusedAssetBundleNames();
         }
 
-        [MenuItem("资源/ClearAssetBundleNames")]
+        [MenuItem("AssetManager/ClearAssetBundleNames")]
         public static void ClearAssetBundleNames()
         {
             AssetBundleEditor.ClearAssetBundleNames();
         }
 
-        [MenuItem("资源/Set AssetBundle Name")]
+        [MenuItem("AssetManager/Set AssetBundle Name")]
         public static void SetAssetBundleNames()
         {
             AssetBundleEditor.SetNames();
         }
 
-        [MenuItem("资源/Build AssetBundle")]
+        [MenuItem("AssetManager/Build AssetBundle")]
         public static void BuildAssetBundles()
         {
             AssetBundleEditor.BuildAssetBundles();
         }
 
-        [MenuItem("资源/Build Config AssetBundle")]
+        [MenuItem("AssetManager/Build Config AssetBundle")]
         public static void BuildConfig()
         {
             AB.Config();
         }
 
-        [MenuItem("资源/Build Lua AssetBundle")]
+        [MenuItem("AssetManager/Build Lua AssetBundle")]
         public static void BuildLua()
         {
             AB.Lua();
         }
 
 
-        [MenuItem("资源/Generator files.csv(Resources)")]
+        [MenuItem("AssetManager/Generator files.csv(Resources)")]
         public static void GeneratorFileCsvFromResources()
         {
             FilesCsvForResources.Generator();
         }
 
 
-        [MenuItem("资源/Generator files.csv(StreamingAssets)")]
+        [MenuItem("AssetManager/Generator files.csv(StreamingAssets)")]
         public static void GeneratorFilesCsvForStreamingAssets()
         {
             FilesCsvForStreamingAssets.Generator();
         }
 
 
-        [MenuItem("资源/Clear Manifest Help File")]
+        [MenuItem("AssetManager/Clear Manifest Help File")]
         public static void ClearManifestHelpFile()
         {
             AssetBundleEditor.ClearManifestHelpFile();
@@ -98,7 +68,7 @@ namespace Ihaiu.Assets
 
 
 
-        [MenuItem("资源/Generator AssetBundle Info")]
+        [MenuItem("AssetManager/Generator AssetBundle Info")]
         public static void GeneratorAssetBundleInfo()
         {
             AssetBundleEditor.GeneratorAssetBundleInfo();

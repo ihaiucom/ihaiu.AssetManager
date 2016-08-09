@@ -8,124 +8,72 @@ namespace Ihaiu.Assets
 {
     public partial class AssetManagerSetting 
     {
+        /** 编辑器模式下模拟加载--Config */
+        public static bool EditorSimulateConfig       = true;
+        /** 编辑器模式下模拟加载--AssetBundle */
+        public static bool EditorSimulateAssetBundle  = true;
 
 
-        public static string MResourcesRoot      = "Assets/Game/MResources";
+        /** 服务器--执行文件 */
+        public static string EditorAssetBundleServerExe = "Ihaiu/Editor/AssetBundleServer/AssetBundleServer.exe";
+        /** 服务器--目录 */
+        public static string EditorAssetBundleServerRoot = Path.Combine (Application.dataPath.Substring(0, Application.dataPath.LastIndexOf('/')), "www");
 
-        public static string ConfigRoot         = "Assets/Game/Config";
-        public static string ConfigBytesRoot    = "Assets/Game/ConfigBytes";
+        /** 目录--MResources */
+        public static string EditorRootMResources      = "Assets/Game/MResources";
+
+        /** 目录--Config */
+        public static string EditorRootConfig           = "Assets/Game/Config";
+        public static string EditorRootConfigBytes      = "Assets/Game/ConfigBytes";
+
+        /** 目录--Lua */
+        public static string EditorRootLua              = "Assets/Game/Lua";
+        public static string EditorRootLuaBytes         = "Assets/Game/LuaBytes";
+
+        /** 目录--StreamingAssets */
+        public static string EditorRootStream         = "Assets/StreamingAssets";
 
 
-        public static string LuaRoot            = "Assets/Game/Lua";
-        public static string LuaBytesRoot       = "Assets/Game/LuaBytes";
+        /** 目录--StreamingAssets/Platform/XXX */
+        public static string EditorRootPlatform        = EditorRootStream + "/" + Platform.PlatformDirectory;
 
 
 
-        /** 获取绝对路径
-         * path = "Platform/IOS/config.assetbundle"
-         * return "xxxx/Platform/IOS/config.assetbundle";
+        /** 资源列表--Resources */
+        public static string EditorFileCsvForResource = "Assets/Game/Resources/files.csv";
+        /** 资源列表--StreamingAssets */
+        public static string EditorFileCsvForStreaming = EditorRootPlatform + "/files.csv";
+
+
+        /** 获取绝对路径--StreamingAssets
+         * path = "game_const.json"
+         * return "Assets/StreamingAssets/game_const.json";
          */
-        public static string GetAbsolutePath(string path)
+        public static string EditorGetAbsoluteStreamPath(string path)
         {
-            return RootPathStreaming + path;
+            return EditorRootStream + "/" + path;
         }
 
-        public static string FileCsvForResource = "Assets/Game/Resources/files.csv";
 
-        public static string FileCsvForStreaming
+
+        /** 获取AssetBundle的存放路径
+         * assetBundleName="config-assetbundle"
+         * return Assets/StreamingAssets/Platform/IOS/config-assetbundle
+        */
+        public static string EditorGetAbsolutePlatformPath(string assetBundleName)
         {
-            get
-            {
-                return GetAbsolutePath(GetPlatformPath("{0}/files.csv"));
-            }
+            return EditorRootPlatform + "/" + assetBundleName;
+        }
+
+       
+        /** 获取Config文件路径 */
+        public static string EditorGetConfigPath(string path)
+        {
+            return path.Replace("Config/", EditorRootConfig + "/");
         }
 
 
    
-        static int m_SimulateAssetBundleInEditor = -1;
-        const string kSimulateAssetBundles = "SimulateAssetBundles";
-
-        /** 编辑器模式模拟加载AssetBundle。用AssetDatabase */
-        public static bool SimulateAssetBundleInEditor 
-        {
-            get
-            {
-                if (m_SimulateAssetBundleInEditor == -1)
-                    m_SimulateAssetBundleInEditor = EditorPrefs.GetBool(kSimulateAssetBundles, true) ? 1 : 0;
-
-                return m_SimulateAssetBundleInEditor != 0;
-            }
-            set
-            {
-                int newValue = value ? 1 : 0;
-                if (newValue != m_SimulateAssetBundleInEditor)
-                {
-                    m_SimulateAssetBundleInEditor = newValue;
-                    EditorPrefs.SetBool(kSimulateAssetBundles, value);
-                }
-            }
-        }
-
-
-        static int m_SimulateConfigInEditor = -1;
-        const string kSimulateConfig = "SimulateConfig";
-
-        /** 编辑器模式模拟加载Config。用AssetDatabase */
-        public static bool SimulateConfigInEditor 
-        {
-            get
-            {
-                if (m_SimulateConfigInEditor == -1)
-                    m_SimulateConfigInEditor = EditorPrefs.GetBool(kSimulateConfig, true) ? 1 : 0;
-
-                return m_SimulateConfigInEditor != 0;
-            }
-            set
-            {
-                int newValue = value ? 1 : 0;
-                if (newValue != m_SimulateConfigInEditor)
-                {
-                    m_SimulateConfigInEditor = newValue;
-                    EditorPrefs.SetBool(kSimulateConfig, value);
-                }
-            }
-        }
-
-        /** 获取配置文件相对项目路径
-         * path = "Config/stage_map"
-         * return "Assets/Games/Config/stage_map.csv";
-         */
-        public static string GetConfigPath(string path)
-        {
-            string result = string.Format("Assets/Games/{0}.csv", path);
-            if (File.Exists(result))
-            {
-                return result;
-            }
-            return string.Format("Assets/Games/{0}.json", path);
-        }
-
-
-
-        /** 打包AssetBundle的根目录
-         *  return Assets/StreamingAssets/Platform/IOS/
-        */
-        public static string BuildPlatformRoot
-        {
-            get
-            {
-                return Application.streamingAssetsPath + "/" + Platform.GetPlatformDirectory(EditorUserBuildSettings.activeBuildTarget);
-            }
-        }
-
-        /** 获取打包AssetBundle的存放路径
-         * assetBundleName="config-assetbundle"
-         * return Assets/StreamingAssets/Platform/IOS/config-assetbundle
-        */
-        public static string GetBuildPlatformPath(string assetBundleName)
-        {
-            return BuildPlatformRoot + "/" + assetBundleName;
-        }
 
 
 

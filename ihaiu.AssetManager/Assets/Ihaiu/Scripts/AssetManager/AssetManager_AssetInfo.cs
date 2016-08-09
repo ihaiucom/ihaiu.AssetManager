@@ -17,14 +17,14 @@ namespace Ihaiu.Assets
         private Dictionary<string, AssetInfo> assetInfoDict = new Dictionary<string, AssetInfo>();
         private IEnumerator ReadFiles()
         {
-            TextAsset textAsset = Resources.Load<TextAsset>(AssetManagerSetting.AssetlistForResource);
+            TextAsset textAsset = Resources.Load<TextAsset>(AssetManagerSetting.FilesCsvForResource);
             if(textAsset != null)
             {
                 ParseInfo(textAsset.text, AssetLoadType.Resources);
             }
 
 
-            string path = AssetManagerSetting.AssetlistForStreaming;
+            string path = AssetManagerSetting.FilesCsvForStreaming;
             WWW www = new WWW(path);
             yield return www;
 
@@ -74,7 +74,7 @@ namespace Ihaiu.Assets
                         assetName       = length > 4 ? seg[4] : string.Empty;
 
 
-                        filename = path.LastIndexOf('.') > 0 ? path.Substring(0, path.LastIndexOf('.')) : path;
+                        filename = path.Replace(AssetManagerSetting.AssetbundleExt, string.Empty);
                         filename = filename.Replace("{0}/", "").ToLower();
 
                         path = AssetManagerSetting.GetPlatformPath(path);
@@ -230,8 +230,8 @@ namespace Ihaiu.Assets
             AssetInfo fileInfo;
             if(!assetInfoDict.TryGetValue(filenameLower, out fileInfo))
             {
-                Debug.LogError("[AssetMananger]资源配置不存在或者加载出错 name="+filenameLower + "   assetInfo=" + fileInfo );
-                if (AssetManagerSetting.IsStrict == false &&  callback != null && fileInfo == null)
+//                Debug.LogError("[AssetMananger]资源配置不存在或者加载出错 name="+filenameLower + "   assetInfo=" + fileInfo );
+                if (callback != null && fileInfo == null)
                 {
                     System.Object obj = Resources.Load(filename, type);
                     if (obj != null)

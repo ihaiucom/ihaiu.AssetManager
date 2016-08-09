@@ -70,7 +70,6 @@ namespace Ihaiu.Assets
                 LogFormat(LogType.Error ,"OnLoadManifest manifest路径不对，或文件不存在 manifestPath={0}, www.error={1}", manifestPath, www.error);
                 yield break;
             }
-            Debug.Log(www.assetBundle);
 
             AssetBundle assetBundle = www.assetBundle;
 
@@ -93,7 +92,7 @@ namespace Ihaiu.Assets
 
             AssetBundleLoadAssetOperation operation = null;
             #if UNITY_EDITOR
-            if (AssetManagerSetting.SimulateAssetBundleInEditor)
+            if (AssetManagerSetting.EditorSimulateAssetBundle)
             {
                 string[] assetPaths = AssetDatabase.GetAssetPathsFromAssetBundleAndAssetName(assetBundleName, assetName);
                 if (assetPaths.Length == 0)
@@ -111,7 +110,7 @@ namespace Ihaiu.Assets
             {
                 assetBundleName = RemapVariantName (assetBundleName);
                 LoadAssetBundle (assetBundleName);
-                operation = new AssetBundleLoadAssetOperationFull (assetBundleName, assetName, type);
+                operation = new AssetBundleLoadAssetOperationFull (this, assetBundleName, assetName, type);
 
                 m_InProgressOperations.Add (operation);
             }
@@ -127,7 +126,7 @@ namespace Ihaiu.Assets
 
             AssetBundleLoadOperation operation = null;
             #if UNITY_EDITOR
-            if (AssetManagerSetting.SimulateAssetBundleInEditor)
+            if (AssetManagerSetting.EditorSimulateAssetBundle)
             {
                 operation = new AssetBundleLoadLevelSimulationOperation(assetBundleName, levelName, isAdditive);
             }
@@ -136,7 +135,7 @@ namespace Ihaiu.Assets
             {
                 assetBundleName = RemapVariantName(assetBundleName);
                 LoadAssetBundle (assetBundleName);
-                operation = new AssetBundleLoadLevelOperation (assetBundleName, levelName, isAdditive);
+                operation = new AssetBundleLoadLevelOperation (this, assetBundleName, levelName, isAdditive);
 
                 m_InProgressOperations.Add (operation);
             }
@@ -249,7 +248,7 @@ namespace Ihaiu.Assets
             LogFormat(LogType.Info, "LoadAssetBundle assetBundleName={0}", assetBundleName);
 
             #if UNITY_EDITOR
-            if (AssetManagerSetting.SimulateAssetBundleInEditor)
+            if (AssetManagerSetting.EditorSimulateAssetBundle)
                 return;
             #endif
 
@@ -289,7 +288,7 @@ namespace Ihaiu.Assets
                 return true;
 
             WWW download = null;
-            string url = AssetManagerSetting.GetAbsoluteURL(assetBundleName);
+            string url = AssetManagerSetting.GetAbsoluteAssetBundleURL(assetBundleName);
 
             // For manifest assetbundle, always download it as we don't have hash for it.
             if (isLoadingAssetBundleManifest)
@@ -330,7 +329,7 @@ namespace Ihaiu.Assets
         public void UnloadAssetBundle(string assetBundleName)
         {
             #if UNITY_EDITOR
-            if (AssetManagerSetting.SimulateAssetBundleInEditor)
+            if (AssetManagerSetting.EditorSimulateAssetBundle)
                 return;
             #endif
 

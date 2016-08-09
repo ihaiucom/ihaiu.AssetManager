@@ -18,6 +18,7 @@ namespace Games
 
         public void Show(VersionManager versionManager)
         {
+            this.versionManager = versionManager;
             versionManager.stateCallback            += OnState;
             versionManager.updateFailedCallback     += OnUpdateFailed;
             versionManager.updateProgressCallback   += OnUpdateProgress;

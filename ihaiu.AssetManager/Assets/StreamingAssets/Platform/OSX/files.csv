@@ -1,6 +1,8 @@
+{0}/config-assetbundle;6f83ca8ae6557903c435d94415e5c0b2
+{0}/luacode-assetbundle;1fc8ddf25b5ad549082de2c0b2dd8d45
 {0}/OSX;30e36725c3a264ebecc69905f60a76af;;OSX;assetbundlemanifest
-{0}/btn-assetbundle;d46d9a12ffd810edb5bb389c97a68e6b;;btn-assetbundle;btn-assetbundle.prefab
+{0}/btn-assetbundle;d46d9a12ffd810edb5bb389c97a68e6b;;btn-assetbundle;btn-assetbundle
 {0}/assets/game/art/component/window-assetbundle;4f8c3c77b60a8d49c06ca8afc4690cdf;;assets/game/art/component/window-assetbundle;
 {0}/assets/game/art/ui/icon-assetbundle;1cd363f9839df5b062028a03ea9c18db;;assets/game/art/ui/icon-assetbundle;
-{0}/modules/modulea-assetbundle;47aefa1b883a4d6e373537640eb16f63;GameObject;modules/modulea-assetbundle;ModuleA.prefab
-{0}/modules/moduleb-assetbundle;e1d143a88c89e4eda5387698fb9e89a0;GameObject;modules/moduleb-assetbundle;ModuleB.prefab
+{0}/modules/modulea-assetbundle;47aefa1b883a4d6e373537640eb16f63;GameObject;modules/modulea-assetbundle;ModuleA
+{0}/modules/moduleb-assetbundle;e1d143a88c89e4eda5387698fb9e89a0;GameObject;modules/moduleb-assetbundle;ModuleB

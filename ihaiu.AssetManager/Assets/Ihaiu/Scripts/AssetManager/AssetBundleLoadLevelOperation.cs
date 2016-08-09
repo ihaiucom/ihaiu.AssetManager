@@ -12,8 +12,9 @@ namespace Ihaiu.Assets
         protected string                m_DownloadingError;
         protected AsyncOperation        m_Request;
 
-        public AssetBundleLoadLevelOperation (string assetbundleName, string levelName, bool isAdditive)
+        public AssetBundleLoadLevelOperation (IAssetBundleManager assetBundleManager, string assetbundleName, string levelName, bool isAdditive)
         {
+            this.assetBundleManager = assetBundleManager;
             m_AssetBundleName = assetbundleName;
             m_LevelName = levelName;
             m_IsAdditive = isAdditive;

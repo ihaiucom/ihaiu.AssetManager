@@ -44,10 +44,21 @@ namespace Games
 
         IEnumerator InitConfig()
         {
-            string path = "{0}/config.assetbundle";
-            path = AssetManagerSetting.RootPathPersistent + string.Format(path, Platform.PlatformDirectory);
+            string path = AssetManagerSetting.ConfigAssetBundleURL;
+            WWW www = new WWW(path);
+            yield return www;
 
-            byte[] bytes = File.ReadAllBytes(path);
+            if (!string.IsNullOrEmpty(www.error))
+            {
+                Debug.LogErrorFormat("[GameLaunch.InitConfig] path={0}, www.error={1}", path, www.error);
+                yield break;
+            }
+
+
+            byte[] bytes = www.bytes;
+            www.Dispose();
+            www = null;
+
             bytes = DecryptBytes(bytes);
 
             AssetBundleCreateRequest assetBundleCreateRequest = LoadFromMemoryAsync(bytes);
@@ -89,6 +100,7 @@ namespace Games
 
         void OnLoadModule(string filename, object obj)
         {
+            Debug.Log("filename=" + filename + "   obj=" + obj);
             GameObject go = GameObject.Instantiate((GameObject)obj);
             RectTransform canvas = (RectTransform) GameObject.Find("Canvas").transform;
             go.transform.SetParent(canvas, false);

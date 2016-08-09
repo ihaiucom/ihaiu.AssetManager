@@ -14,9 +14,9 @@ namespace Ihaiu.Assets
             if(callback == null) return;
 
             #if UNITY_EDITOR
-            if (AssetManagerSetting.SimulateConfigInEditor)
+            if (AssetManagerSetting.EditorSimulateConfig)
             {
-                TextAsset textAsset = UnityEditor.AssetDatabase.LoadAssetAtPath<TextAsset>(AssetManagerSetting.GetConfigPath(filename));
+                TextAsset textAsset = UnityEditor.AssetDatabase.LoadAssetAtPath<TextAsset>(AssetManagerSetting.EditorGetConfigPath(filename));
                 if(textAsset != null)
                 {
                     callback(filename, textAsset.text, args);

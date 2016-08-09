@@ -1,20 +1,26 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.IO;
 
 namespace Ihaiu.Assets
 {
     public partial class AssetManagerSetting 
     {
-        public static bool TestVersionMode = false;
-        public static string BytesExt = ".txt";
-        public static string AssetbundleExt = "-assetbundle";
+        public static bool TestVersionMode = true;
+
+        public static string BytesExt           = ".txt";
+        public static string AssetbundleExt     = "-assetbundle";
+
+        public static string ConfigAssetBundleName  = "config" + AssetbundleExt;
+        public static string LuaAssetBundleName     = "luacode" + AssetbundleExt;
 
         public static string PersistentAssetListName    = "PersistentAssetList.csv";
         public static string FilesName                  = "files.csv";
         public static string AssetBundleListName        = "AssetBundleList.csv";
         public static string AssetListName              = "AssetList.csv";
         public static string UpdateAssetListName        = "UpdateAssetListName.csv";
-        public static string GameConstName              = "game_const.csv";
+        public static string GameConstName              = "game_const.json";
+        public static string VersionInfoName            = string.Format("version_{0}.json", Platform.PlatformDirectoryName.ToLower());
 
 
 
@@ -89,8 +95,6 @@ namespace Ihaiu.Assets
         public static AssetFileList persistentAssetFileList = new AssetFileList();
 
 
-        /** 是否严格 */
-        public static bool IsStrict = true;
 
         /** 强制异步加载,等待一帧(Resource.AsyLoad) */
         public static bool ForcedResourceAsynLoadWaitFrame = true;
@@ -113,6 +117,20 @@ namespace Ihaiu.Assets
         }
 
 
+        /** 获取平台文件URL
+         * path="{0}/config.assetbundle"
+         * return "file:///xxxx/Platform/IOS/config.assetbundle";
+        */
+        public static string GetAbsolutePlatformURL(string path)
+        {
+            return GetAbsoluteURL(GetPlatformPath(path));
+        }
+
+
+        public static string GetAbsoluteAssetBundleURL(string assetBundleName)
+        {
+            return GetAbsoluteURL(Platform.PlatformDirectory + "/" + assetBundleName);
+        }
 
 
         /** 获取平台文件路径
@@ -124,21 +142,12 @@ namespace Ihaiu.Assets
             return string.Format(path, Platform.PlatformDirectory);
         }
 
-        /** 获取平台文件URL
-         * path="{0}/config.assetbundle"
-         * return "file:///xxxx/Platform/IOS/config.assetbundle";
-        */
-        public static string GetPlatformURL(string path)
-        {
-            return GetAbsoluteURL(GetPlatformPath(path));
-        }
-
         /** AssetBundleManifest文件路径 */
         public static string ManifestURL
         {
             get
             {
-                return GetAbsoluteURL(Platform.ManifestPath);
+                return GetAbsolutePlatformURL("{0}/" + Platform.PlatformDirectoryName);
             }
         }
 
@@ -147,35 +156,46 @@ namespace Ihaiu.Assets
         /** 资源列表文件路径
          * return "files.csv" in "Resources" directory
          */
-        public static string AssetlistForResource = "files";
+        public static string FilesCsvForResource = "files";
 
         /** 资源列表文件路径
          * return "StreamingAssets/Platform/IOS/files.csv"
          * return "Res/Platform/IOS/files.csv"
          */
-        public static string AssetlistForStreaming
+        public static string FilesCsvForStreaming
         {
             get
             {
-                return GetPlatformURL("{0}/files.csv");
+                return GetAbsolutePlatformURL("{0}/files.csv");
             }
         }
 
-        /** 服务器资源更新列表
+        /** 服务器资源更新列表URL
          * root =  "http://112.126.75.68:8080/StreamingAssets/"
-         * return  "http://112.126.75.68:8080/StreamingAssets/"
+         * return  "http://112.126.75.68:8080/StreamingAssets/Platform/XXX/files.csv"
          */
-        public static string GetServerUpdateAssetlistURL(string root)
+        public static string GetServerFilesCsvURL(string root)
         {
             return root + GetPlatformPath("{0}/files.csv");
         }
         #endregion files.csv
 
+        /** 获取服务器版本信息URL */
         public static string GetServerVersionInfoURL(string root)
         {
-            return root + "version_" + Platform.PlatformDirectoryName.ToLower();
+            return root + VersionInfoName;
         }
 
+
+
+
+        public static string ConfigAssetBundleURL
+        {
+            get
+            {
+                return GetAbsolutePlatformURL("{0}/" + ConfigAssetBundleName);
+            }
+        }
 
 
 
@@ -185,7 +205,7 @@ namespace Ihaiu.Assets
          */
         public static string GetConfigAssetName(string filename)
         {
-            return filename.ToLower().Replace("config/", ConfigBytesRoot) + BytesExt;
+            return Path.GetFileName(filename);
         }
 
 
@@ -197,6 +217,12 @@ namespace Ihaiu.Assets
         {
             return filename.ToLower().IndexOf("config/") == 0;
         }
+
+
+
+
+
+
 
 
         public const string ObjType_Sprite         = "Sprite";

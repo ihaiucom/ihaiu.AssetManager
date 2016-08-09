@@ -13,8 +13,8 @@ namespace Ihaiu.Assets
 		
 		public static void Config()
 		{
-            string configRoot = AssetManagerSetting.ConfigRoot;
-            string bytesRoot = AssetManagerSetting.ConfigBytesRoot;
+            string configRoot = AssetManagerSetting.EditorRootConfig;
+            string bytesRoot = AssetManagerSetting.EditorRootConfigBytes;
 
             if (!Directory.Exists(configRoot))
             {
@@ -48,7 +48,7 @@ namespace Ihaiu.Assets
 			Recursive(bytesRoot, bytesList);
 
 		
-            string assetBundleName =  "config" + AssetManagerSetting.AssetbundleExt;
+            string assetBundleName =  AssetManagerSetting.ConfigAssetBundleName;
 
 			AssetBundleBuild[] builds = new AssetBundleBuild[1];
 			builds[0].assetBundleName =  assetBundleName;
@@ -61,7 +61,7 @@ namespace Ihaiu.Assets
 			AssetDatabase.Refresh();
 
 			string inAssetBundlePath = bytesRoot + "/" + assetBundleName;
-            string outBytesPath = AssetManagerSetting.GetBuildPlatformPath(assetBundleName);
+            string outBytesPath = AssetManagerSetting.EditorGetAbsolutePlatformPath(assetBundleName);
 			byte[] bytes = File.ReadAllBytes(inAssetBundlePath);
 
             bytes = EncryptBytes(bytes, SKey);

@@ -5,7 +5,7 @@ namespace Ihaiu.Assets
 {
     public abstract class AssetBundleLoadOperation : IEnumerator
     {
-        public ManifestAssetBundleManager      assetBundleManager;
+        public IAssetBundleManager      assetBundleManager;
 
         public object Current
         {
