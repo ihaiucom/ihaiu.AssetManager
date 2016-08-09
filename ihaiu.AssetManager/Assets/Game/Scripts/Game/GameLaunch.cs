@@ -9,8 +9,10 @@ namespace Games
 {
     public class GameLaunch : MonoBehaviour
     {
+        public LaunchPanel launchPanel;
         void Awake()
         {
+            launchPanel = GameObject.Find("LaunchPanel").GetComponent<LaunchPanel>();
             DontDestroyOnLoad(gameObject);
             StartCoroutine(Initialize());
         }
@@ -20,6 +22,7 @@ namespace Games
             Game.assetManager = gameObject.AddComponent<AssetManager>();
 
             VersionManager versionManager = gameObject.AddComponent<VersionManager>();
+            launchPanel.Show(versionManager);
             yield return versionManager.CheckVersion();
             if (versionManager.yieldbreak)
                 yield break;
@@ -32,6 +35,11 @@ namespace Games
             {
                 yield return InitConfig();
             }
+
+            GameObject.Destroy(launchPanel.gameObject);
+            launchPanel = null;
+            TestModeule();
+
         }
 
         IEnumerator InitConfig()
@@ -70,6 +78,20 @@ namespace Games
             ICryptoTransform desencrypt = DES.CreateDecryptor();
             byte[] result = desencrypt.TransformFinalBlock(data, 0, data.Length);
             return result;
+        }
+
+
+        void TestModeule()
+        {
+            Game.assetManager.Load("modules/ModuleA", OnLoadModule);
+            Game.assetManager.Load("modules/ModuleB", OnLoadModule);
+        }
+
+        void OnLoadModule(string filename, object obj)
+        {
+            GameObject go = GameObject.Instantiate((GameObject)obj);
+            RectTransform canvas = (RectTransform) GameObject.Find("Canvas").transform;
+            go.transform.SetParent(canvas, false);
         }
 
     }

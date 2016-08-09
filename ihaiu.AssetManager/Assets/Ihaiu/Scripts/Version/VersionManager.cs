@@ -10,15 +10,27 @@ namespace Ihaiu.Assets
 {
     public class VersionManager : MonoBehaviour
     {
+        public Action<string>       stateCallback;
+        public Action<string>       updateFailedCallback;
+        public Action<float>        updateProgressCallback;
+        public Action<string>       needDownAppCallback;
+        public Action               finalCallback;
+
         public bool yieldbreak = false;
         private Version appVer = new Version();
         private Version curVer = new Version();
         private Version serverVer = new Version();
 
-        private VersionInfo serverVersionInfo;
+        public VersionInfo serverVersionInfo;
 
         private GameConstConfig appGameConstConfig;
         private GameConstConfig curGameConstConfig;
+
+        void OnState(string txt)
+        {
+            if (stateCallback != null)
+                stateCallback(txt);
+        }
 
         void OnUpdateEnter()
         {
@@ -30,18 +42,26 @@ namespace Ihaiu.Assets
 
         void OnUpdateFailed(string url)
         {
+            if (updateFailedCallback != null)
+                updateFailedCallback(url);
         }
 
         void OnUpdateProgress(float progress)
         {
+            if (updateProgressCallback != null)
+                updateProgressCallback(progress);
         }
 
         void OnNeedDownApp(string url)
         {
+            if (needDownAppCallback != null)
+                needDownAppCallback(url);
         }
 
         void OnFinal()
         {
+            if (finalCallback != null)
+                finalCallback();
         }
 
 
@@ -212,7 +232,7 @@ namespace Ihaiu.Assets
             }
             else
             {       
-                Debug.LogErrorFormat("读取game_const.json失败 ReadGameConst_Streaming url={0} error={1}  text={2}", url, www.error);
+                Debug.LogErrorFormat("读取game_const.json失败 ReadGameConst_Streaming url={0} error={1}", url, www.error);
             }
 
             www.Dispose();
