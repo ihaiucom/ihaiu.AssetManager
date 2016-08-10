@@ -49,5 +49,10 @@ namespace Ihaiu.Assets
             Debug.Log("[VersionInfoJsonGenerator]" + filesPath);
         }
         #endif
+
+        public override string ToString()
+        {
+            return string.Format("[VersionInfo] version={0}, downLoadUrl={1}, updateLoadUrl={2}", version, downLoadUrl, updateLoadUrl);
+        }
     }
 }

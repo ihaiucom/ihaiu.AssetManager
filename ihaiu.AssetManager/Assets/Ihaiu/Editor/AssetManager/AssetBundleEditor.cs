@@ -126,6 +126,13 @@ namespace Ihaiu.Assets
             {
                 string path = list[i];
                 AssetImporter importer = AssetImporter.GetAtPath(path);
+
+                if (string.IsNullOrEmpty(importer.assetBundleName))
+                {
+                    Debug.LogWarningFormat("MResource资源没有设置AssetBundleName  path={0}", path);
+                    continue;
+                }
+                
                 AssetBundleInfo item = new AssetBundleInfo();
                 item.path = path;
                 item.assetBundleName = importer.assetBundleName;
@@ -152,7 +159,7 @@ namespace Ihaiu.Assets
             }
 
             EditorUtility.ClearProgressBar();
-            infoList.Save(AssetManagerSetting.EditorGetAbsoluteStreamPath("AssetBundleInfo.csv"));
+            infoList.Save(AssetManagerSetting.EditorGetAbsoluteStreamPath(AssetManagerSetting.AssetBundleListName));
             AssetDatabase.Refresh();
 
             return infoList;

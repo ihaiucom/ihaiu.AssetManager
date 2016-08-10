@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Ihaiu
+namespace Ihaiu.Assets
 {
     /** 版本号 (git version) */
     public class Version
@@ -27,6 +27,21 @@ namespace Ihaiu
 
         [HelpAttribute("版本类型")]
         public VersionType verType = 0;
+
+
+        [HelpAttribute("时间")]
+        public Int64 datetime;
+
+        public Version()
+        {
+//            SetNowDatetime();
+        }
+
+
+        public void SetNowDatetime()
+        {
+            datetime = Convert.ToInt64(DateTime.Now.ToString("yyyyMMddHHmmss"));
+        }
 
 
         public bool Equals(Version b)
@@ -61,7 +76,7 @@ namespace Ihaiu
                 return (int)stages - (int)b.stages;
             }
 
-            return 0;
+            return datetime > b.datetime ? 1 : -1;
         }
 
         public void Copy(Version b)
@@ -71,10 +86,16 @@ namespace Ihaiu
             revised = b.revised;
             stages = b.stages;
             verType = b.verType;
+            datetime = b.datetime;
         }
 
 
         public override string ToString()
+        {
+            return string.Format("{4}-ver{0:D2}.{1:D2}.{2:D2}_{3}-{5}", master, minor, revised, GetStagesTxt(stages), GetVerTypeTxt(verType), datetime);
+        }
+
+        public string ToStringNoDate()
         {
             return string.Format("{4}-ver{0:D2}.{1:D2}.{2:D2}_{3}", master, minor, revised, GetStagesTxt(stages), GetVerTypeTxt(verType));
         }
@@ -85,6 +106,10 @@ namespace Ihaiu
             return string.Format("{0:D1}.{1:D1}.{2:D1}", master, minor, revised);
         }
 
+        public static Version ParseVersion(string str)
+        {
+            return new Version().Parse(str);
+        }
 
         public Version Parse(string str)
         {
@@ -95,6 +120,11 @@ namespace Ihaiu
                 string typeText = arr[0];
                 verType = GetVerType(typeText);
                 str = arr[1];
+
+                if (arr.Length > 2)
+                {
+                    datetime = Convert.ToInt64(arr[2]);
+                }
             }
             else
             {

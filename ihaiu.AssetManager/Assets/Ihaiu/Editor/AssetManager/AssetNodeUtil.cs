@@ -7,7 +7,7 @@ using System.IO;
 
 public class AssetNodeUtil 
 {
-    public static bool isLog = true;
+    public static bool isLog = false;
     public static int progressNumOnce = 30;
     public static int progressNumOnceLit = 10;
 

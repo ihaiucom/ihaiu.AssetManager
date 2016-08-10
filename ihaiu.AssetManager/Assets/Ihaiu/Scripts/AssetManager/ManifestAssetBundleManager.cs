@@ -15,7 +15,7 @@ namespace Ihaiu.Assets
         public enum LogMode { All, JustErrors };
         public enum LogType { Info, Warning, Error };
 
-        static LogMode m_LogMode = LogMode.All;
+        static LogMode m_LogMode = LogMode.JustErrors;
 
         private static void Log(LogType logType, string text)
         {

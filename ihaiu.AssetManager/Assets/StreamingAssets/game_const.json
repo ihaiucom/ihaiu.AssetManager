@@ -1,8 +1,8 @@
 {
-    "CleanupDataPath": false,
-    "DevelopMode": false,
+    "DevelopMode": true,
+    "TestVersionMode": false,
     "AppName": "ihaiu",
     "AppPrefix": "ihaiu_",
     "WebUrl": "http://192.168.1.9:7888/",
-    "Version": "0.0.0"
+    "Version": "1.0.0"
 }

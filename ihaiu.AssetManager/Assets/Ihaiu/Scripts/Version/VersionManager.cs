@@ -26,6 +26,9 @@ namespace Ihaiu.Assets
         private GameConstConfig appGameConstConfig;
         private GameConstConfig curGameConstConfig;
 
+        private AssetFileList   assetList;
+
+        #region Event
         void OnState(string txt)
         {
             if (stateCallback != null)
@@ -63,6 +66,7 @@ namespace Ihaiu.Assets
             if (finalCallback != null)
                 finalCallback();
         }
+        #endregion
 
 
         public IEnumerator CheckVersion()
@@ -70,9 +74,10 @@ namespace Ihaiu.Assets
             yield return StartCoroutine(ReadGameConst_Streaming());
 
             #if UNITY_EDITOR
+            appGameConstConfig.Set();
+
             if (appGameConstConfig.DevelopMode)
             {
-                appGameConstConfig.Set();
                 OnFinal();
                 AssetManagerSetting.persistentAssetFileList.Save(AssetManagerSetting.PersistentAssetFileListPath);
                 yield break;
@@ -112,6 +117,7 @@ namespace Ihaiu.Assets
 
 
             yield return (ReadServerVersionInfo());
+            Debug.Log("serverVersionInfo=" + serverVersionInfo);
 
             if (serverVersionInfo != null)
             {
@@ -148,7 +154,6 @@ namespace Ihaiu.Assets
         {
             List<string> list = new List<string>();
             list.Add(AssetManagerSetting.GameConstName);
-            list.Add(AssetManagerSetting.AssetListName);
 
 
 
@@ -190,9 +195,45 @@ namespace Ihaiu.Assets
                 yield return new WaitForEndOfFrame();
             }
 
+            yield return InitAssetList();
+
+
+            AssetManagerSetting.persistentAssetFileList.Add(AssetManagerSetting.AssetListName, "");
 
             AssetManagerSetting.persistentAssetFileList.Save(AssetManagerSetting.PersistentAssetFileListPath);
 
+        }
+
+        IEnumerator InitAssetList()
+        {
+            string url = AssetManagerSetting.FilesCsvForStreaming;
+            WWW www = new WWW(url);
+            yield return www;
+
+            assetList = new AssetFileList();
+            if(string.IsNullOrEmpty(www.error))
+            {
+                string path, md5;
+
+                using(StringReader stringReader = new StringReader(www.text))
+                {
+                    while(stringReader.Peek() >= 0)
+                    {
+                        string line = stringReader.ReadLine();
+                        if(!string.IsNullOrEmpty(line))
+                        {
+                            string[] seg = line.Split(';');
+                            path            = seg[0];
+                            md5             = seg[1];
+
+
+                            assetList.Add(path, md5);
+                        }
+                    }
+                }
+            }
+
+            assetList.Save(AssetManagerSetting.AssetFileListPath);
         }
 
 
@@ -221,6 +262,7 @@ namespace Ihaiu.Assets
         /** 读取streaming下只读配置  */
         IEnumerator ReadGameConst_Streaming()
         {   
+            OnState("读取streaming game_const.json");
             string url = AssetManagerSetting.GameConstUrl_Streaming;
             WWW www = new WWW(url);
             yield return www;
@@ -243,6 +285,7 @@ namespace Ihaiu.Assets
 
         IEnumerator ReadGameConst_Persistent()
         {   
+            OnState("读取persistent game_const.json");
             string url = AssetManagerSetting.GameConstUrl_Persistent;
             WWW www = new WWW(url);
             yield return www;
@@ -271,6 +314,7 @@ namespace Ihaiu.Assets
 
             //获取服务器端的file.csv
 
+            OnState("获取服务器端的file.csv");
             string updateAssetListUrl = AssetManagerSetting.GetServerFilesCsvURL(rootUrl);
             Debug.Log("UpdateAssetList URL: " + updateAssetListUrl);
             WWW www = new WWW(updateAssetListUrl);
@@ -290,21 +334,24 @@ namespace Ihaiu.Assets
             //Debug.Log("count: " + files.Length + " text: " + filesText);
 
 
-            AssetFileList assetFileList = AssetFileList.Read(AssetManagerSetting.AssetFileListPath);
+            OnState("读取" + AssetManagerSetting.AssetFileListPath);
+            if(assetList == null) assetList = AssetFileList.Read(AssetManagerSetting.AssetFileListPath);
 
-            List<AssetFile> diffs = AssetFileList.Diff(assetFileList, updateAssetList);
+            List<AssetFile> diffs = AssetFileList.Diff(assetList, updateAssetList);
 
            
-
+            string path;
             //更新
             int count = diffs.Count;
             for (int i = 0; i < count; i++)
             {
                 AssetFile item = diffs[i];
+                path = AssetManagerSetting.GetPlatformPath(item.path);
 
+                OnState("更新" + path);
                 OnUpdateProgress((float)(i + 1) / (float)count);
 
-                string url = rootUrl + item.path;
+                string url = rootUrl + path;
                 www = new WWW(url);
 
                 yield return www;
@@ -317,21 +364,21 @@ namespace Ihaiu.Assets
                     continue;
                 }
 
-                string localPath = AssetManagerSetting.RootPathPersistent + item.path;
+                string localPath = AssetManagerSetting.RootPathPersistent + path;
                 PathUtil.CheckPath(localPath, true);
                 File.WriteAllBytes(localPath, www.bytes);
 
                 www.Dispose();
                 www = null;
 
-                assetFileList.Add(item);
+                assetList.Add(item);
 
-                AssetManagerSetting.persistentAssetFileList.Add(item);
+                AssetManagerSetting.persistentAssetFileList.Add(path, item.md5);
             }
             yield return new WaitForEndOfFrame();
 
 
-            assetFileList.Save(AssetManagerSetting.AssetFileListPath);
+            assetList.Save(AssetManagerSetting.AssetFileListPath);
             AssetManagerSetting.persistentAssetFileList.Save(AssetManagerSetting.PersistentAssetFileListPath);
 
 

@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-namespace Ihaiu
+namespace Ihaiu.Assets
 {
     public class VersionCheck
     {

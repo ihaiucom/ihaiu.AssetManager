@@ -7,8 +7,8 @@ namespace Games
 {
 	public class GameConstConfig 
 	{
-		public bool CleanupDataPath = false;
 		public bool DevelopMode     = true;					    //开发模式
+        public bool TestVersionMode = false;                    //测试版本更新模式
 	
 		public string AppName   = "ihaiu";           			//应用程序名称
 		public string AppPrefix = "ihaiu_";                     //应用程序前缀
@@ -18,8 +18,6 @@ namespace Games
 
 		public void Set()
 		{
-
-			GameConst.CleanupDataPath = CleanupDataPath;
 			GameConst.DevelopMode = DevelopMode;
 
 			
@@ -33,6 +31,7 @@ namespace Games
             GameConst.Version = Version;
 
             #if UNITY_EDITOR
+            AssetManagerSetting.TestVersionMode               = TestVersionMode;
             AssetManagerSetting.EditorSimulateConfig          = GameConst.DevelopMode;
             AssetManagerSetting.EditorSimulateAssetBundle     = GameConst.DevelopMode;
             #endif

@@ -1,6 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEditor;
+using System.IO;
+
+
 namespace Ihaiu.Assets
 {
     public class AssetMenuItems 
@@ -60,6 +63,7 @@ namespace Ihaiu.Assets
         }
 
 
+
         [MenuItem("AssetManager/Clear Manifest Help File")]
         public static void ClearManifestHelpFile()
         {
@@ -73,5 +77,16 @@ namespace Ihaiu.Assets
         {
             AssetBundleEditor.GeneratorAssetBundleInfo();
         }
+
+
+
+        [MenuItem("AssetManager/CleanCache")]
+        public static void CleanCache()
+        {
+            Caching.CleanCache();
+        }
+
+
+
     }
 }

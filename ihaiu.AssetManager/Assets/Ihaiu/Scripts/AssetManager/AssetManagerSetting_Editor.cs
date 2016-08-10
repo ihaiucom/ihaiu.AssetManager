@@ -3,6 +3,7 @@ using UnityEngine;
 using System.Collections;
 using UnityEditor;
 using System.IO;
+using System;
 
 namespace Ihaiu.Assets
 {
@@ -37,12 +38,14 @@ namespace Ihaiu.Assets
         /** 目录--StreamingAssets/Platform/XXX */
         public static string EditorRootPlatform        = EditorRootStream + "/" + Platform.PlatformDirectory;
 
-
+        public static string EditorRootVersion         = "version/" + Platform.PlatformDirectoryName;
 
         /** 资源列表--Resources */
         public static string EditorFileCsvForResource = "Assets/Game/Resources/files.csv";
         /** 资源列表--StreamingAssets */
         public static string EditorFileCsvForStreaming = EditorRootPlatform + "/files.csv";
+        /** 资源列表--UpdateList */
+        public static string EditorUpdateAssetListPath     = EditorRootPlatform + "/UpdateAssetList.csv";
 
 
         /** 获取绝对路径--StreamingAssets
@@ -73,13 +76,11 @@ namespace Ihaiu.Assets
         }
 
 
-   
-
-
-
-
-
-
+        /** 获取版本文件列表路径 */
+        public static string EditorGetVersionFileListPath(string version)
+        {
+            return EditorRootVersion + "/" + version  + ".csv";
+        }
 
     }
 }

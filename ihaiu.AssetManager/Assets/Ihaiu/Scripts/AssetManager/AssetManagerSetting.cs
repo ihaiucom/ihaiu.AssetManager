@@ -18,11 +18,17 @@ namespace Ihaiu.Assets
         public static string FilesName                  = "files.csv";
         public static string AssetBundleListName        = "AssetBundleList.csv";
         public static string AssetListName              = "AssetList.csv";
-        public static string UpdateAssetListName        = "UpdateAssetListName.csv";
+        public static string UpdateAssetListName        = "UpdateAssetList.csv";
         public static string GameConstName              = "game_const.json";
         public static string VersionInfoName            = string.Format("version_{0}.json", Platform.PlatformDirectoryName.ToLower());
 
 
+
+        public static string AssetFileListPath              = RootPathPersistent + AssetListName;
+        public static string PersistentAssetFileListPath    = RootPathPersistent + PersistentAssetListName;
+
+
+        public static AssetFileList persistentAssetFileList = new AssetFileList();
 
         public static string RootPathStreaming
         {
@@ -87,12 +93,6 @@ namespace Ihaiu.Assets
 
         public static string GameConstUrl_Streaming     = RootUrlStreaming      + GameConstName;
         public static string GameConstUrl_Persistent    = RootUrlPersistent     + GameConstName;
-
-        public static string AssetFileListPath = RootPathPersistent + AssetListName;
-        public static string PersistentAssetFileListPath = RootPathPersistent + PersistentAssetListName;
-
-
-        public static AssetFileList persistentAssetFileList = new AssetFileList();
 
 
 
@@ -166,17 +166,17 @@ namespace Ihaiu.Assets
         {
             get
             {
-                return GetAbsolutePlatformURL("{0}/files.csv");
+                return GetAbsolutePlatformURL("{0}/" + FilesName);
             }
         }
 
         /** 服务器资源更新列表URL
          * root =  "http://112.126.75.68:8080/StreamingAssets/"
-         * return  "http://112.126.75.68:8080/StreamingAssets/Platform/XXX/files.csv"
+         * return  "http://112.126.75.68:8080/StreamingAssets/Platform/XXX/UpdateAssetList.csv"
          */
         public static string GetServerFilesCsvURL(string root)
         {
-            return root + GetPlatformPath("{0}/files.csv");
+            return root + GetPlatformPath("{0}/" + UpdateAssetListName);
         }
         #endregion files.csv
 

@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 3793673006
+CRC: 1705316902
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 7ca882fb4d83bd7df29fe9bb7ccb323f
+    Hash: a27cafc081955ebedbb5e3aead6acd7a
   TypeTreeHash:
     serializedVersion: 2
     Hash: 7b086e36e48be9aa6563083dc982ff0d
@@ -36,5 +36,5 @@ ClassTypes:
 Assets:
 - Assets/Game/MResources/modules/ModuleB.prefab
 Dependencies:
-- /Users/macserver/zf/workspaces/unity/demo/AssetBundle Manager/Assets/StreamingAssets/Platform/OSX/assets/game/art/component/window-assetbundle
-- /Users/macserver/zf/workspaces/unity/demo/AssetBundle Manager/Assets/StreamingAssets/Platform/OSX/assets/game/art/ui/icon-assetbundle
+- Assets/StreamingAssets/Platform/OSX/assets/game/art/component/window-assetbundle
+- Assets/StreamingAssets/Platform/OSX/assets/game/art/ui/icon-assetbundle

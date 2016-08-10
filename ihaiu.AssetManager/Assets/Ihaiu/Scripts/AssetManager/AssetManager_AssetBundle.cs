@@ -13,7 +13,12 @@ namespace Ihaiu.Assets
         public IEnumerator InitManifest()
         {
             manifestAssetBundleManager =  new ManifestAssetBundleManager(this, AssetManagerSetting.ManifestURL);
-            yield return StartCoroutine(manifestAssetBundleManager.LoadManifest());
+            #if UNITY_EDITOR
+            if(!AssetManagerSetting.EditorSimulateAssetBundle)
+            #endif
+            {
+                yield return StartCoroutine(manifestAssetBundleManager.LoadManifest());
+            }
         }
 
         internal void OnLoadManifest(IAssetBundleManager manifest)
