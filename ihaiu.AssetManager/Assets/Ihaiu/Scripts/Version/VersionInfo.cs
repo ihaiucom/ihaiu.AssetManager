@@ -12,9 +12,9 @@ namespace Ihaiu.Assets
         public string updateLoadUrl = "http://www.ihaiu.com/StreamingAssets/";
 
         #if UNITY_EDITOR
-        public static VersionInfo Load()
+        public static VersionInfo Load(string serverRoot)
         {
-            string path = AssetManagerSetting.EditorAssetBundleServerRoot + "/" + AssetManagerSetting.VersionInfoName;
+            string path = serverRoot + "/" + AssetManagerSetting.VersionInfoName;
 
             var f = new FileInfo(path);
             if (f.Exists)
@@ -33,10 +33,10 @@ namespace Ihaiu.Assets
         }
 
 
-        public void Save()
+        public void Save(string serverRoot)
         {
             string str = JsonUtility.ToJson(this, true);
-            string filesPath = AssetManagerSetting.EditorAssetBundleServerRoot + "/" + AssetManagerSetting.VersionInfoName;
+            string filesPath = serverRoot + "/" + AssetManagerSetting.VersionInfoName;
 
             PathUtil.CheckPath(filesPath, true);
             if (File.Exists(filesPath)) File.Delete(filesPath);

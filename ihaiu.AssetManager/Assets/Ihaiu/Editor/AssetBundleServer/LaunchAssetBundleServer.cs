@@ -16,8 +16,51 @@ namespace Ihaiu.Assets
 	{
         const string kLocalAssetbundleServerMenu = "AssetManager/Local AssetBundle Server";
 
+        private static string _serverRootPath;
+        public static string ServerRootPath
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(_serverRootPath))
+                {
+                    if (EditorPrefs.HasKey("AssetBundleServerRootPath"))
+                    {
+                        _serverRootPath = EditorPrefs.GetString("AssetBundleServerRootPath");
+                    }
+                    else
+                    {
+                        _serverRootPath = AssetManagerSetting.EditorAssetBundleServerRoot_WWW;
+                    }
+                }
+                return _serverRootPath;
+            }
+
+            set
+            {
+                _serverRootPath = value;
+                EditorPrefs.SetString("AssetBundleServerRootPath", value);
+            }
+        }
+
 		[SerializeField]
 		int 	m_ServerPID = 0;
+
+
+        [SerializeField]
+        string     m_host;
+
+        public static string Host
+        {
+            get
+            {
+                return instance.m_host;
+            }
+
+            set
+            {
+                instance.m_host = value;
+            }
+        }
 
 		[MenuItem (kLocalAssetbundleServerMenu)]
 		public static void ToggleLocalAssetBundleServer ()
@@ -41,7 +84,7 @@ namespace Ihaiu.Assets
 			return true;
 		}
 
-		static bool IsRunning ()
+		public static bool IsRunning ()
 		{
 			if (instance.m_ServerPID == 0)
 				return false;
@@ -53,7 +96,7 @@ namespace Ihaiu.Assets
 			return !process.HasExited;
 		}
 
-		static void KillRunningAssetBundleServer ()
+		public static void KillRunningAssetBundleServer ()
 		{
 			// Kill the last time we ran
 			try
@@ -70,20 +113,22 @@ namespace Ihaiu.Assets
 			}
 		}
 		
-		static void Run ()
+		public static void Run ()
 		{
+            PathUtil.CheckPath(ServerRootPath, false);
+            
             string pathToAssetServer = Path.Combine(Application.dataPath, AssetManagerSetting.EditorAssetBundleServerExe);
 	
 			KillRunningAssetBundleServer();
 			
 			WriteServerURL();
 			
-            string args = AssetManagerSetting.EditorAssetBundleServerRoot;
+            string args = ServerRootPath;
             UnityEngine.Debug.Log(pathToAssetServer);
             args = string.Format("\"{0}\" {1}", args, Process.GetCurrentProcess().Id);
             UnityEngine.Debug.Log(args);
 			ProcessStartInfo startInfo = ExecuteInternalMono.GetProfileStartInfoForMono(MonoInstallationFinder.GetMonoInstallation("MonoBleedingEdge"), "4.0", pathToAssetServer, args, true);
-            startInfo.WorkingDirectory = AssetManagerSetting.EditorAssetBundleServerRoot;
+            startInfo.WorkingDirectory = ServerRootPath;
 			startInfo.UseShellExecute = false;
             Process launchProcess = Process.Start(startInfo);
             UnityEngine.Debug.Log(startInfo.WorkingDirectory);
@@ -98,6 +143,7 @@ namespace Ihaiu.Assets
 				instance.m_ServerPID = launchProcess.Id;
 			}
 		}
+
 
         public static void WriteServerURL()
         {
@@ -114,14 +160,23 @@ namespace Ihaiu.Assets
                 }
             }
             downloadURL = "http://"+localIP+":7888/";
+            Host = downloadURL;
 
             Games.GameConstConfig gameConstConfig = Games.GameConstConfig.Load();
-            gameConstConfig.WebUrl = downloadURL;
+            gameConstConfig.WebUrl_Develop = downloadURL;
             gameConstConfig.Save();
 
-            VersionInfo versionInfo = VersionInfo.Load();
-            versionInfo.updateLoadUrl = downloadURL + "StreamingAssets/";
-            versionInfo.Save();
+            VersionInfo versionInfo = VersionInfo.Load(ServerRootPath);
+            versionInfo.version = gameConstConfig.Version;
+            if (ServerRootPath == AssetManagerSetting.EditorAssetBundleServerRoot_StreamingAssets)
+            {
+                versionInfo.updateLoadUrl = downloadURL;
+            }
+            else
+            {
+                versionInfo.updateLoadUrl = downloadURL + "StreamingAssets/";
+            }
+            versionInfo.Save(ServerRootPath);
         }
 
 	}

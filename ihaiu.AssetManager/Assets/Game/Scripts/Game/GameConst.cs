@@ -7,8 +7,15 @@ namespace Games
 {
     public class GameConst 
 	{
+        public static string UserId
+        {
+            get
+            {
+                return "00001";
+            }
+        }
 
-		public static bool      CleanupDataPath = false;
+
 		public static bool      DevelopMode = true;					    //开发模式
 
 

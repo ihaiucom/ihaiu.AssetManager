@@ -249,6 +249,7 @@ namespace Ihaiu.Assets
                     data.Add(CreateDvancedSettingItem(DvancedSettingType.AB_config));
                     data.Add(CreateDvancedSettingItem(DvancedSettingType.GameConstConfig));
                     data.Add(CreateDvancedSettingItem(DvancedSettingType.GeneratorStreamingAssetsFilesCSV));
+                    data.Add(CreateDvancedSettingItem(DvancedSettingType.GeneratorResourcesFilesCSV, false));
                     data.Add(CreateDvancedSettingItem(DvancedSettingType.GenerateVersionInfo));
                     data.Add(CreateDvancedSettingItem(DvancedSettingType.GeneratorUpdateAssetList));
                 }
@@ -259,6 +260,7 @@ namespace Ihaiu.Assets
         public DvancedSettingData currentDvancedSettingData;
         #endregion
 
+        Vector2 scrollPos;
         void OnGUI ()
         {
             VersionList.Read();
@@ -266,6 +268,8 @@ namespace Ihaiu.Assets
 
 
             TabType tabType = HGUILayout.TabGroup<TabType>(tabGroupData);
+
+            scrollPos = EditorGUILayout.BeginScrollView(scrollPos);
             GUILayout.Space(20);
 
 
@@ -448,7 +452,22 @@ namespace Ihaiu.Assets
                     GUILayout.Space(10);
                 }
                 GUILayout.EndVertical();
+
             }
+
+
+
+            switch(tabType)
+            {
+                case TabType.App:
+                case TabType.Patch:
+                    OnGUI_AssetBundleServer();
+                    OnGUI_TestVersionModel();
+                    break;
+            }
+
+            EditorGUILayout.EndScrollView();
+
         }
 
 
@@ -495,6 +514,48 @@ namespace Ihaiu.Assets
         void SetPlayerSettingsVersion(Version version)
         {
             PlayerSettings.bundleVersion = version.ToConfig();
+        }
+
+        bool assetBundleServer_foldout = true;
+        AssetBundleServerGUI assetBundleServerGUI = new AssetBundleServerGUI();
+        void OnGUI_AssetBundleServer()
+        {
+            assetBundleServer_foldout = EditorGUILayout.Foldout(assetBundleServer_foldout, "Local AssetBundle Server");
+
+            if (assetBundleServer_foldout)
+            {
+                assetBundleServerGUI.OnGUI();
+            }
+        }
+
+
+        bool testVersionModel_foldout = true;
+        bool testVersionModel_value = false;
+        void OnGUI_TestVersionModel()
+        {
+            testVersionModel_foldout = EditorGUILayout.Foldout(testVersionModel_foldout, "测试模拟版本模式");
+
+            if (testVersionModel_foldout)
+            {
+                if (GameConstConfig.last == null)
+                    GameConstConfig.Load();
+
+
+                GUILayout.BeginVertical(HGUILayout.boxMPStyle, GUILayout.Height(50));
+                testVersionModel_value = GameConstConfig.last.TestVersionMode;
+                GameConstConfig.last.TestVersionMode = EditorGUILayout.ToggleLeft("测试模拟版本模式", GameConstConfig.last.TestVersionMode);
+                if (testVersionModel_value != GameConstConfig.last.TestVersionMode)
+                {
+                    testVersionModel_value = GameConstConfig.last.TestVersionMode;
+                    if (testVersionModel_value)
+                    {
+                        GameConstConfig.last.DevelopMode = false;
+                    }
+
+                    GameConstConfig.last.Save();
+                }
+                GUILayout.EndVertical();
+            }
         }
 
 

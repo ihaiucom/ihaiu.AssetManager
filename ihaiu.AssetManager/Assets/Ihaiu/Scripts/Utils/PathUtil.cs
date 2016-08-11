@@ -39,7 +39,17 @@ public class PathUtil
         path = root + "/users";
         DeleteDirectory(path);
 
-        string[] names = new string[]{"crash_report.log", "test_record.json", "test_record.bin", "test_rscdata.bin", "test_WarEnterData.json" };
+        string[] names = new string[]{
+            "crash_report.log", 
+            "test_record.json", 
+            "test_record.bin", 
+            "test_rscdata.bin", 
+            "test_WarEnterData.json", 
+            "AssetBundleList.csv", 
+            "version_osx.json", 
+            "version_ios.json",
+            "version_android.json",
+        };
         foreach(string name in names)
         {
             path = root + "/" + name;
@@ -242,6 +252,11 @@ public class PathUtil
 
             RecursiveFile(dir, fileList, exts);
         }
+
+
+        #if UNITY_EDITOR
+        UnityEditor.EditorUtility.ClearProgressBar();
+        #endif
     }
 
     /** 遍历目录下文件 */
@@ -365,6 +380,66 @@ public class PathUtil
 //        #endif
 
         return fileList;
+    }
+
+
+    public static void CopyDirectory(string fromPath, string toPath, List<string> filterexts = null, List<string> filterFolderNames = null)
+    {
+        PathUtil.CheckPath(toPath, false);
+
+        string[] names = Directory.GetFiles(fromPath);
+        string[] dirs = Directory.GetDirectories(fromPath);
+        bool isCheckExt = filterexts != null && filterexts.Count > 0;
+        foreach (string filename in names) 
+        {
+            if (isCheckExt)
+            {
+                string ext = Path.GetExtension(filename).ToLower();
+                if (filterexts.Contains(ext))
+                    continue;
+            }
+
+
+            string fn = Path.GetFileName(filename);
+            if(fn.Equals(".DS_Store")) continue;
+            if(fn.IndexOf(".") == 0) continue;
+
+            string file = filename.Replace('\\', '/');
+            string dist = file.Replace(fromPath, toPath);
+
+
+            File.Copy(file, dist, true);
+        }
+
+        #if UNITY_EDITOR
+        int count = dirs.Length;
+        int index = 0;
+        #endif
+
+        bool isCheckFilter = filterFolderNames != null && filterFolderNames.Count > 0;
+        foreach (string dir in dirs) 
+        {
+            string dirName = Path.GetFileName(dir);
+            string dirNameLower = dirName.ToLower();
+            if(dirNameLower.IndexOf(".") == 0) continue;
+            if (isCheckFilter)
+            {
+                if (filterFolderNames.Contains(dirNameLower))
+                    continue;
+            }
+
+
+            #if UNITY_EDITOR
+            UnityEditor.EditorUtility.DisplayProgressBar("拷贝目录", dir, 1f *(index ++) / count);
+            #endif
+
+            CopyDirectory(dir, toPath + "/" + dirName, filterexts, filterFolderNames);
+        }
+
+
+        #if UNITY_EDITOR
+        UnityEditor.EditorUtility.ClearProgressBar();
+        #endif
     }
 
 

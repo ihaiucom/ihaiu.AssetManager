@@ -3,6 +3,7 @@ using System.Collections;
 using System.IO;
 using System.Collections.Generic;
 using UnityEditor;
+using System;
 
 namespace Ihaiu.Assets
 {
@@ -61,7 +62,12 @@ namespace Ihaiu.Assets
                     for (int i = 0; i < fileList.Count; i++)
                     {
                         file = fileList[i];
-                        if (file.IndexOf("test_") != -1 || file.IndexOf("crash_report") != -1 || file.IndexOf("AssetBundleList.csv") != -1 || file.IndexOf("AssetList.csv") != -1)
+                        if (file.IndexOf("test_") != -1 
+                            || file.IndexOf("crash_report") != -1 
+                            || file.IndexOf("AssetBundleList.csv") != -1 
+                            || file.IndexOf("AssetList.csv") != -1
+                            || file.IndexOf("version_") != -1
+                        )
                             continue;
 
 
@@ -141,7 +147,8 @@ namespace Ihaiu.Assets
            
 
 
-
+            fileinfo = SerializeFile("{0}/" + AssetManagerSetting.FilesName, DateTime.Now.ToString("yyyyMMddHHmmss"));
+            sw.WriteLine(fileinfo);
 
 
             sw.Close(); fs.Close();

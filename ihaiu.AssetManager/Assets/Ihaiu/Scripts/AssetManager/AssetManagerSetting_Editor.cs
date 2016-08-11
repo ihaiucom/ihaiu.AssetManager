@@ -18,7 +18,9 @@ namespace Ihaiu.Assets
         /** 服务器--执行文件 */
         public static string EditorAssetBundleServerExe = "Ihaiu/Editor/AssetBundleServer/AssetBundleServer.exe";
         /** 服务器--目录 */
-        public static string EditorAssetBundleServerRoot = Path.Combine (Application.dataPath.Substring(0, Application.dataPath.LastIndexOf('/')), "www");
+        public static string EditorAssetBundleServerRoot_WWW                = Path.Combine (Application.dataPath.Substring(0, Application.dataPath.LastIndexOf('/')), "www");
+        /** 服务器--目录 */
+        public static string EditorAssetBundleServerRoot_StreamingAssets    = Application.streamingAssetsPath;
 
         /** 目录--MResources */
         public static string EditorRootMResources      = "Assets/Game/MResources";
