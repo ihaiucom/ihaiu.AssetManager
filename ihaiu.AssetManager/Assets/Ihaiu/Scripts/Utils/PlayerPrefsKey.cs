@@ -3,6 +3,9 @@ using System.Collections;
 
 public class PlayerPrefsKey
 {
+    // Test
+    public const string Test_WebUrl_IsDevelop = "Test_WebUrl_IsDevelop";
+
 
 	// login
 	public const string Login_Username 		= "login_username";

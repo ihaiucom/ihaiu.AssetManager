@@ -178,7 +178,7 @@ public class PathUtil
 		
 		string destString = "";
 		for (int i = 0; i < md5Data.Length; i++) {
-			destString += System.Convert.ToString(md5Data[i], 16).PadLeft(2, '0');
+            destString += System.Convert.ToString(md5Data[i], 16).PadLeft(2, '0');
 		}
 		destString = destString.PadLeft(32, '0');
 		return destString;
@@ -196,9 +196,9 @@ public class PathUtil
 			
 			StringBuilder sb = new StringBuilder();
 			for (int i = 0; i < retVal.Length; i++) {
-				sb.Append(retVal[i].ToString("x2"));
+                sb.Append(retVal[i].ToString("x2"));
 			}
-			return sb.ToString();
+            return sb.ToString();
 		} catch (Exception ex) {
 			throw new Exception("md5file() fail, error:" + ex.Message);
 		}

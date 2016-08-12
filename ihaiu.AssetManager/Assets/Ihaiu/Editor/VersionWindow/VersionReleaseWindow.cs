@@ -531,6 +531,7 @@ namespace Ihaiu.Assets
 
         bool testVersionModel_foldout = true;
         bool testVersionModel_value = false;
+        bool testVersionModel_webIsDevelop = false;
         void OnGUI_TestVersionModel()
         {
             testVersionModel_foldout = EditorGUILayout.Foldout(testVersionModel_foldout, "测试模拟版本模式");
@@ -554,6 +555,14 @@ namespace Ihaiu.Assets
 
                     GameConstConfig.last.Save();
                 }
+
+
+                testVersionModel_webIsDevelop = EditorGUILayout.ToggleLeft("WebUrl Is Develop", GameConst.WebUrlIsDevelop);
+                if (testVersionModel_webIsDevelop != GameConst.WebUrlIsDevelop)
+                {
+                    GameConst.WebUrlIsDevelop = testVersionModel_webIsDevelop;
+                }
+
                 GUILayout.EndVertical();
             }
         }

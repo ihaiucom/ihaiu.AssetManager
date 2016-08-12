@@ -84,6 +84,29 @@ namespace Ihaiu.Assets
             return EditorRootVersion + "/" + version  + ".csv";
         }
 
+        public static string EditorToString()
+        {
+            string info = "";
+            info += "\nAssetManagerSetting.EditorSimulateConfig : " + EditorSimulateConfig;
+            info += "\nAssetManagerSetting.EditorSimulateAssetBundle : " + EditorSimulateAssetBundle;
+            info += "\n";
+            info += "\nAssetManagerSetting.EditorAssetBundleServerExe : " + EditorAssetBundleServerExe;
+            info += "\nAssetManagerSetting.EditorAssetBundleServerRoot_WWW : " + EditorAssetBundleServerRoot_WWW;
+            info += "\nAssetManagerSetting.EditorAssetBundleServerRoot_StreamingAssets : " + EditorAssetBundleServerRoot_StreamingAssets;
+            info += "\n";
+            info += "\nAssetManagerSetting.EditorRootMResources : " + EditorRootMResources;
+            info += "\nAssetManagerSetting.EditorRootConfig : " + EditorRootConfig;
+            info += "\nAssetManagerSetting.EditorRootConfigBytes : " + EditorRootConfigBytes;
+            info += "\nAssetManagerSetting.EditorRootLua : " + EditorRootLua;
+            info += "\nAssetManagerSetting.EditorRootLuaBytes : " + EditorRootLuaBytes;
+            info += "\nAssetManagerSetting.EditorRootStream : " + EditorRootStream;
+            info += "\nAssetManagerSetting.EditorRootPlatform : " + EditorRootPlatform;
+            info += "\nAssetManagerSetting.EditorRootVersion : " + EditorRootVersion;
+            info += "\nAssetManagerSetting.EditorFileCsvForResource : " + EditorFileCsvForResource;
+            info += "\nAssetManagerSetting.EditorFileCsvForStreaming : " + EditorFileCsvForStreaming;
+            info += "\nAssetManagerSetting.EditorUpdateAssetListPath : " + EditorUpdateAssetListPath;
+            return info;
+        }
     }
 }
 

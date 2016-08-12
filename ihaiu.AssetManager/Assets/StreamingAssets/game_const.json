@@ -1,9 +1,9 @@
 {
     "DevelopMode": false,
-    "TestVersionMode": true,
+    "TestVersionMode": false,
     "AppName": "ihaiu",
     "AppPrefix": "ihaiu_",
     "WebUrl_Release": "http://www.ihaiu.com/",
-    "WebUrl_Develop": "http://192.168.1.9:7888/",
-    "Version": "1.1.0"
+    "WebUrl_Develop": "http://localhost/",
+    "Version": "1.0.0"
 }

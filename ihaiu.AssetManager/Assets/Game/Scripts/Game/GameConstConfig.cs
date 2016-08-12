@@ -28,7 +28,8 @@ namespace Games
 			GameConst.AppName = AppName;
 			GameConst.AppPrefix = AppPrefix;
 			
-			GameConst.WebUrl = WebUrl_Release;
+            GameConst.WebUrl_Release = WebUrl_Release;
+            GameConst.WebUrl_Develop = WebUrl_Develop;
 
 
             GameConst.Version = Version;
@@ -37,12 +38,6 @@ namespace Games
             AssetManagerSetting.TestVersionMode               = TestVersionMode;
             AssetManagerSetting.EditorSimulateConfig          = GameConst.DevelopMode;
             AssetManagerSetting.EditorSimulateAssetBundle     = GameConst.DevelopMode;
-
-            if(TestVersionMode)
-            {
-                GameConst.WebUrl = WebUrl_Develop;
-            }
-
             #endif
 		}
 
@@ -51,7 +46,24 @@ namespace Games
         public static GameConstConfig last;
         public static GameConstConfig Load()
         {
-            var f = new FileInfo(Application.streamingAssetsPath + "/" + AssetManagerSetting.GameConstName);
+            string filesPath = Application.streamingAssetsPath + "/" + AssetManagerSetting.GameConstName;
+            return last = Load(filesPath);
+        }
+
+
+        public void Save()
+        {
+            last = this;
+            string filesPath = Application.streamingAssetsPath + "/" + AssetManagerSetting.GameConstName;
+            Save(filesPath);
+            UnityEditor.AssetDatabase.Refresh();
+            Debug.Log("[GameConstJsonGenerator]" + filesPath);
+        }
+        #endif
+
+        public static GameConstConfig Load(string path)
+        {
+            var f = new FileInfo(path);
             if (f.Exists)
             {
                 var sr = f.OpenText();
@@ -59,22 +71,18 @@ namespace Games
                 sr.Close();
 
                 GameConstConfig config = JsonUtility.FromJson<GameConstConfig>(str);
-                last = config; 
                 return config;
             }
             else
             {
-                last = new GameConstConfig();
-                return last;
+                return new GameConstConfig();
             }
         }
 
 
-        public void Save()
+        public void Save(string filesPath)
         {
-            last = this;
             string str = JsonUtility.ToJson(this, true);
-            string filesPath = Application.streamingAssetsPath + "/" + AssetManagerSetting.GameConstName;
 
             PathUtil.CheckPath(filesPath, true);
             if (File.Exists(filesPath)) File.Delete(filesPath);
@@ -83,10 +91,7 @@ namespace Games
             StreamWriter sw = new StreamWriter(fs);
             sw.Write(str);
             sw.Close(); fs.Close();
-            UnityEditor.AssetDatabase.Refresh();
-            Debug.Log("[GameConstJsonGenerator]" + filesPath);
         }
-        #endif
 
 
 	}

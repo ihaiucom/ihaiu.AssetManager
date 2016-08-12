@@ -151,7 +151,7 @@ namespace Ihaiu.Assets
 
         //-----------------------------------
 
-        Type tmpType = typeof(System.Object);
+        Type tmpObjType = typeof(System.Object);
 
        
 
@@ -206,7 +206,7 @@ namespace Ihaiu.Assets
         /// <param name="arg">回调参数.</param>
         public void Load(string filename, Action<string, object, object[]> callback, object[] callbackArgs)
         {
-            Load(filename, callback, callbackArgs, tmpType);
+            Load(filename, callback, callbackArgs, tmpObjType);
         }
 
         /// <summary>
@@ -233,19 +233,12 @@ namespace Ihaiu.Assets
 //                Debug.LogError("[AssetMananger]资源配置不存在或者加载出错 name="+filenameLower + "   assetInfo=" + fileInfo );
                 if (callback != null && fileInfo == null)
                 {
-                    System.Object obj = Resources.Load(filename, type);
-                    if (obj != null)
-                    {
-                        callback(filenameLower, obj, callbackArgs);
-                        return;
-                    }
+                    LoadResourceAsync(filename, type, callback, callbackArgs);
                 }
-
-                if(callback != null) callback(filenameLower, null, callbackArgs);
                 return;
             }
 
-            if(fileInfo.objType != null &&  (type == null || type == typeof(System.Object)))
+            if(fileInfo.objType != null &&  (type == null || type == tmpObjType))
             {
                 type = fileInfo.objType;
             }
@@ -258,6 +251,40 @@ namespace Ihaiu.Assets
             else
             {
                 LoadResourceAsync(fileInfo.path, type, callback, callbackArgs);
+            }
+        }
+
+
+        public void Unload(string filename)
+        {
+            Unload(filename, tmpObjType);
+        }
+
+        public void Unload(string filename, Type type)
+        {
+            string filenameLower = filename.ToLower();
+            AssetInfo fileInfo;
+            if (!assetInfoDict.TryGetValue(filenameLower, out fileInfo))
+            {
+                UnloadResource(filename, type);
+                return;
+            }
+
+
+
+            if(fileInfo.loadType == AssetLoadType.AssetBundle)
+            {
+                UnloadAssetBundle(fileInfo.assetBundleName);
+            }
+            else
+            {
+
+                if(fileInfo.objType != null &&  (type == null || type == tmpObjType))
+                {
+                    type = fileInfo.objType;
+                }
+
+                UnloadResource(fileInfo.path, type);
             }
         }
 

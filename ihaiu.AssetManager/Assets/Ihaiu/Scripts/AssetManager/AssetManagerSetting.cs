@@ -95,9 +95,14 @@ namespace Ihaiu.Assets
         public static string GameConstUrl_Persistent    = RootUrlPersistent     + GameConstName;
 
 
+        public static string GameConstPath = RootPathPersistent + GameConstName;
+
+
 
         /** 强制异步加载,等待一帧(Resource.AsyLoad) */
         public static bool ForcedResourceAsynLoadWaitFrame = true;
+        /** 是否缓存Resouces加载的对象 */
+        public static bool IsCacheResourceAsset = false;
 
 
         /** 获取绝对URL
@@ -228,20 +233,73 @@ namespace Ihaiu.Assets
         public const string ObjType_Sprite         = "Sprite";
         public const string ObjType_GameObject     = "GameObject";
 
+        private static System.Type tmpSpriteType = typeof(Sprite);
+        private static System.Type tmpGameObjectType = typeof(GameObject);
+        private static System.Type tmpObjectType = typeof(System.Object);
+
         /** 获取资源Type */
         public static System.Type GetObjType(string objType)
         {
             switch(objType)
             {
                 case ObjType_Sprite:
-                    return typeof(Sprite);
+                    return tmpSpriteType;
 
                 case ObjType_GameObject:
-                    return typeof(GameObject);
+                    return tmpGameObjectType;
 
                 default:
-                    return typeof(System.Object);
+                    return tmpObjectType;
             }
+        }
+
+
+        public static string GetInfo()
+        {
+            string info = "";
+            info += "\nAssetManagerSetting.ForcedResourceAsynLoadWaitFrame : " + ForcedResourceAsynLoadWaitFrame;
+            info += "\nAssetManagerSetting.IsCacheResourceAsset : " + IsCacheResourceAsset;
+            info += "\n";
+            info += "\nAssetManagerSetting.TestVersionMode : " + TestVersionMode;
+            info += "\nAssetManagerSetting.AssetbundleExt : " + AssetbundleExt;
+            info += "\nAssetManagerSetting.ConfigAssetBundleName : " + ConfigAssetBundleName;
+            info += "\nAssetManagerSetting.LuaAssetBundleName : " + LuaAssetBundleName;
+
+            info += "\n";
+            info += "\nAssetManagerSetting.FilesName : " + FilesName;
+            info += "\nAssetManagerSetting.PersistentAssetListName : " + PersistentAssetListName;
+            info += "\nAssetManagerSetting.AssetListName : " + AssetListName;
+            info += "\nAssetManagerSetting.UpdateAssetListName : " + UpdateAssetListName;
+            info += "\nAssetManagerSetting.AssetListName : " + AssetListName;
+            info += "\nAssetManagerSetting.GameConstName : " + GameConstName;
+            info += "\nAssetManagerSetting.VersionInfoName : " + VersionInfoName;
+
+            info += "\n";
+            info += "\nAssetManagerSetting.RootPathStreaming : " + RootPathStreaming;
+            info += "\nAssetManagerSetting.RootPathPersistent : " + RootPathPersistent;
+            info += "\nAssetManagerSetting.RootUrlStreaming : " + RootUrlStreaming;
+            info += "\nAssetManagerSetting.RootUrlPersistent : " + RootUrlPersistent;
+            info += "\n";
+            info += "\nAssetManagerSetting.AssetFileListPath : " + AssetFileListPath;
+            info += "\nAssetManagerSetting.PersistentAssetFileListPath : " + PersistentAssetFileListPath;
+            info += "\n";
+            info += "\nAssetManagerSetting.GameConstUrl_Streaming : " + GameConstUrl_Streaming;
+            info += "\nAssetManagerSetting.GameConstUrl_Persistent : " + GameConstUrl_Persistent;
+            info += "\nAssetManagerSetting.GameConstPath : " + GameConstPath;
+
+            info += "\n";
+            info += "\nAssetManagerSetting.FilesCsvForResource : " + FilesCsvForResource;
+            info += "\nAssetManagerSetting.FilesCsvForStreaming : " + FilesCsvForStreaming;
+            info += "\nAssetManagerSetting.ManifestURL : " + ManifestURL;
+            info += "\nAssetManagerSetting.ConfigAssetBundleURL : " + ConfigAssetBundleURL;
+
+            #if UNITY_EDITOR
+            info += "\n";
+            info += EditorToString();
+            #endif
+
+
+            return info;
         }
 
 

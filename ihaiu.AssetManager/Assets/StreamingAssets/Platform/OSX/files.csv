@@ -1,4 +1,4 @@
-game_const.json;f5715c276e17a26982977319392de32f
+game_const.json;0cf74d2930acedb57fe45cc7f73c3ae0
 {0}/config-assetbundle;583901af99d7e5e418179eaf0b1a8aa7
 {0}/luacode-assetbundle;b35144a92842bebaa945d89b2c956d45
 {0}/OSX;fce42e59e0c7d3f803aa37eb29ff6564;;OSX;assetbundlemanifest
@@ -7,4 +7,4 @@ game_const.json;f5715c276e17a26982977319392de32f
 {0}/assets/game/art/ui/icon-assetbundle;3e8d4b27ad4c0df790d12b104f662aa7;;assets/game/art/ui/icon-assetbundle;
 {0}/modules/modulea-assetbundle;f1d185a5d2c6d866083b391ce874f3b1;GameObject;modules/modulea-assetbundle;ModuleA
 {0}/modules/moduleb-assetbundle;4d332cac726cf5afaa94854ac5671e9d;GameObject;modules/moduleb-assetbundle;ModuleB
-{0}/files.csv;20160811165604
+{0}/files.csv;20160812131215

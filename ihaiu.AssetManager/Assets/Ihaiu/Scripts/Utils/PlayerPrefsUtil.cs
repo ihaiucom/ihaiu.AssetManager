@@ -34,6 +34,32 @@ public class PlayerPrefsUtil
         return PlayerPrefs.HasKey(name);
     }
 
+
+    /// <summary>
+    /// 取得Bool
+    /// </summary>
+    public static bool GetBool(string key) {
+        return GetBool(key, true);
+    }
+
+    public static bool GetBool(string key, bool isBindUserId) {
+        string name = GetKey(key, isBindUserId);
+        return PlayerPrefs.GetInt(name) == 1;
+    }
+
+    /// <summary>
+    /// 保存Bool
+    /// </summary>
+    public static void SetBool(string key, bool value) {
+        SetBool(key, value, true);
+    }
+
+    public static void SetBool(string key, bool value, bool isBindUserId) {
+        string name = GetKey(key, isBindUserId);
+        PlayerPrefs.DeleteKey(name);
+        PlayerPrefs.SetInt(name, value ? 1 : 0);
+        PlayerPrefs.Save();
+    }
 	
 	/// <summary>
 	/// 取得整型

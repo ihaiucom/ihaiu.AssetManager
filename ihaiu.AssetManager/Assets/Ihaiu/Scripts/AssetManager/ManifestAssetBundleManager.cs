@@ -159,6 +159,14 @@ namespace Ihaiu.Assets
         // ”资源包“依赖列表 字典
         Dictionary<string, string[]>                m_Dependencies              = new Dictionary<string, string[]>();
 
+        public Dictionary<string, LoadedAssetBundle> LoadedAssetBundles
+        {
+            get
+            {
+                return m_LoadedAssetBundles;
+            }
+        }
+
 
 
         /** 获取“资源包信息”、检测加载状态 */

@@ -1,7 +1,6 @@
 using UnityEngine;
 using System.Collections;
 using System.IO;
-using Games;
 
 namespace Ihaiu.Debugs
 {
@@ -88,6 +87,10 @@ namespace Ihaiu.Debugs
     		}
 
 
+            info += "\n";
+            info += Games.GameConst.GetInfo();
+            info += "\n";
+            info += Ihaiu.Assets.AssetManagerSetting.GetInfo();
     	
     		info += "\n";
     		#if LUA_ZIP

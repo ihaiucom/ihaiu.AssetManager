@@ -9,6 +9,18 @@ namespace Ihaiu.Assets
     {
         ManifestAssetBundleManager  manifestAssetBundleManager;
 
+        public Dictionary<string, LoadedAssetBundle>   LoadedAssetBundles
+        {
+            get
+            {
+                if (manifestAssetBundleManager != null)
+                {
+                    return manifestAssetBundleManager.LoadedAssetBundles;
+                }
+                return null;
+            }
+        }
+
 
         public IEnumerator InitManifest()
         {
@@ -99,6 +111,15 @@ namespace Ihaiu.Assets
             {
                 callback(assetBundleName, levelName, callbackArgs);
             }
+        }
+
+
+
+        //----------------
+        /** 卸载资源包和他依赖的资源包 */
+        public void UnloadAssetBundle(string assetBundleName)
+        {
+            manifestAssetBundleManager.UnloadAssetBundle(assetBundleName);
         }
 
     }
