@@ -17,7 +17,8 @@ namespace Games
         public string   WebUrl_Develop  = "http://localhost/";              //更新地址--调试版本
 		public string 	Version         = "0.0.0";						        //游戏版本号
 
-
+        public bool IsCacheResourceAsset                = false;    //是否缓存Resouces加载的对象
+        public bool ForcedResourceAsynLoadWaitFrame     = true;     //强制异步加载,等待一帧(Resource.AsyLoad)
 
 		public void Set()
 		{
@@ -34,11 +35,15 @@ namespace Games
 
             GameConst.Version = Version;
 
+            AssetManagerSetting.IsCacheResourceAsset                = IsCacheResourceAsset;
+            AssetManagerSetting.ForcedResourceAsynLoadWaitFrame     = ForcedResourceAsynLoadWaitFrame;
+
             #if UNITY_EDITOR
             AssetManagerSetting.TestVersionMode               = TestVersionMode;
             AssetManagerSetting.EditorSimulateConfig          = GameConst.DevelopMode;
             AssetManagerSetting.EditorSimulateAssetBundle     = GameConst.DevelopMode;
             #endif
+
 		}
 
 
