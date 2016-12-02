@@ -25,6 +25,7 @@ namespace Games
 	
 
         public static string    Version = "0.0.0";                      //游戏版本号
+        public static string    CenterName = "Official";                //运营商
 
 
         public static string   WebUrl_Release  = "http://www.ihaiu.com/";          //更新地址--发布版本

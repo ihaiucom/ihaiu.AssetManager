@@ -11,7 +11,7 @@ public class AssetNodeUtil
     public static int progressNumOnce = 30;
     public static int progressNumOnceLit = 10;
 
-  
+
 
 
     /** 生成所有节点 */
@@ -104,7 +104,7 @@ public class AssetNodeUtil
         return nodeDict;
     }
 
-  
+
     /** 生成每个节点依赖的节点 */
     public static void GenerateNodeDependencies(Dictionary<string, AssetNode> nodeDict)
     {
@@ -139,7 +139,7 @@ public class AssetNodeUtil
         if(isLog) AssetNode.PrintNodeDict(nodeDict, "生成每个节点依赖的节点 nodeDict");
     }
 
-   
+
 
 
     /** 生成要强制设置Root的节点 */
@@ -149,7 +149,7 @@ public class AssetNodeUtil
         int count = nodeDict.Count;
         int index = 0;
 
-        
+
         List<string> forceRootList = new List<string>();
         foreach(var kvp in nodeDict)
         {

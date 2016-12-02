@@ -59,7 +59,7 @@ namespace Ihaiu.Assets
             return assetManager.StartCoroutine_Auto (routine);
         }
 
-      
+
         public IEnumerator LoadManifest()
         {
             WWW www = new WWW(manifestPath);
@@ -67,7 +67,7 @@ namespace Ihaiu.Assets
 
             if(!string.IsNullOrEmpty(www.error))
             {
-                LogFormat(LogType.Error ,"OnLoadManifest manifest路径不对，或文件不存在 manifestPath={0}, www.error={1}", manifestPath, www.error);
+                LogFormat(LogType.Warning ,"OnLoadManifest manifest路径不对，或文件不存在 manifestPath={0}, www.error={1}", manifestPath, www.error);
                 yield break;
             }
 
@@ -102,7 +102,7 @@ namespace Ihaiu.Assets
                 }
 
                 // @TODO: Now we only get the main object from the first asset. Should consider type also.
-                Object target = AssetDatabase.LoadMainAssetAtPath(assetPaths[0]);
+                Object target = AssetDatabase.LoadAssetAtPath(assetPaths[0], type);
                 operation = new AssetBundleLoadAssetOperationSimulation (target);
             }
             else
@@ -174,31 +174,46 @@ namespace Ihaiu.Assets
         {
             // 如果加载出错，返回空，并返回错
             if (m_DownloadingErrors.TryGetValue(assetBundleName, out error) )
+            {
+                //              Debug.Log("m_DownloadingErrors="+error+",assetBundleName="+assetBundleName);
                 return null;
+            }
 
             // 如果”资源信息包“还没找到说明还没加载完成，返回null，让操作继续等待
             LoadedAssetBundle bundle = null;
             m_LoadedAssetBundles.TryGetValue(assetBundleName, out bundle);
             if (bundle == null)
+            {
+                //              Debug.Log("bundle loading="+error+",assetBundleName="+assetBundleName);
                 return null;
+            }
 
             // 检查是否有依赖的“资源包”列表, 如果没有依赖，成功加载返回“资源包信息”
             string[] dependencies = null;
             if (!m_Dependencies.TryGetValue(assetBundleName, out dependencies) )
+            {
+                //              Debug.Log("bundle no depend="+error+",assetBundleName="+assetBundleName);
                 return bundle;
+            }
 
             // 检测依赖的资源包是否加载完成
             foreach(var dependency in dependencies)
             {
                 // 检测到依赖的资源加载出错，返回自己的资源，并返回依赖的资源错误,
                 if (m_DownloadingErrors.TryGetValue(assetBundleName, out error) )
+                {
+                    //                  Debug.Log("m_Downloading depend Errors="+error+",assetBundleName="+assetBundleName);
                     return bundle;
+                }
 
                 // 如果依赖的资源还没加载完成，返回null，让操作继续等待
                 LoadedAssetBundle dependentBundle;
                 m_LoadedAssetBundles.TryGetValue(dependency, out dependentBundle);
                 if (dependentBundle == null)
+                {
+                    //                  Debug.Log("m_Downloading dependency loading="+error+",assetBundleName="+assetBundleName+",dependentBundle="+dependency);
                     return null;
+                }
             }
 
             // 成功加载返回“资源包信息”
@@ -288,6 +303,11 @@ namespace Ihaiu.Assets
                 bundle.m_ReferencedCount++;
                 return true;
             }
+
+            //            string path = AssetManagerSetting.GetAbsoluteAssetBundlePath(assetBundleName);
+            //            AssetBundle assetBundle = AssetBundle.LoadFromFile(path);
+            //            m_LoadedAssetBundles.Add(assetBundleName, new LoadedAssetBundle(assetBundle) );
+            //            return false;
 
             // @TODO: Do we need to consider the referenced count of WWWs?
             // In the demo, we never have duplicate WWWs as we wait LoadAssetAsync()/LoadLevelAsync() to be finished before calling another LoadAssetAsync()/LoadLevelAsync().
@@ -381,7 +401,7 @@ namespace Ihaiu.Assets
             }
         }
 
-      
+
 
         /** 更新检测状态 */
         public void Update()

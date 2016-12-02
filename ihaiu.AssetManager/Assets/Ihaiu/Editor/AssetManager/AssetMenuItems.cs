@@ -12,59 +12,63 @@ namespace Ihaiu.Assets
 
 
 
-        [MenuItem("AssetManager/RemoveUnusedAssetBundleNames")]
+        [MenuItem("资源管理/RemoveUnusedAssetBundleNames")]
         public static void RemoveUnusedAssetBundleNames()
         {
             AssetDatabase.RemoveUnusedAssetBundleNames();
         }
 
-        [MenuItem("AssetManager/ClearAssetBundleNames")]
+        [MenuItem("资源管理/ClearAssetBundleNames")]
         public static void ClearAssetBundleNames()
         {
             AssetBundleEditor.ClearAssetBundleNames();
         }
 
-        [MenuItem("AssetManager/Set AssetBundle Name")]
+        [MenuItem("资源管理/Set AssetBundle Name")]
         public static void SetAssetBundleNames()
         {
             AssetBundleEditor.SetNames();
         }
 
-        [MenuItem("AssetManager/Build AssetBundle")]
+        [MenuItem("资源管理/Build AssetBundle")]
         public static void BuildAssetBundles()
         {
             AssetBundleEditor.BuildAssetBundles();
         }
 
-        [MenuItem("AssetManager/Build Config AssetBundle")]
+        [MenuItem("资源管理/Build Config AssetBundle")]
         public static void BuildConfig()
         {
             AB.Config();
         }
 
-        [MenuItem("AssetManager/Build Lua AssetBundle")]
+        [MenuItem("资源管理/Build Lua AssetBundle")]
         public static void BuildLua()
         {
             AB.Lua();
         }
 
 
-        [MenuItem("AssetManager/Generator files.csv(Resources)")]
-        public static void GeneratorFileCsvFromResources()
-        {
-            FilesCsvForResources.Generator();
-        }
 
-
-        [MenuItem("AssetManager/Generator files.csv(StreamingAssets)")]
+        [MenuItem("资源管理/Generator files.csv(StreamingAssets)")]
         public static void GeneratorFilesCsvForStreamingAssets()
         {
             FilesCsvForStreamingAssets.Generator();
         }
 
+        [MenuItem("资源管理/Generator LoadAssetList.csv")]
+        public static void GeneratorLoadAssetListCsv()
+        {
+            LoadAssetListCsv.Generator();
+        }
 
+        [MenuItem("资源管理/Generator DontUnloadAssetList.csv")]
+        public static void GeneratorDontUnloadAssetListCsv()
+        {
+            DontUnloadAssetListCsv.Generator();
+        }
 
-        [MenuItem("AssetManager/Clear Manifest Help File")]
+        [MenuItem("资源管理/Clear Manifest Help File")]
         public static void ClearManifestHelpFile()
         {
             AssetBundleEditor.ClearManifestHelpFile();
@@ -72,7 +76,7 @@ namespace Ihaiu.Assets
 
 
 
-        [MenuItem("AssetManager/Generator AssetBundle Info")]
+        [MenuItem("资源管理/Generator AssetBundle Info")]
         public static void GeneratorAssetBundleInfo()
         {
             AssetBundleEditor.GeneratorAssetBundleInfo();
@@ -80,7 +84,7 @@ namespace Ihaiu.Assets
 
 
 
-        [MenuItem("AssetManager/CleanCache")]
+        [MenuItem("资源管理/CleanCache")]
         public static void CleanCache()
         {
             Caching.CleanCache();

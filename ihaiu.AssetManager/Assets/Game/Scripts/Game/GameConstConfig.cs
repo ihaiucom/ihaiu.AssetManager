@@ -15,7 +15,8 @@ namespace Games
 
         public string 	WebUrl_Release  = "http://www.ihaiu.com/";  	    //更新地址--发布版本
         public string   WebUrl_Develop  = "http://localhost/";              //更新地址--调试版本
-		public string 	Version         = "0.0.0";						        //游戏版本号
+        public string 	Version         = "0.0.0";						        //游戏版本号
+        public string   CenterName = "Official";                //运营商
 
         public bool IsCacheResourceAsset                = false;    //是否缓存Resouces加载的对象
         public bool ForcedResourceAsynLoadWaitFrame     = true;     //强制异步加载,等待一帧(Resource.AsyLoad)
@@ -33,7 +34,8 @@ namespace Games
             GameConst.WebUrl_Develop = WebUrl_Develop;
 
 
-            GameConst.Version = Version;
+            GameConst.Version       = Version;
+            GameConst.CenterName    = CenterName;
 
             AssetManagerSetting.IsCacheResourceAsset                = IsCacheResourceAsset;
             AssetManagerSetting.ForcedResourceAsynLoadWaitFrame     = ForcedResourceAsynLoadWaitFrame;

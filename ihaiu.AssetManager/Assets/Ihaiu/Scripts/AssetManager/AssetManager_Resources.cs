@@ -10,6 +10,7 @@ namespace Ihaiu.Assets
 
         // ”资源包信息“ 字典
         Dictionary<Type, Dictionary<string, LoadedResource>>       m_LoadedResources        = new Dictionary<Type, Dictionary<string, LoadedResource>>();
+        List<LoadedResource>    LoadedResourceList = new List<LoadedResource>();
 
         public Dictionary<Type, Dictionary<string, LoadedResource>>   LoadedResources
         {
@@ -67,7 +68,7 @@ namespace Ihaiu.Assets
             }
         }
 
-      
+
 
         LoadedResource GetLoadedResource(string path, Type type)
         {
@@ -105,6 +106,8 @@ namespace Ihaiu.Assets
                 }
 
                 m_LoadedResources[type].Add(path, loaded);
+
+                LoadedResourceList.Add(loaded);
             }
         }
 
@@ -113,32 +116,141 @@ namespace Ihaiu.Assets
             if (m_LoadedResources.ContainsKey(type))
             {
                 if (m_LoadedResources[type].ContainsKey(path))
+                {
+                    LoadedResourceList.Remove(m_LoadedResources[type][path]);
                     m_LoadedResources[type].Remove(path);
+                }
             }
         }
 
+
+
+
+
+        #region UnloadResource
         public void UnloadResource(string path)
         {
-            UnloadResource(path, tmpObjType);
+            UnloadResource(path, tmpObjType, 1, false);
         }
 
+
         public void UnloadResource(string path, Type type)
+        {
+            UnloadResource(path, type, 1, false);
+        }
+
+        public void UnloadResource(string path, Type type, int count, bool isSetLastTime)
         {
             LoadedResource loaded = GetLoadedResource(path, type);
             if (loaded != null)
             {
-                loaded.referencedCount--;
+                if (count < 0)
+                {
+                    loaded.referencedCount = 0;
+                }
+                else
+                {
+                    loaded.referencedCount -= count;
+                }
+
+
+
                 if (loaded.referencedCount <= 0)
                 {
-                    if (loaded.obj != null)
+                    if (isSetLastTime)
                     {
-                        Resources.UnloadAsset(loaded.obj);
+                        loaded.lastTime = Time.unscaledTime;
                     }
 
-                    loaded.obj = null;
-                    RemoveLoadedResource(path, type);
+                    if (!AssetManagerSetting.UseCacheAssetTime)
+                    {
+                        UnloadLoadedResourceCache(loaded);
+                    }
+                }
+
+            }
+        }
+
+
+        void UnloadLoadedResourceCache(LoadedResource loaded)
+        {
+            if (loaded.obj != null)
+            {
+                try
+                {
+                    Resources.UnloadAsset(loaded.obj);
+                }
+                catch(Exception e)
+                {
+
+                }
+            }
+
+            loaded.obj = null;
+            RemoveLoadedResource(loaded.path, loaded.objType);
+        }
+
+
+
+
+
+
+
+        public void CheckResourceCache()
+        {
+            if (!isResourceCacheChecking)
+            {
+                isResourceCacheChecking = true;
+                resourceCheckCacheCoroutiner = StartCoroutine(OnCheckResourceCache());
+            }
+        }
+
+        bool isResourceCacheChecking = false;
+        Coroutine resourceCheckCacheCoroutiner;
+        IEnumerator OnCheckResourceCache()
+        {
+            LoadedResource loaded;
+            while (true)
+            {
+                if (AssetManagerSetting.CheckCacheActive)
+                {
+                    for (int i = LoadedResourceList.Count - 1; i >= 0; i--)
+                    {
+                        loaded = LoadedResourceList[i];
+                        if (loaded.referencedCount <= 0 && Time.unscaledTime - loaded.lastTime > AssetManagerSetting.CacheAssetTime)
+                        {
+                            UnloadLoadedResourceCache(loaded);
+                        }
+
+                        yield return new WaitForEndOfFrame();
+
+                        if (i >= LoadedResourceList.Count)
+                        {
+                            i = LoadedResourceList.Count - 1;
+                        }
+                    }
+                }
+
+                yield return new WaitForSeconds(AssetManagerSetting.CheckCacheAssetRate);
+            }
+        }
+
+
+        public void ClearResourceCache()
+        {
+            LoadedResource loaded;
+            for(int i = LoadedResourceList.Count - 1; i >= 0; i --)
+            {
+                loaded = LoadedResourceList[i];
+                if (loaded.referencedCount <= 0 && Time.unscaledTime - loaded.lastTime > AssetManagerSetting.CacheAssetTime)
+                {
+                    UnloadLoadedResourceCache(loaded);
                 }
             }
         }
+        #endregion
+
+
+
     }
 }

@@ -90,6 +90,21 @@ namespace Ihaiu.Assets
         }
 
 
+        public string ToDateString()
+        {
+            string str = datetime.ToString();
+            string dstr = string.Format("{0}年{1}月{2}日{3}:{4}", 
+                str.Substring(0, 4), 
+                str.Substring(4, 2), 
+                str.Substring(6, 2), 
+
+                str.Substring(8, 2),
+                str.Substring(10, 2)
+            );
+
+            return string.Format("{4}-ver{0:D2}.{1:D2}.{2:D2}_{3}-{5}", master, minor, revised, GetStagesTxt(stages), GetVerTypeTxt(verType), dstr);
+        }
+
         public override string ToString()
         {
             return string.Format("{4}-ver{0:D2}.{1:D2}.{2:D2}_{3}-{5}", master, minor, revised, GetStagesTxt(stages), GetVerTypeTxt(verType), datetime);

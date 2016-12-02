@@ -46,10 +46,11 @@ namespace Ihaiu.Assets
             appVersionList.Clear();
             lastAppRevisedDict.Clear();
 
+            string root = AssetManagerSetting.EditorRootVersion;
 
-            PathUtil.CheckPath(AssetManagerSetting.EditorRootVersion, false);
+            PathUtil.CheckPath(root, false);
 
-            string[] names = Directory.GetFiles(AssetManagerSetting.EditorRootVersion);
+            string[] names = Directory.GetFiles(root);
             foreach (string filename in names) 
             {
                 string ext = Path.GetExtension(filename).ToLower();
@@ -98,8 +99,8 @@ namespace Ihaiu.Assets
             appVersionStrArr = new string[appVersionList.Count];
             for(int i = 0; i < appVersionList.Count; i ++)
             {
-                appVersionStrArr[i] = appVersionList[i].ToString();
-                appVersionStrList.Add(appVersionStrArr[i]);
+                appVersionStrArr[i] = appVersionList[i].ToDateString();
+                appVersionStrList.Add(appVersionList[i].ToString());
             }
 
 

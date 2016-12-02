@@ -8,10 +8,10 @@ namespace Ihaiu.Assets
 {
     public class AssetBundleEditor 
     {
-        static string resourceRoot = AssetManagerSetting.EditorRootMResources;
+        public static string resourceRoot = AssetManagerSetting.EditorRootMResources;
         static string[] resourcesPaths = new string[]{
             resourceRoot,
-    //        "Assets/Ihaiu/AssetManagerExampleFiles/Component"
+            //        "Assets/Ihaiu/AssetManagerExampleFiles/Component"
 
         };
 
@@ -23,7 +23,7 @@ namespace Ihaiu.Assets
         static List<string> imageExts = new List<string>{".png", ".jpg", ".jpeg", ".bmp", "gif", ".tga", ".tiff", ".psd"};
         static bool isSpriteTag = true;
 
-        static List<string> exts = new List<string>(new string[]{ ".prefab", ".png", ".jpg", ".jpeg", ".bmp", "gif", ".tga", ".tiff", ".psd", ".mat", ".mp3", ".wav" });
+        public static List<string> exts = new List<string>(new string[]{ ".prefab", ".png", ".jpg", ".jpeg", ".bmp", "gif", ".tga", ".tiff", ".psd", ".mat", ".mp3", ".wav" });
 
 
         public static void ClearAssetBundleNames()
@@ -51,7 +51,8 @@ namespace Ihaiu.Assets
             List<string> list = new List<string>();
             PathUtil.RecursiveFile(resourcesPaths, list, exts);
 
-
+            if (list.Count == 0)
+                return;
 
 
             // 生成所有节点
@@ -87,6 +88,33 @@ namespace Ihaiu.Assets
 
 
             AssetDatabase.RemoveUnusedAssetBundleNames();
+        }
+
+
+        public static void SetNames_Develop()
+        {
+            List<string> list = new List<string>();
+            PathUtil.RecursiveFile(resourceRoot, list, exts);
+
+            int count = list.Count;
+            for(int i =0; i < count; i ++ )
+            {
+                string path = list[i];
+                AssetImporter assetImporter = AssetImporter.GetAtPath(path);
+                if (!string.IsNullOrEmpty(assetImporter.assetBundleName))
+                {
+                    if (assetImporter.assetBundleName.IndexOf(assetbundleExt) == -1)
+                    {
+                        continue;
+                    }
+                }
+
+
+                string assetBundleName =  path.Replace(resourceRoot + "/", "").ToLower();
+                assetBundleName = PathUtil.ChangeExtension(assetBundleName, assetbundleExt);
+                assetImporter.assetBundleName  = assetBundleName;
+
+            }
         }
 
         public static void BuildAssetBundles()
@@ -132,7 +160,7 @@ namespace Ihaiu.Assets
                     Debug.LogWarningFormat("MResource资源没有设置AssetBundleName  path={0}", path);
                     continue;
                 }
-                
+
                 AssetBundleInfo item = new AssetBundleInfo();
                 item.path = path;
                 item.assetBundleName = importer.assetBundleName;
@@ -144,6 +172,10 @@ namespace Ihaiu.Assets
                 if (ext == ".prefab")
                 {
                     item.objType = AssetManagerSetting.ObjType_GameObject;
+                }
+                else if (path.IndexOf("map/terrain") != -1)
+                {
+                    item.objType = AssetManagerSetting.ObjType_Texture;
                 }
                 else if (imageExts.IndexOf(ext) != -1)
                 {

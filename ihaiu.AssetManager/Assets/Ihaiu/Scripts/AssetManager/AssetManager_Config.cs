@@ -13,31 +13,30 @@ namespace Ihaiu.Assets
         {
             if(callback == null) return;
 
+            TextAsset textAsset = LoadConfig(filename);
+            if(textAsset != null)
+            {
+                callback(filename, textAsset.text, args);
+            }
+            else
+            {
+                callback(filename, null, args);
+            }
+
+        }
+
+        public TextAsset LoadConfig(string filename)
+        {
             #if UNITY_EDITOR
             if (AssetManagerSetting.EditorSimulateConfig)
             {
-                TextAsset textAsset = UnityEditor.AssetDatabase.LoadAssetAtPath<TextAsset>(AssetManagerSetting.EditorGetConfigPath(filename));
-                if(textAsset != null)
-                {
-                    callback(filename, textAsset.text, args);
-                }
-                else
-                {
-                    callback(filename, null, args);
-                }
+                return UnityEditor.AssetDatabase.LoadAssetAtPath<TextAsset>(AssetManagerSetting.EditorGetConfigPath(filename));
+
             }
             else
             #endif
             {
-                TextAsset textAsset = (TextAsset)configAssetBundle.LoadAsset(AssetManagerSetting.GetConfigAssetName(filename));
-                if(textAsset != null)
-                {
-                    callback(filename, textAsset.text, args);
-                }
-                else
-                {
-                    callback(filename, null, args);
-                }
+                return (TextAsset)configAssetBundle.LoadAsset(AssetManagerSetting.GetConfigAssetName(filename));
             }
         }
 

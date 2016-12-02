@@ -10,10 +10,20 @@ namespace Ihaiu.Assets
 {
     public class VersionManager : MonoBehaviour
     {
+        public Action<string>       errorCallback;
         public Action<string>       stateCallback;
+
         public Action<string>       updateFailedCallback;
         public Action<float>        updateProgressCallback;
+
+        public Action               updateEnterCallback;
+        public Action               updateEndCallback;
+
+
+		public Action               serverCloseCallback;
         public Action<string>       needDownAppCallback;
+        public Action               needHostUpdateCallback;
+
         public Action               finalCallback;
 
         public bool yieldbreak = false;
@@ -29,6 +39,12 @@ namespace Ihaiu.Assets
         private AssetFileList   assetList;
 
         #region Event
+        void OnError(string txt)
+        {
+            if (errorCallback != null)
+                errorCallback(txt);
+        }
+
         void OnState(string txt)
         {
             if (stateCallback != null)
@@ -37,10 +53,14 @@ namespace Ihaiu.Assets
 
         void OnUpdateEnter()
         {
+            if (updateEnterCallback != null)
+                updateEnterCallback();
         }
 
         void OnUpdateEnd()
         {
+            if (updateEndCallback != null)
+                updateEndCallback();
         }
 
         void OnUpdateFailed(string url)
@@ -55,16 +75,35 @@ namespace Ihaiu.Assets
                 updateProgressCallback(progress);
         }
 
+		void OnServerClose()
+		{
+			if (serverCloseCallback != null)
+				serverCloseCallback();
+		}
+
         void OnNeedDownApp(string url)
         {
             if (needDownAppCallback != null)
                 needDownAppCallback(url);
         }
 
+
+        void OnNeedHostUpdate()
+        {
+            if (needHostUpdateCallback != null)
+                needHostUpdateCallback();
+        }
+
         void OnFinal()
         {
             if (finalCallback != null)
                 finalCallback();
+        }
+
+        private bool IsContinueHostUpdate = false;
+        public void SetContinueHostUpdate()
+        {
+            IsContinueHostUpdate = true;
         }
         #endregion
 
@@ -79,7 +118,6 @@ namespace Ihaiu.Assets
             if (appGameConstConfig.DevelopMode)
             {
                 OnFinal();
-                AssetManagerSetting.persistentAssetFileList.Save(AssetManagerSetting.PersistentAssetFileListPath);
                 yield break;
             }
 
@@ -109,6 +147,9 @@ namespace Ihaiu.Assets
                 needInitData = VersionCheck.CheckNeedCopy(curVer, appVer);
             }
 
+
+            AssetManagerSetting.persistentAssetFileList = AssetFileList.Read(AssetManagerSetting.PersistentAssetFileListPath);
+
             if (needInitData)
             {
                 yield return StartCoroutine(InitData());
@@ -116,42 +157,62 @@ namespace Ihaiu.Assets
             }
 
 
+
             yield return (ReadServerVersionInfo());
             Debug.Log("serverVersionInfo=" + serverVersionInfo);
 
             if (serverVersionInfo != null)
             {
-                serverVer.Parse(serverVersionInfo.version);
+				if (serverVersionInfo.isClose > 0)
+				{
+					OnServerClose();
+					yieldbreak = true;
+				}
+				else
+				{
+	                serverVer.Parse(serverVersionInfo.version);
 
-                VersionCheckState state = VersionCheck.CheckState(curVer, serverVer);
+	                VersionCheckState state = VersionCheck.CheckState(curVer, serverVer);
 
-                switch(state)
-                {
-                    case VersionCheckState.DownApp:
-                        OnNeedDownApp(serverVersionInfo.downLoadUrl);
-                        yieldbreak = true;
-                        break;
+	                switch(state)
+	                {
+	                    case VersionCheckState.DownApp:
+	                        OnNeedDownApp(serverVersionInfo.downLoadUrl);
+	                        yieldbreak = true;
+	                        break;
 
-                    case VersionCheckState.HotUpdate:
-                        yield return StartCoroutine(UpdateResource(serverVersionInfo.updateLoadUrl));
-                        yield return StartCoroutine(ReadGameConst_Persistent());
-                        curGameConstConfig.Set();
-                        OnFinal();
-                        break;
-                    default:
-                        AssetManagerSetting.persistentAssetFileList = AssetFileList.Read(AssetManagerSetting.PersistentAssetFileListPath);
-                        OnFinal();
-                        break;
-                }
+	                    case VersionCheckState.HotUpdate:
+	                        IsContinueHostUpdate = false;
+	                        OnNeedHostUpdate();
+
+	                        while (!IsContinueHostUpdate)
+	                        {
+	                            yield return new WaitForSeconds(0.25f);
+	                        }
+
+	                        yield return StartCoroutine(UpdateResource(serverVersionInfo.updateLoadUrl));
+	                        yield return StartCoroutine(ReadGameConst_Persistent());
+	                        curGameConstConfig.Set();
+	                        OnFinal();
+	                        break;
+	                    default:
+	                        OnFinal();
+	                        break;
+	                }
+				}
             }
             else
             {
+                Debug.Log("zj OnFinal");
                 OnFinal();
             }
         }
 
         IEnumerator InitData()
         {
+            Caching.CleanCache();
+            yield return InitAssetList();
+
             List<string> list = new List<string>();
             list.Add(AssetManagerSetting.GameConstName);
 
@@ -195,7 +256,6 @@ namespace Ihaiu.Assets
                 yield return new WaitForEndOfFrame();
             }
 
-            yield return InitAssetList();
 
 
             AssetManagerSetting.persistentAssetFileList.Add(AssetManagerSetting.AssetListName, "");
@@ -210,7 +270,7 @@ namespace Ihaiu.Assets
             WWW www = new WWW(url);
             yield return www;
 
-            assetList = new AssetFileList();
+            assetList = AssetFileList.Read(AssetManagerSetting.AssetFileListPath);
             if(string.IsNullOrEmpty(www.error))
             {
                 string path, md5;
@@ -228,6 +288,8 @@ namespace Ihaiu.Assets
 
 
                             assetList.Add(path, md5);
+
+                            AssetManagerSetting.persistentAssetFileList.Remove(AssetManagerSetting.GetPlatformPath(path));
                         }
                     }
                 }
@@ -240,11 +302,21 @@ namespace Ihaiu.Assets
         /** 获取服务器版本号 */
         IEnumerator ReadServerVersionInfo()
         {
-            string url = AssetManagerSetting.GetServerVersionInfoURL(GameConst.WebUrl) ;
+
+            int isUpdateTest = PlayerPrefsUtil.GetIntSimple(PlayerPrefsKey.Setting_Update);//测试更新
+            string centerName = GameConst.CenterName;
+            if (isUpdateTest == 1)
+            {
+                centerName = "Test";
+            }
+
+
+            string url = AssetManagerSetting.GetServerVersionInfoURL(GameConst.WebUrl, centerName) ;
             WWW www = new WWW(url);
             yield return www;
             if(!string.IsNullOrEmpty(www.error))
             {
+                OnError("获取服务器版本号出错");
                 Debug.LogErrorFormat("获取服务器版本号出错 url={0}, www.error={1}", url, www.error);
                 www.Dispose();
                 www = null;
@@ -255,7 +327,7 @@ namespace Ihaiu.Assets
             Debug.Log(www.text);
 
             serverVersionInfo = JsonUtility.FromJson<VersionInfo>(www.text);
-
+            serverVersionInfo.Set();
         }
 
 
@@ -275,6 +347,7 @@ namespace Ihaiu.Assets
             }
             else
             {       
+                OnError("读取Streaming下game_const.json失败");
                 Debug.LogErrorFormat("读取game_const.json失败 ReadGameConst_Streaming url={0} error={1}", url, www.error);
             }
 
@@ -306,7 +379,6 @@ namespace Ihaiu.Assets
         }
 
 
-
         IEnumerator UpdateResource(string rootUrl)
         {
             // rootUrl = "http://www.ihaiu.com/StreamingAssets/"
@@ -322,6 +394,7 @@ namespace Ihaiu.Assets
 
             if (!string.IsNullOrEmpty(www.error))
             {
+                OnError("更新资源读取资源列表失败");
                 Debug.LogErrorFormat("更新资源读取资源列表失败 updateAssetListUrl={0}, www.error={1}", updateAssetListUrl,  www.error);
                 www.Dispose();
                 www = null;
@@ -339,7 +412,8 @@ namespace Ihaiu.Assets
 
             List<AssetFile> diffs = AssetFileList.Diff(assetList, updateAssetList);
 
-           
+            AssetManagerSetting.persistentAssetFileList = AssetFileList.Read(AssetManagerSetting.PersistentAssetFileListPath);
+
             string path;
             //更新
             int count = diffs.Count;

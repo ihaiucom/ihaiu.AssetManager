@@ -117,7 +117,7 @@ namespace Ihaiu.Assets
                 GUILayout.BeginHorizontal();
                 version.master = Convert.ToInt32(GUILayout.TextField(string.Format("{0}", version.master), GUILayout.Width(cellWidth)));
                 version.minor = Convert.ToInt32(GUILayout.TextField(string.Format("{0}", version.minor), GUILayout.Width(cellWidth)));
-                Convert.ToInt32(GUILayout.TextField(string.Format("{0}", version.revised), textFieldStyle_Disable, GUILayout.Width(cellWidth)));
+				version.revised = Convert.ToInt32(GUILayout.TextField(string.Format("{0}", version.revised), GUILayout.Width(cellWidth)));
                 version.stages = (VersionStages)EditorGUILayout.EnumPopup(version.stages, GUILayout.Width(cellWidth));
                 GUILayout.EndHorizontal();
             }

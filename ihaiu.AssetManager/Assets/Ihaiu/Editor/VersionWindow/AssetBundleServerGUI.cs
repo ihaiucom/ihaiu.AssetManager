@@ -89,6 +89,7 @@ namespace Ihaiu.Assets
                 if (GUILayout.Button("关闭服务器", GUILayout.MinHeight(50), GUILayout.MaxWidth(200)))
                 {
                     LaunchAssetBundleServer.KillRunningAssetBundleServer();
+                    LaunchCheckServer.KillRunningServer();
                 }
 
                 GUILayout.Space(20);
@@ -114,6 +115,7 @@ namespace Ihaiu.Assets
                 {
                     LaunchAssetBundleServer.ServerRootPath = selectRoot;
                     LaunchAssetBundleServer.Run();
+                    LaunchCheckServer.Run();
                 }
                 HGUILayout.EndCenterHorizontal();
 

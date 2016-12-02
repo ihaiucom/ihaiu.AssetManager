@@ -33,18 +33,14 @@ namespace Ihaiu.Assets
 
                 if (currentDvancedSettingData.GetValue(DvancedSettingType.Set_AssetBundleName))
                 {
-                    AssetBundleEditor.SetNames();
+                    AssetBundleEditor.SetNames_Develop();
                 }
 
-                if (currentDvancedSettingData.GetValue(DvancedSettingType.GeneratorStreamingAssetsFilesCSV))
+                if (currentDvancedSettingData.GetValue(DvancedSettingType.GeneratorLoadAssetListCsv))
                 {
-                    FilesCsvForStreamingAssets.Generator(true);
+                    LoadAssetListCsv.Generator();
                 }
 
-                if (currentDvancedSettingData.GetValue(DvancedSettingType.GeneratorResourcesFilesCSV))
-                {
-                    FilesCsvForResources.Generator();
-                }
             }
             HGUILayout.EndCenterHorizontal();
 

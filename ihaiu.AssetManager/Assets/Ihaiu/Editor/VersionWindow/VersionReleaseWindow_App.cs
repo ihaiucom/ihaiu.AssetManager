@@ -89,18 +89,6 @@ namespace Ihaiu.Assets
                     AssetDatabase.Refresh();
                 }
 
-
-                if (currentDvancedSettingData.GetValue(DvancedSettingType.AB_luacode))
-                {
-                    AB.Lua();
-                }
-
-                if (currentDvancedSettingData.GetValue(DvancedSettingType.AB_config))
-                {
-                    AB.Config();
-                }
-
-
                 if (currentDvancedSettingData.GetValue(DvancedSettingType.Clear_AssetBundleName))
                 {
                     AssetBundleEditor.ClearAssetBundleNames();
@@ -118,6 +106,19 @@ namespace Ihaiu.Assets
                     AssetBundleEditor.BuildAssetBundles();
                 }
 
+                if (currentDvancedSettingData.GetValue(DvancedSettingType.AB_luacode))
+                {
+                    AB.Lua();
+                }
+
+                if (currentDvancedSettingData.GetValue(DvancedSettingType.AB_config))
+                {
+                    AB.Config();
+                }
+
+
+              
+
                 if (currentDvancedSettingData.GetValue(DvancedSettingType.GameConstConfig))
                 {
                     GameConstConfig config = GameConstConfig.Load();
@@ -127,16 +128,16 @@ namespace Ihaiu.Assets
                 }
 
 
+                if (currentDvancedSettingData.GetValue(DvancedSettingType.GeneratorLoadAssetListCsv))
+                {
+                    LoadAssetListCsv.Generator();
+                }
 
                 if (currentDvancedSettingData.GetValue(DvancedSettingType.GeneratorStreamingAssetsFilesCSV))
                 {
                     FilesCsvForStreamingAssets.Generator();
                 }
 
-                if (currentDvancedSettingData.GetValue(DvancedSettingType.GeneratorResourcesFilesCSV))
-                {
-                    FilesCsvForResources.Generator();
-                }
 
                 if (currentDvancedSettingData.GetValue(DvancedSettingType.PlayerSettings))
                 {

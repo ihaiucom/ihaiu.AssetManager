@@ -74,6 +74,16 @@ namespace Ihaiu.Assets
             }
         }
 
+        public void Remove(string path)
+        {
+            if (dict.ContainsKey(path))
+            {
+                AssetFile asset = dict[path];
+                list.Remove(asset);
+                dict.Remove(path);
+            }
+        }
+
 
         public void Save(string path)
         {
@@ -94,6 +104,9 @@ namespace Ihaiu.Assets
 
         public static AssetFileList Read(string path)
         {
+            if (!File.Exists(path))
+                return new AssetFileList();
+            
             using (FileStream fsRead = new FileStream(path, FileMode.Open))
             {
                 int fsLen = (int)fsRead.Length;

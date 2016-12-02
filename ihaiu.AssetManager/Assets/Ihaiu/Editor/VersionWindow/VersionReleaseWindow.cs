@@ -11,7 +11,7 @@ namespace Ihaiu.Assets
     public partial class VersionReleaseWindow : EditorWindow
     {
         public static VersionReleaseWindow window;
-        [MenuItem ("AssetManager/版本设置面板", false, 900)]
+        [MenuItem ("资源管理/版本设置面板", false, 900)]
         public static void Open () 
         {
             window = EditorWindow.GetWindow <VersionReleaseWindow>("版本设置");
@@ -50,24 +50,11 @@ namespace Ihaiu.Assets
 
 
 
-        public bool autoSelectPlatform = true;
-        public int runtimePlatformIndex = Platform.GetRuntimePlatformIndex(Platform.CurrentRuntimePlatform);
         public RuntimePlatform runtimePlatform
         {
             get
             {
-                if (autoSelectPlatform)
-                    return Platform.GetRuntimePlatform(EditorUserBuildSettings.activeBuildTarget);
-                
-                return Platform.GetRuntimePlatform(runtimePlatformIndex);
-            }
-        }
-
-        public BuildTarget buildTarget
-        {
-            get
-            {
-                return Platform.GetBuildTarget(runtimePlatform);
+                return Platform.GetRuntimePlatform(EditorUserBuildSettings.activeBuildTarget);
             }
         }
 
@@ -76,8 +63,8 @@ namespace Ihaiu.Assets
         #region 高级设置
         public enum DvancedSettingType
         {
-            [HelpAttribute("生成Resources files.csv")]
-            GeneratorResourcesFilesCSV,
+            [HelpAttribute("生成LoadAssetList.csv")]
+            GeneratorLoadAssetListCsv,
             [HelpAttribute("生成StreamingAssets files.csv")]
             GeneratorStreamingAssetsFilesCSV,
             [HelpAttribute("修改game_const.json")]
@@ -122,7 +109,7 @@ namespace Ihaiu.Assets
         }
 
         public string[] davancedSetingNames = new string[]{ 
-            "生成Resources files.csv",
+            "生成LoadAssetList.csv",
             "生成StreamingAssets files.csv",
             "修改game_const.json",
             "生成版本信息文件",
@@ -211,11 +198,8 @@ namespace Ihaiu.Assets
 
                     DvancedSettingData data = new DvancedSettingData(TabType.Develop);
                     _dvancedSettingDataDict.Add(data.tabType, data);
-                    data.Add(CreateDvancedSettingItem(DvancedSettingType.Clear_AssetBundleName));
-                    data.Add(CreateDvancedSettingItem(DvancedSettingType.Set_AssetBundleName));
                     data.Add(CreateDvancedSettingItem(DvancedSettingType.GameConstConfig));
-                    data.Add(CreateDvancedSettingItem(DvancedSettingType.GeneratorStreamingAssetsFilesCSV));
-                    data.Add(CreateDvancedSettingItem(DvancedSettingType.GeneratorResourcesFilesCSV));
+                    data.Add(CreateDvancedSettingItem(DvancedSettingType.GeneratorLoadAssetListCsv));
 
 
                     data = new DvancedSettingData(TabType.App);
@@ -229,8 +213,8 @@ namespace Ihaiu.Assets
                     data.Add(CreateDvancedSettingItem(DvancedSettingType.AB_luacode));
                     data.Add(CreateDvancedSettingItem(DvancedSettingType.AB_config));
                     data.Add(CreateDvancedSettingItem(DvancedSettingType.GameConstConfig));
+                    data.Add(CreateDvancedSettingItem(DvancedSettingType.GeneratorLoadAssetListCsv));
                     data.Add(CreateDvancedSettingItem(DvancedSettingType.GeneratorStreamingAssetsFilesCSV));
-                    data.Add(CreateDvancedSettingItem(DvancedSettingType.GeneratorResourcesFilesCSV));
                     data.Add(CreateDvancedSettingItem(DvancedSettingType.PlayerSettings));
                     data.Add(CreateDvancedSettingItem(DvancedSettingType.PlayerSettingsVersion));
                     data.Add(CreateDvancedSettingItem(DvancedSettingType.GenerateVersionInfo));
@@ -248,8 +232,8 @@ namespace Ihaiu.Assets
                     data.Add(CreateDvancedSettingItem(DvancedSettingType.AB_luacode));
                     data.Add(CreateDvancedSettingItem(DvancedSettingType.AB_config));
                     data.Add(CreateDvancedSettingItem(DvancedSettingType.GameConstConfig));
+                    data.Add(CreateDvancedSettingItem(DvancedSettingType.GeneratorLoadAssetListCsv));
                     data.Add(CreateDvancedSettingItem(DvancedSettingType.GeneratorStreamingAssetsFilesCSV));
-                    data.Add(CreateDvancedSettingItem(DvancedSettingType.GeneratorResourcesFilesCSV, false));
                     data.Add(CreateDvancedSettingItem(DvancedSettingType.GenerateVersionInfo));
                     data.Add(CreateDvancedSettingItem(DvancedSettingType.GeneratorUpdateAssetList));
                 }
@@ -260,6 +244,8 @@ namespace Ihaiu.Assets
         public DvancedSettingData currentDvancedSettingData;
         #endregion
 
+
+
         Vector2 scrollPos;
         void OnGUI ()
         {
@@ -269,7 +255,13 @@ namespace Ihaiu.Assets
 
             TabType tabType = HGUILayout.TabGroup<TabType>(tabGroupData);
 
+           
+           
+
+
             scrollPos = EditorGUILayout.BeginScrollView(scrollPos);
+
+
             GUILayout.Space(20);
 
 
@@ -291,7 +283,7 @@ namespace Ihaiu.Assets
 
 
 
-            currentDvancedSettingData.foldout = EditorGUILayout.Foldout(currentDvancedSettingData.foldout, "高级设置");
+            currentDvancedSettingData.foldout = EditorGUILayout.Foldout(currentDvancedSettingData.foldout, "执行选项");
 
             if (currentDvancedSettingData.foldout)
             {
@@ -346,9 +338,22 @@ namespace Ihaiu.Assets
                                 break;
 
                             case DvancedSettingType.Set_AssetBundleName:
-                                AssetBundleEditor.SetNames();
+                                switch (tabType)
+                                {
+                                    case TabType.Develop:
+                                        AssetBundleEditor.SetNames_Develop();
+                                        break;
+                                    default:
+                                        AssetBundleEditor.SetNames();
+                                        break;
+                                }
+
                                 break;
 
+
+                            case DvancedSettingType.AB_AssetBundle:
+                                AssetBundleEditor.BuildAssetBundles();
+                                break;
 
 
 
@@ -379,22 +384,12 @@ namespace Ihaiu.Assets
 
 
                             case DvancedSettingType.GeneratorStreamingAssetsFilesCSV:
-                                switch (tabType)
-                                {
-                                    case TabType.App:
-                                    case TabType.Patch:
-                                        FilesCsvForStreamingAssets.Generator();
-                                        break;
-
-                                    case TabType.Develop:
-                                        FilesCsvForStreamingAssets.Generator(true);
-                                        break;
-                                }
+                                FilesCsvForStreamingAssets.Generator();
                                 break;
 
 
-                            case DvancedSettingType.GeneratorResourcesFilesCSV:
-                                FilesCsvForResources.Generator();
+                            case DvancedSettingType.GeneratorLoadAssetListCsv:
+                                LoadAssetListCsv.Generator();
                                 break;
 
 
@@ -490,13 +485,13 @@ namespace Ihaiu.Assets
                 PlayerSettings.bundleIdentifier = "com.mb.crsg";
 
 
-                Texture2D[] icons = new Texture2D[1];
-                icons[0] = AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/Game/PlayerSettings/icon.png");
-                PlayerSettings.SetIconsForTargetGroup(BuildTargetGroup.iOS, icons);
-                PlayerSettings.SetIconsForTargetGroup(BuildTargetGroup.Standalone, icons);
-
-                Texture2D splash = AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/Game/PlayerSettings/splash.jpg");
-                PlayerSettings.virtualRealitySplashScreen = splash;
+//                Texture2D[] icons = new Texture2D[1];
+//                icons[0] = AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/Game/PlayerSettings/icon.png");
+//                PlayerSettings.SetIconsForTargetGroup(BuildTargetGroup.iOS, icons);
+//                PlayerSettings.SetIconsForTargetGroup(BuildTargetGroup.Standalone, icons);
+//
+//                Texture2D splash = AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/Game/PlayerSettings/splash.jpg");
+//                PlayerSettings.virtualRealitySplashScreen = splash;
             }
 
 
@@ -514,6 +509,14 @@ namespace Ihaiu.Assets
         void SetPlayerSettingsVersion(Version version)
         {
             PlayerSettings.bundleVersion = version.ToConfig();
+            if (runtimePlatform == RuntimePlatform.Android)
+            {
+                PlayerSettings.Android.bundleVersionCode = version.ToConfig().Replace(".", "").ToInt32();
+            }
+            else if(runtimePlatform == RuntimePlatform.IPhonePlayer)
+            {
+                PlayerSettings.iOS.buildNumber = version.ToConfig().Replace(".", "");
+            }
         }
 
         bool assetBundleServer_foldout = true;

@@ -8,12 +8,12 @@ using System.Text;
 
 namespace Ihaiu.Assets
 {
-	public partial class AB 
-	{
+    public partial class AB 
+    {
 
-		
-		public static void Lua()
-		{
+
+        public static void Lua()
+        {
             string luaRoot = AssetManagerSetting.EditorRootLua;
             string bytesRoot = AssetManagerSetting.EditorRootLuaBytes;
 
@@ -23,64 +23,64 @@ namespace Ihaiu.Assets
                 return;
             }
 
-			List<string> luaList = new List<string>();
-			RecursiveLua(luaRoot, luaList);
+            List<string> luaList = new List<string>();
+            RecursiveLua(luaRoot, luaList);
 
 
-			
-			if (Directory.Exists(bytesRoot)) PathUtil.DeleteDirectory(bytesRoot);
-			Directory.CreateDirectory(bytesRoot);
 
-			for(int i = 0; i < luaList.Count; i ++)
-			{
-				string ext = Path.GetExtension(luaList[i]);
-				if(ext.Equals(".lua"))
-				{
-					string sourcePath = luaList[i];
+            if (Directory.Exists(bytesRoot)) PathUtil.DeleteDirectory(bytesRoot);
+            Directory.CreateDirectory(bytesRoot);
+
+            for(int i = 0; i < luaList.Count; i ++)
+            {
+                string ext = Path.GetExtension(luaList[i]);
+                if(ext.Equals(".lua"))
+                {
+                    string sourcePath = luaList[i];
                     string destPath = PathUtil.ChangeExtension(sourcePath.Replace(luaRoot, bytesRoot), AssetManagerSetting.BytesExt);
-					
-					PathUtil.CheckPath(destPath, true);
-					File.Copy(sourcePath, destPath, true);
-				}
-			}
 
-			
-			AssetDatabase.Refresh();
-			
-			List<string> luaBytesList = new List<string>();
-			RecursiveLuaBytes(bytesRoot, luaBytesList);
+                    PathUtil.CheckPath(destPath, true);
+                    File.Copy(sourcePath, destPath, true);
+                }
+            }
+
+
+            AssetDatabase.Refresh();
+
+            List<string> luaBytesList = new List<string>();
+            RecursiveLuaBytes(bytesRoot, luaBytesList);
 
             string assetBundleName =  AssetManagerSetting.LuaAssetBundleName;
 
-			AssetBundleBuild[] builds = new AssetBundleBuild[1];
-			builds[0].assetBundleName =  assetBundleName;
-			builds[0].assetNames = luaBytesList.ToArray();
-			Debug.Log("luaBytesList.Count=" + luaBytesList.Count);
-			
-			string outPath = bytesRoot;
-			PathUtil.CheckPath(outPath, false);
-            BuildPipeline.BuildAssetBundles(outPath, builds, BuildAssetBundleOptions.None, EditorUserBuildSettings.activeBuildTarget);
-			AssetDatabase.Refresh();
+            AssetBundleBuild[] builds = new AssetBundleBuild[1];
+            builds[0].assetBundleName =  assetBundleName;
+            builds[0].assetNames = luaBytesList.ToArray();
+            Debug.Log("luaBytesList.Count=" + luaBytesList.Count);
 
-			string inAssetBundlePath = bytesRoot + "/" + assetBundleName;
+            string outPath = bytesRoot;
+            PathUtil.CheckPath(outPath, false);
+            BuildPipeline.BuildAssetBundles(outPath, builds, BuildAssetBundleOptions.None, EditorUserBuildSettings.activeBuildTarget);
+            AssetDatabase.Refresh();
+
+            string inAssetBundlePath = bytesRoot + "/" + assetBundleName;
             string outBytesPath = AssetManagerSetting.EditorGetAbsolutePlatformPath(assetBundleName);
-			byte[] bytes = File.ReadAllBytes(inAssetBundlePath);
+            byte[] bytes = File.ReadAllBytes(inAssetBundlePath);
 
             bytes = EncryptBytes(bytes, SKey);
 
-			PathUtil.CheckPath(outBytesPath, true);
-			File.WriteAllBytes(outBytesPath, bytes);
+            PathUtil.CheckPath(outBytesPath, true);
+            File.WriteAllBytes(outBytesPath, bytes);
 
             AssetDatabase.Refresh();
-			
-			if (Directory.Exists(bytesRoot)) PathUtil.DeleteDirectory(bytesRoot);
-		
-		}
+
+            if (Directory.Exists(bytesRoot)) PathUtil.DeleteDirectory(bytesRoot);
+
+        }
 
 
 
 
-	}
+    }
 
 	
 

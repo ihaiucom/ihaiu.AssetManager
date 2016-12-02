@@ -14,7 +14,7 @@ namespace Ihaiu.Assets
 {
 	internal class LaunchAssetBundleServer : ScriptableSingleton<LaunchAssetBundleServer>
 	{
-        const string kLocalAssetbundleServerMenu = "AssetManager/Local AssetBundle Server";
+        const string kLocalAssetbundleServerMenu = "资源管理/Local AssetBundle Server";
 
         private static string _serverRootPath;
         public static string ServerRootPath
@@ -126,7 +126,8 @@ namespace Ihaiu.Assets
             string args = ServerRootPath;
             UnityEngine.Debug.Log(pathToAssetServer);
             args = string.Format("\"{0}\" {1}", args, Process.GetCurrentProcess().Id);
-            UnityEngine.Debug.Log(args);
+            UnityEngine.Debug.Log("args=" + args);
+            UnityEngine.Debug.Log("GetMonoInstallation=" + MonoInstallationFinder.GetMonoInstallation("MonoBleedingEdge"));
 			ProcessStartInfo startInfo = ExecuteInternalMono.GetProfileStartInfoForMono(MonoInstallationFinder.GetMonoInstallation("MonoBleedingEdge"), "4.0", pathToAssetServer, args, true);
             startInfo.WorkingDirectory = ServerRootPath;
 			startInfo.UseShellExecute = false;
@@ -176,7 +177,9 @@ namespace Ihaiu.Assets
             {
                 versionInfo.updateLoadUrl = downloadURL + "StreamingAssets/";
             }
-            versionInfo.Save(ServerRootPath);
+
+            string versionPath = ServerRootPath + "/kcj_conf/" + Platform.PlatformDirectoryName.ToLower() + "/" + gameConstConfig.CenterName + "/" + AssetManagerSetting.VersionInfoName;
+            versionInfo.Save(versionPath);
         }
 
 	}

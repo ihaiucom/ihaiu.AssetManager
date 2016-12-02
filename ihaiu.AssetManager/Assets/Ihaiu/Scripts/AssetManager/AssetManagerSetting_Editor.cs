@@ -16,18 +16,22 @@ namespace Ihaiu.Assets
 
 
         /** 服务器--执行文件 */
-        public static string EditorAssetBundleServerExe = "Ihaiu/Editor/AssetBundleServer/AssetBundleServer.exe";
+        public static string EditorCheckServerExe = "Game/Scripts/CC/Editor/AssetBundleServer/UdpServer.exe";
+        /** 服务器--执行文件 */
+        public static string EditorAssetBundleServerExe = "Game/Scripts/CC/Editor/AssetBundleServer/AssetBundleServer.exe";
         /** 服务器--目录 */
         public static string EditorAssetBundleServerRoot_WWW                = Path.Combine (Application.dataPath.Substring(0, Application.dataPath.LastIndexOf('/')), "www");
         /** 服务器--目录 */
         public static string EditorAssetBundleServerRoot_StreamingAssets    = Application.streamingAssetsPath;
+
+        /** 目录--Resources */
+        public static string EditorRootResources      = "Assets/Game/Resources";
 
         /** 目录--MResources */
         public static string EditorRootMResources      = "Assets/Game/MResources";
 
         /** 目录--Config */
         public static string EditorRootConfig           = "Assets/Game/Config";
-        public static string EditorRootConfigBytes      = "Assets/Game/ConfigBytes";
 
         /** 目录--Lua */
         public static string EditorRootLua              = "Assets/Game/Lua";
@@ -40,7 +44,13 @@ namespace Ihaiu.Assets
         /** 目录--StreamingAssets/Platform/XXX */
         public static string EditorRootPlatform        = EditorRootStream + "/" + Platform.PlatformDirectory;
 
-        public static string EditorRootVersion         = "version/" + Platform.PlatformDirectoryName;
+        public static string EditorRootVersion
+        {
+            get
+            {
+                return "version/" + Platform.PlatformDirectoryName + "/" + Games.GameConstConfig.Load().CenterName;
+            }
+        }
 
         /** 资源列表--Resources */
         public static string EditorFileCsvForResource = "Assets/Game/Resources/files.csv";
@@ -48,6 +58,10 @@ namespace Ihaiu.Assets
         public static string EditorFileCsvForStreaming = EditorRootPlatform + "/files.csv";
         /** 资源列表--UpdateList */
         public static string EditorUpdateAssetListPath     = EditorRootPlatform + "/UpdateAssetList.csv";
+        /** 资源列表--LoadList */
+        public static string EditorLoadAssetListPath     = EditorRootPlatform + "/LoadAssetList.csv";
+        /** 资源列表--DontUnloadList */
+        public static string EditorDontUnloadAssetListPath     = EditorRootPlatform + "/DontUnloadAssetList.csv";
 
 
         /** 获取绝对路径--StreamingAssets
@@ -70,18 +84,33 @@ namespace Ihaiu.Assets
             return EditorRootPlatform + "/" + assetBundleName;
         }
 
-       
+
         /** 获取Config文件路径 */
         public static string EditorGetConfigPath(string path)
         {
-            return path.Replace("Config/", EditorRootConfig + "/");
+
+            path = path.Replace("Config/", EditorRootConfig + "/");
+            string result = path + ".csv";
+            if (File.Exists(result))
+                return result;
+
+
+            result = path + ".json";
+            if (File.Exists(result))
+                return result;
+
+            result = path + ".txt";
+            if (File.Exists(result))
+                return result;
+
+            return path;
         }
 
 
         /** 获取版本文件列表路径 */
         public static string EditorGetVersionFileListPath(string version)
         {
-            return EditorRootVersion + "/" + version  + ".csv";
+            return EditorRootVersion + "/"  + version  + ".csv";
         }
 
         public static string EditorToString()
@@ -96,7 +125,7 @@ namespace Ihaiu.Assets
             info += "\n";
             info += "\nAssetManagerSetting.EditorRootMResources : " + EditorRootMResources;
             info += "\nAssetManagerSetting.EditorRootConfig : " + EditorRootConfig;
-            info += "\nAssetManagerSetting.EditorRootConfigBytes : " + EditorRootConfigBytes;
+            info += "\nAssetManagerSetting.RootConfigBytes : " + RootConfigBytes;
             info += "\nAssetManagerSetting.EditorRootLua : " + EditorRootLua;
             info += "\nAssetManagerSetting.EditorRootLuaBytes : " + EditorRootLuaBytes;
             info += "\nAssetManagerSetting.EditorRootStream : " + EditorRootStream;

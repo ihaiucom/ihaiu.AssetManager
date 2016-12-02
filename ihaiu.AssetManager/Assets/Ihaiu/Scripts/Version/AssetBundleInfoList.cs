@@ -48,7 +48,7 @@ namespace Ihaiu.Assets
 
         public void Add(AssetBundleInfo item)
         {
-            if (dict.ContainsKey(item.path))
+            if (dict.ContainsKey(item.assetBundleName))
             {
                 AssetBundleInfo asset = dict[item.assetBundleName];
                 asset.assetBundleName = item.assetBundleName;

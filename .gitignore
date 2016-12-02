@@ -1,0 +1,6 @@
+.DS_Store
+*/.DS_Store
+ihaiu.AssetManager/obj*
+ihaiu.AssetManager/Library
+ihaiu.AssetManager/Library*
+ihaiu.AssetManager/Temp*

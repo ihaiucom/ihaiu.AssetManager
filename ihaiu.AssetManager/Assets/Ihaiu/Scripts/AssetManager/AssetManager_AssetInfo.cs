@@ -17,46 +17,29 @@ namespace Ihaiu.Assets
         private Dictionary<string, AssetInfo> assetInfoDict = new Dictionary<string, AssetInfo>();
         private IEnumerator ReadFiles()
         {
-            TextAsset textAsset = Resources.Load<TextAsset>(AssetManagerSetting.FilesCsvForResource);
-            if(textAsset != null)
-            {
-                ParseInfo(textAsset.text, AssetLoadType.Resources);
-            }
-
-
-            string path = AssetManagerSetting.FilesCsvForStreaming;
+            string path = AssetManagerSetting.LoadAssetListURL;
             WWW www = new WWW(path);
             yield return www;
 
             if(string.IsNullOrEmpty(www.error))
             {
-                ParseInfo(www.text, AssetLoadType.AssetBundle);
+                ParseInfo(www.text);
             }
 
+            path = AssetManagerSetting.DontUnloadAssetListURL;
+            www = new WWW(path);
+            yield return www;
+
+            if(string.IsNullOrEmpty(www.error))
+            {
+                AssetManagerSetting.dontUnloadAssetFileList = AssetFileList.Deserialize(www.text);
+            }
         }
 
-        private void ParseInfo(string p, AssetLoadType loadType)
+        private void ParseInfo(string p)
         {
-
-            // path;objType
-            if (loadType == AssetLoadType.Resources)
-            {
-                ParseInfoResources(p);
-            }
-            //path;md5;objType;assetName;assetBundleName
-            else
-            {
-                ParseInfoStreaming(p);
-            }
-
-        }
-
-
-
-        //path;md5;objType;assetName;assetBundleName
-        private void ParseInfoStreaming(string p)
-        {
-            string path,  objType, assetName, assetBundleName;
+            AssetLoadType loadType;
+            string path,  objType, assetBundleName, assetName, ext;
             string filename;
 
             using(StringReader stringReader = new StringReader(p))
@@ -68,16 +51,26 @@ namespace Ihaiu.Assets
                     {
                         string[] seg = line.Split(';');
                         int length = seg.Length;
-                        path = seg[0];
+                        loadType = (AssetLoadType) Convert.ToInt32(seg[0]);
+                        path = seg[1];
                         objType         = length > 2 ? seg[2] : string.Empty;
                         assetBundleName = length > 3 ? seg[3] : string.Empty;
                         assetName       = length > 4 ? seg[4] : string.Empty;
 
 
-                        filename = path.Replace(AssetManagerSetting.AssetbundleExt, string.Empty);
-                        filename = filename.Replace("{0}/", "").ToLower();
+                        filename = path.Replace("{0}/", "").ToLower();
 
-                        path = AssetManagerSetting.GetPlatformPath(path);
+                        #if UNITY_EDITOR
+                        ext             = length > 5 ? seg[5] : string.Empty;
+                        if (AssetManagerSetting.EditorSimulateAssetBundle)
+                        {
+                            path = string.Format(path, AssetManagerSetting.EditorRootMResources) + ext;
+                        }
+                        else
+                        #endif
+                        {
+                            path = AssetManagerSetting.GetPlatformPath(path);
+                        }
 
 
                         AssetInfo assetInfo;
@@ -89,71 +82,27 @@ namespace Ihaiu.Assets
                         }
 
                         assetInfo.path           = path;
-                        assetInfo.loadType       = AssetLoadType.AssetBundle;
+                        assetInfo.loadType       = loadType;
                         assetInfo.objType        = AssetManagerSetting.GetObjType(objType);
 
                         assetInfo.assetName          = assetName;
                         assetInfo.assetBundleName    = assetBundleName;
 
-                        assetInfo.isConfig = AssetManagerSetting.IsConfigFile(filename);
-
-
 
                     }
                 }
             }
 
+
         }
 
-        // path;objType
-        private void ParseInfoResources(string p)
-        {
-            string path, objType;
-            string filename;
-
-
-            using(StringReader stringReader = new StringReader(p))
-            {
-                while(stringReader.Peek() >= 0)
-                {
-                    string line = stringReader.ReadLine();
-
-                    if (string.IsNullOrEmpty(line))
-                        continue;
-
-
-                    string[] seg = line.Split(';');
-                    path = seg[0];
-                    objType = seg.Length > 1 ? seg[1] : string.Empty;
-
-                    filename = path;
-                    filename = filename.ToLower();
-
-
-
-                    AssetInfo assetInfo;
-                    if(!assetInfoDict.TryGetValue(filename, out assetInfo))
-                    {
-                        assetInfo = new AssetInfo();
-                        assetInfo.name = filename;
-                        assetInfoDict.Add(filename, assetInfo);
-                    }
-
-                    assetInfo.path = path;
-                    assetInfo.loadType = AssetLoadType.Resources;
-                    assetInfo.objType = AssetManagerSetting.GetObjType(objType);
-
-                    assetInfo.isConfig = AssetManagerSetting.IsConfigFile(filename);
-                }
-            }
-        }
 
 
         //-----------------------------------
 
         Type tmpObjType = typeof(System.Object);
 
-       
+
 
         /// <summary>
         /// 加载
@@ -218,7 +167,15 @@ namespace Ihaiu.Assets
         /// <param name="type">资源类型.</param>
         public void Load(string filename, Action<string, object, object[]> callback, object[] callbackArgs, Type type)
         {
-           
+            if (string.IsNullOrEmpty(filename))
+            {
+                if (callback != null)
+                    callback(filename, null, callbackArgs);
+
+                Debug.LogErrorFormat("Load filename=" + filename);
+                return;
+            }
+
             if(AssetManagerSetting.IsConfigFile(filename))
             {
                 LoadConfig(filename, callback, callbackArgs);
@@ -230,13 +187,15 @@ namespace Ihaiu.Assets
             AssetInfo fileInfo;
             if(!assetInfoDict.TryGetValue(filenameLower, out fileInfo))
             {
-//                Debug.LogError("[AssetMananger]资源配置不存在或者加载出错 name="+filenameLower + "   assetInfo=" + fileInfo );
+                //                Debug.LogError("[AssetMananger]资源配置不存在或者加载出错 name="+filenameLower + "   assetInfo=" + fileInfo );
                 if (callback != null && fileInfo == null)
                 {
                     LoadResourceAsync(filename, type, callback, callbackArgs);
                 }
                 return;
             }
+
+            AddToModule(fileInfo);
 
             if(fileInfo.objType != null &&  (type == null || type == tmpObjType))
             {
@@ -246,7 +205,28 @@ namespace Ihaiu.Assets
 
             if(fileInfo.loadType == AssetLoadType.AssetBundle)
             {
-                LoadAssetAsync(fileInfo.assetBundleName, fileInfo.assetName, type, callback, callbackArgs);
+                #if UNITY_EDITOR
+                if (AssetManagerSetting.EditorSimulateAssetBundle)
+                {
+                    try
+                    {
+                        UnityEngine.Object target = UnityEditor.AssetDatabase.LoadAssetAtPath(fileInfo.path, type);
+
+                        if(callback != null)
+                        {
+                            callback(filename, target, callbackArgs);
+                        }
+                    }
+                    catch(Exception e)
+                    {
+                        Debug.LogErrorFormat("fileInfo.path={0}  e={1}", fileInfo.path, e);
+                    }
+                }
+                else
+                #endif
+                {
+                    LoadAssetAsync(filename, fileInfo.assetBundleName, fileInfo.assetName, type, callback, callbackArgs);
+                }
             }
             else
             {
@@ -255,13 +235,36 @@ namespace Ihaiu.Assets
         }
 
 
+
+
         public void Unload(string filename)
         {
-            Unload(filename, tmpObjType);
+            Unload(filename, tmpObjType, 1, false);
         }
+
+        public void Unload(string filename, int count)
+        {
+            Unload(filename, tmpObjType, count, false);
+        }
+
+
+
+        public void Unload(string filename, int count, bool isSetLastTime)
+        {
+            Unload(filename, tmpObjType, count, isSetLastTime);
+        }
+
+
 
         public void Unload(string filename, Type type)
         {
+            Unload(filename, type, 1, false);
+        }
+
+        public void Unload(string filename, Type type, int count, bool isSetLastTime)
+        {
+            UnloadOperation(filename, isSetLastTime);
+
             string filenameLower = filename.ToLower();
             AssetInfo fileInfo;
             if (!assetInfoDict.TryGetValue(filenameLower, out fileInfo))
@@ -271,21 +274,35 @@ namespace Ihaiu.Assets
             }
 
 
+            if(fileInfo.objType != null &&  (type == null || type == tmpObjType))
+            {
+                type = fileInfo.objType;
+            }
+
 
             if(fileInfo.loadType == AssetLoadType.AssetBundle)
             {
-                UnloadAssetBundle(fileInfo.assetBundleName);
+                UnloadAssetBundle(fileInfo.assetBundleName, fileInfo.assetName, type, count, isSetLastTime);
             }
             else
             {
-
-                if(fileInfo.objType != null &&  (type == null || type == tmpObjType))
-                {
-                    type = fileInfo.objType;
-                }
-
-                UnloadResource(fileInfo.path, type);
+                UnloadResource(fileInfo.path, type, count, isSetLastTime);
             }
+        }
+
+
+
+
+
+        public bool IsFileExist(string filename)
+        {
+            filename = filename.ToLower();
+            AssetInfo fileInfo;
+            if(!assetInfoDict.TryGetValue(filename, out fileInfo))
+            {
+                return false;
+            }
+            return true;
         }
 
     }

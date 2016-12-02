@@ -81,7 +81,7 @@ namespace Games
 
         private byte[] DecryptBytes(byte[] data, string sKey = null)
         {
-            if (sKey == null) sKey = "ihaiucom";
+            if (sKey == null) sKey = "zengfeng";
 
             DESCryptoServiceProvider DES = new DESCryptoServiceProvider();
             DES.Key = ASCIIEncoding.ASCII.GetBytes(sKey);

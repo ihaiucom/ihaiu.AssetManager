@@ -46,9 +46,11 @@ TextureImporter:
   spriteBorder: {x: 68, y: 71, z: 58, w: 71}
   spritePixelsToUnits: 100
   alphaIsTransparency: 1
+  spriteTessellationDetail: -1
   textureType: 8
   buildTargetSettings: []
   spriteSheet:
+    serializedVersion: 2
     sprites: []
     outline: []
   spritePackingTag: 
