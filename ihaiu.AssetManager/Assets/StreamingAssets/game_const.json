@@ -1,5 +1,5 @@
 {
-    "DevelopMode": false,
+    "DevelopMode": true,
     "TestVersionMode": false,
     "AppName": "ihaiu",
     "AppPrefix": "ihaiu_",
