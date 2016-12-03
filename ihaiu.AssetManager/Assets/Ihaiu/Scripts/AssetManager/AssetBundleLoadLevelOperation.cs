@@ -25,7 +25,7 @@ namespace Ihaiu.Assets
 			if (m_Request != null)
 				return false;
 
-			LoadedAssetBundle bundle = assetBundleManager.GetLoadedAssetBundle (m_AssetBundleName, out m_DownloadingError);
+            LoadedAssetBundle bundle = assetBundleManager.GetLoadedAssetBundle (m_AssetBundleName, out m_DownloadingError, false);
 			if (bundle != null)
 			{
 				if (m_IsAdditive)

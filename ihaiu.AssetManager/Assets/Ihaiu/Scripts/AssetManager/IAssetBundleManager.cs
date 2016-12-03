@@ -15,7 +15,7 @@ namespace Ihaiu.Assets
 		List<string> GetWaitLoadResDependencies(string assetBundleName);
 
 		/** 获取“资源包信息”、检测加载状态 */
-		LoadedAssetBundle GetLoadedAssetBundle(string assetBundleName, out string error);
+        LoadedAssetBundle GetLoadedAssetBundle(string assetBundleName, out string error, bool isTryForceGetBundle);
 
 		/** 卸载资源包和他依赖的资源包 */
 		void UnloadAssetBundle(string assetBundleName);

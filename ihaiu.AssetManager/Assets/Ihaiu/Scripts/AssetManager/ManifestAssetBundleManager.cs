@@ -199,7 +199,7 @@ namespace Ihaiu.Assets
 
 
         /** 获取“资源包信息”、检测加载状态 */
-        public LoadedAssetBundle GetLoadedAssetBundle (string assetBundleName, out string error)
+        public LoadedAssetBundle GetLoadedAssetBundle (string assetBundleName, out string error, bool isTryForceGetBundle)
         {
             // 如果加载出错，返回空，并返回错
             if (m_DownloadingErrors.TryGetValue(assetBundleName, out error) )
@@ -215,6 +215,11 @@ namespace Ihaiu.Assets
             {
                 //              Debug.Log("bundle loading="+error+",assetBundleName="+assetBundleName);
                 return null;
+            }
+
+            if (isTryForceGetBundle)
+            {
+                return bundle;
             }
 
             // 检查是否有依赖的“资源包”列表, 如果没有依赖，成功加载返回“资源包信息”
@@ -417,7 +422,7 @@ namespace Ihaiu.Assets
         protected void UnloadAssetBundleInternal(string assetBundleName)
         {
             string error;
-            LoadedAssetBundle bundle = GetLoadedAssetBundle(assetBundleName, out error);
+            LoadedAssetBundle bundle = GetLoadedAssetBundle(assetBundleName, out error, false);
             if (bundle == null)
                 return;
 

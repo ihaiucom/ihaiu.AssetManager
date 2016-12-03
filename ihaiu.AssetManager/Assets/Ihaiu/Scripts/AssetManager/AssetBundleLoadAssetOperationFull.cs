@@ -44,11 +44,11 @@ namespace Ihaiu.Assets
 				if (waitTime > 10)
 				{
 					waitTimeError = true;
-					Debug.LogWarningFormat("AssetBundleLoadAssetOperationFull Update 加载超时 {0} WaitLoadResDependencies={1}", ToString(), assetBundleManager.GetWaitLoadResDependencies(m_AssetBundleName).ToStr());
+                    Debug.LogErrorFormat("AssetBundleLoadAssetOperationFull Update 加载超时 {0} WaitLoadResDependencies={1}", ToString(), assetBundleManager.GetWaitLoadResDependencies(m_AssetBundleName).ToStr());
 				}
 			}
 
-			LoadedAssetBundle bundle = assetBundleManager.GetLoadedAssetBundle (m_AssetBundleName, out m_DownloadingError);
+            LoadedAssetBundle bundle = assetBundleManager.GetLoadedAssetBundle (m_AssetBundleName, out m_DownloadingError, waitTimeError);
 			if (bundle != null)
 			{
 				///@TODO: When asset bundle download fails this throws an exception...
