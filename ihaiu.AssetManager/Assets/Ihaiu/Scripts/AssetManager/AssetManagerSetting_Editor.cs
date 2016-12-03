@@ -16,9 +16,9 @@ namespace Ihaiu.Assets
 
 
         /** 服务器--执行文件 */
-        public static string EditorCheckServerExe = "Game/Scripts/CC/Editor/AssetBundleServer/UdpServer.exe";
+        public static string EditorCheckServerExe = "Ihaiu/Editor/AssetBundleServer/UdpServer.exe";
         /** 服务器--执行文件 */
-        public static string EditorAssetBundleServerExe = "Game/Scripts/CC/Editor/AssetBundleServer/AssetBundleServer.exe";
+        public static string EditorAssetBundleServerExe = "Ihaiu/Editor/AssetBundleServer/AssetBundleServer.exe";
         /** 服务器--目录 */
         public static string EditorAssetBundleServerRoot_WWW                = Path.Combine (Application.dataPath.Substring(0, Application.dataPath.LastIndexOf('/')), "www");
         /** 服务器--目录 */

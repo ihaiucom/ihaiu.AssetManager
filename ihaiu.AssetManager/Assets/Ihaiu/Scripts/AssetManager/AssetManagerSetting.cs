@@ -286,10 +286,8 @@ namespace Ihaiu.Assets
         /** 获取服务器版本信息URL */
         public static string GetServerVersionInfoURL(string root, string centerName)
         {
-            return root + "/kcj_conf/" + Platform.PlatformDirectoryName.ToLower() + "/" + centerName + "/" + AssetManagerSetting.VersionInfoName;
+            return root + "/versioninfo/" + Platform.PlatformDirectoryName.ToLower() + "/" + centerName + "/" + AssetManagerSetting.VersionInfoName;
         }
-
-
 
 
         public static string ConfigAssetBundleURL

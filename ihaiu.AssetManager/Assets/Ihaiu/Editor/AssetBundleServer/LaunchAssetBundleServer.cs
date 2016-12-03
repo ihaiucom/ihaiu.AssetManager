@@ -178,7 +178,9 @@ namespace Ihaiu.Assets
                 versionInfo.updateLoadUrl = downloadURL + "StreamingAssets/";
             }
 
-            string versionPath = ServerRootPath + "/kcj_conf/" + Platform.PlatformDirectoryName.ToLower() + "/" + gameConstConfig.CenterName + "/" + AssetManagerSetting.VersionInfoName;
+
+
+            string versionPath = AssetManagerSetting.GetServerVersionInfoURL(ServerRootPath, gameConstConfig.CenterName) ;
             versionInfo.Save(versionPath);
         }
 
