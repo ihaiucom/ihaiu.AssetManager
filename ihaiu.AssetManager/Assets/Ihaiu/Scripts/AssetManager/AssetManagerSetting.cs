@@ -6,7 +6,10 @@ namespace Ihaiu.Assets
 {
     public partial class AssetManagerSetting 
     {
+        /** 是否是测试版本模式 */
         public static bool TestVersionMode = true;
+        /** 加载超时 */
+        public static int LoadTimeOut           = 10;
 
         public static string BytesExt           = ".txt";
         public static string AssetbundleExt     = "-assetbundle";
@@ -370,6 +373,7 @@ namespace Ihaiu.Assets
             info += "\nAssetManagerSetting.IsCacheResourceAsset : " + IsCacheResourceAsset;
             info += "\n";
             info += "\nAssetManagerSetting.TestVersionMode : " + TestVersionMode;
+            info += "\nAssetManagerSetting.LoadTimeOut : " + LoadTimeOut;
             info += "\nAssetManagerSetting.AssetbundleExt : " + AssetbundleExt;
             info += "\nAssetManagerSetting.ConfigAssetBundleName : " + ConfigAssetBundleName;
             info += "\nAssetManagerSetting.LuaAssetBundleName : " + LuaAssetBundleName;

@@ -41,7 +41,7 @@ namespace Ihaiu.Assets
 			if (waitTimeError == false)
 			{
 				waitTime += Time.deltaTime;
-				if (waitTime > 10)
+                if (waitTime > AssetManagerSetting.LoadTimeOut)
 				{
 					waitTimeError = true;
                     Debug.LogErrorFormat("AssetBundleLoadAssetOperationFull Update 加载超时 {0} WaitLoadResDependencies={1}", ToString(), assetBundleManager.GetWaitLoadResDependencies(m_AssetBundleName).ToStr());
