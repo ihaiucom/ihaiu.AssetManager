@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
-using System;
 using System.Collections.Generic;
+using System;
 
 namespace Ihaiu.Assets
 {
@@ -301,6 +301,9 @@ namespace Ihaiu.Assets
 			if (callback != null)
 			{
 				UnityEngine.Object obj = operation.GetAsset<UnityEngine.Object>();
+				if (obj == null) {
+					Debug.LogErrorFormat ("AssetManager_AssetBundle OnLoadAssetAsync obj=null, operation={0}", operation);
+				}
 				callback(assetBundleName, assetName, obj, callbackArgs);
 			}
 		}
@@ -309,6 +312,9 @@ namespace Ihaiu.Assets
 		//=================
 		public void LoadAssetAsync(string filename, string assetBundleName, string assetName, System.Type type, Action<string, object, object[]> callback, params object[] callbackArgs)
 		{
+			if (assetBundleName.IndexOf("runerewardeffect") != -1) {
+				Debug.Log (filename);
+			}
 			if (AssetManagerSetting.IsCacheAssetBundleAsset)
 			{
 				LoadedAssetBundleCache loaded = GetLoadedAssetBundleCache(assetBundleName, assetName, type);
@@ -332,12 +338,20 @@ namespace Ihaiu.Assets
 			if (AssetManagerSetting.IsCacheAssetBundleAsset)
 			{
 				obj = operation.GetAsset<UnityEngine.Object>();
+
+				if (obj == null) {
+					Debug.LogErrorFormat ("AssetManager_AssetBundle OnLoadAssetAsync obj=null, operation={0}", operation);
+				}
 				CreateLoadedAssetBundleCache(assetBundleName, assetName, type, obj);
 			}
 
 			if (callback != null)
 			{
 				if(obj == null) obj = operation.GetAsset<UnityEngine.Object>();
+
+				if (obj == null) {
+					Debug.LogErrorFormat ("AssetManager_AssetBundle OnLoadAssetAsync obj=null, operation={0}", operation);
+				}
 				callback(filename, obj, callbackArgs);
 			}
 		}

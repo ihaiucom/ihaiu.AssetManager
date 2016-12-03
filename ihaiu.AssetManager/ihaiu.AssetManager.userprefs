@@ -1,20 +1,30 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Ihaiu/Scripts/Version/VersionManager.cs">
+  <MonoDevelop.Ide.Workbench>
     <Files>
-      <File FileName="Assets/Ihaiu/Scripts/AssetManager/AssetManagerSetting.cs" Line="289" Column="86" />
-      <File FileName="Assets/Ihaiu/Scripts/AssetManager/AssetManagerSetting_Editor.cs" Line="10" Column="45" />
-      <File FileName="Assets/Ihaiu/Scripts/Version/VersionManager.cs" Line="116" Column="13" />
-      <File FileName="Assets/Ihaiu/Editor/AssetBundleServer/LaunchAssetBundleServer.cs" Line="120" Column="99" />
-      <File FileName="Assets/Ihaiu/Editor/VersionWindow/VersionReleaseWindow.cs" Line="11" Column="5" />
-      <File FileName="Assets/Game/Scripts/Game/GameConst.cs" Line="72" Column="55" />
-      <File FileName="Assets/Game/Scripts/Game/GameConstConfig.cs" Line="24" Column="15" />
-      <File FileName="Assets/Game/Scripts/Game/GameLaunch.cs" Line="26" Column="48" />
-      <File FileName="Assets/Game/Scripts/Game/LaunchPanel.cs" Line="19" Column="9" />
+      <File FileName="Assets/Ihaiu/Editor/VersionWindow/AssetBundleServerGUI.cs" Line="1" Column="1" />
+      <File FileName="Assets/Ihaiu/Scripts/Version/VersionInfo.cs" Line="1" Column="1" />
+      <File FileName="Assets/Ihaiu/Scripts/AssetManager/AssetManagerSetting.cs" Line="1" Column="1" />
+      <File FileName="Assets/Ihaiu/Editor/AssetBundleServer/LaunchAssetBundleServer.cs" Line="1" Column="1" />
+      <File FileName="Assets/Ihaiu/Scripts/AssetManager/AssetManagerSetting_Editor.cs" Line="1" Column="1" />
+      <File FileName="Assets/Ihaiu/Scripts/Version/VersionManager.cs" Line="1" Column="1" />
+      <File FileName="Assets/Game/Scripts/Game/GameLaunch.cs" Line="1" Column="1" />
+      <File FileName="Assets/Game/Scripts/Game/GameConstConfig.cs" Line="1" Column="1" />
+      <File FileName="Assets/Game/Scripts/Game/GameConst.cs" Line="1" Column="1" />
+      <File FileName="Assets/Ihaiu/Scripts/AssetManager/AssetInfo.cs" Line="1" Column="1" />
+      <File FileName="Assets/Ihaiu/Scripts/AssetManager/IAssetBundleManager.cs" Line="1" Column="1" />
+      <File FileName="Assets/Ihaiu/Scripts/AssetManager/LoadedAssetBundleCache.cs" Line="1" Column="1" />
+      <File FileName="Assets/Ihaiu/Scripts/AssetManager/LoadedModuleAsset.cs" Line="1" Column="1" />
+      <File FileName="Assets/Ihaiu/Scripts/AssetManager/LoadedResource.cs" Line="1" Column="1" />
+      <File FileName="Assets/Ihaiu/Scripts/AssetManager/LoadedModule.cs" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
-    <BreakpointStore />
+    <BreakpointStore>
+      <Breakpoint file="/Users/macserver/zf/workspaces/unity/github/ihaiu.AssetManager/ihaiu.AssetManager/Assets/Ihaiu/Scripts/Version/VersionManager.cs" line="113" column="10" />
+      <Breakpoint file="/Users/macserver/zf/workspaces/unity/github/ihaiu.AssetManager/ihaiu.AssetManager/Assets/Ihaiu/Scripts/Version/VersionManager.cs" line="116" column="9" />
+      <Breakpoint file="/Users/macserver/zf/workspaces/unity/github/ihaiu.AssetManager/ihaiu.AssetManager/Assets/Game/Scripts/Game/GameConstConfig.cs" line="27" column="1" />
+    </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
 </Properties>

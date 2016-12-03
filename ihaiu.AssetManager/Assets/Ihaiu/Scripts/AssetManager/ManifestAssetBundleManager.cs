@@ -165,7 +165,36 @@ namespace Ihaiu.Assets
             {
                 return m_LoadedAssetBundles;
             }
-        }
+		}
+
+		/** 获取等待加载的依赖文件 */
+		public List<string> GetWaitLoadResDependencies(string assetBundleName)
+		{
+			List<string> list = new List<string>();
+			// 检查是否有依赖的“资源包”列表, 如果没有依赖，成功加载返回“资源包信息”
+			string[] dependencies = null;
+			if (m_Dependencies.TryGetValue(assetBundleName, out dependencies) )
+			{
+				// 检测依赖的资源包是否加载完成
+				foreach(var dependency in dependencies)
+				{
+					if (string.IsNullOrEmpty (dependency))
+						continue;
+
+					// 如果依赖的资源还没加载完成，返回null，让操作继续等待
+					LoadedAssetBundle dependentBundle;
+					m_LoadedAssetBundles.TryGetValue(dependency, out dependentBundle);
+					if (dependentBundle == null)
+					{
+						list.Add(dependency);
+					}
+				}
+			}
+
+			return list;
+		}
+
+
 
 
 
