@@ -8,7 +8,7 @@ namespace Ihaiu.Assets
     {
         /** 是否是测试版本模式 */
         public static bool TestVersionMode = true;
-        /** 加载超时 */
+        /** 加载超时(秒) */
         public static int LoadTimeOut           = 10;
 
         public static string BytesExt           = ".txt";
