@@ -7,7 +7,7 @@ using System.Diagnostics;
 using System.IO;
 using System;
 
-namespace Ihaiu.Assets
+namespace com.ihaiu
 {
 	class MonoInstallationFinder
 	{

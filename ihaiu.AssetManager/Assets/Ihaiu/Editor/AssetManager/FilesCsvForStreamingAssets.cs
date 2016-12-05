@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using System;
 
-namespace Ihaiu.Assets
+namespace com.ihaiu
 {
     public class FilesCsvForStreamingAssets 
     {

@@ -1,8 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using Ihaiu.Assets;
+
 using System;
+using com.ihaiu;
 
 public class DebugAssetLoadedPanel : MonoBehaviour {
 

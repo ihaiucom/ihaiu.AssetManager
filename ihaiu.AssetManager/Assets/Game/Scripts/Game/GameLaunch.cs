@@ -1,9 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
-using Ihaiu.Assets;
+
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
+using com.ihaiu;
 
 namespace Games
 {

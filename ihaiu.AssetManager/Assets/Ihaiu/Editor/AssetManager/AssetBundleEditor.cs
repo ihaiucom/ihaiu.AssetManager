@@ -4,7 +4,7 @@ using UnityEditor;
 using System.Collections.Generic;
 using System.IO;
 
-namespace Ihaiu.Assets
+namespace com.ihaiu
 {
     public class AssetBundleEditor 
     {

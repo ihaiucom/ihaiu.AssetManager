@@ -4,7 +4,7 @@ using System.IO;
 using System;
 using Games;
 
-namespace Ihaiu.Assets
+namespace com.ihaiu
 {
     public class VersionInfo 
     {

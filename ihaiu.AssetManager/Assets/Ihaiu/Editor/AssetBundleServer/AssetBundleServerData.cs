@@ -3,7 +3,7 @@ using System.Collections;
 using System.IO;
 using System.Collections.Generic;
 
-namespace Ihaiu.Assets
+namespace com.ihaiu
 {
     public class AssetBundleServerData 
     {

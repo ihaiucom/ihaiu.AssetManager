@@ -6,7 +6,7 @@ using Games;
 using System;
 
 
-namespace Ihaiu.Assets
+namespace com.ihaiu
 {
     public partial class VersionReleaseWindow : EditorWindow
     {

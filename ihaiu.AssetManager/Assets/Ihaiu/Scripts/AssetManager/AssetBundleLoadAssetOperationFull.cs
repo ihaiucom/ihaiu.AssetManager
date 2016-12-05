@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-namespace Ihaiu.Assets
+namespace com.ihaiu
 {
 
 	public class AssetBundleLoadAssetOperationFull : AssetBundleLoadAssetOperation

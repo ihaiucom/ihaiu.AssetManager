@@ -4,7 +4,7 @@ using System;
 using System.IO;
 using System.Collections.Generic;
 
-namespace Ihaiu.Assets
+namespace com.ihaiu
 {
     public partial class AssetManager 
     {

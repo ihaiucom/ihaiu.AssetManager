@@ -3,7 +3,7 @@ using System.Collections;
 using UnityEditor;
 
 
-namespace Ihaiu.Assets
+namespace com.ihaiu
 {
     public class AssetBundleServerGUI 
     {

@@ -5,7 +5,7 @@ using System.IO;
 using System.Text;
 
 
-namespace Ihaiu.Assets
+namespace com.ihaiu
 {
     public class AssetBundleInfoList 
     {

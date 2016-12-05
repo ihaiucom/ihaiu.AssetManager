@@ -4,7 +4,7 @@ using UnityEditor;
 using System;
 using System.Collections.Generic;
 
-namespace Ihaiu.Assets
+namespace com.ihaiu
 {
     public partial class HGUILayout
     {

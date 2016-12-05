@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Ihaiu.Assets
+namespace com.ihaiu
 {
     /** 版本号 (git version) */
     public class Version

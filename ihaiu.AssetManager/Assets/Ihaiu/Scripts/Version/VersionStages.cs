@@ -1,4 +1,4 @@
-﻿namespace Ihaiu.Assets
+﻿namespace com.ihaiu
 {
     public enum VersionStages
     {

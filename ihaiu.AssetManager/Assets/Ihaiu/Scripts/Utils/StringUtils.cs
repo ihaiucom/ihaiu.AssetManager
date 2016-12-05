@@ -4,7 +4,7 @@ using System.Globalization;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Ihaiu.Assets
+namespace com.ihaiu
 {
     public static class StringUtils
     {
@@ -148,8 +148,7 @@ namespace Ihaiu.Assets
                     }
                     catch(FormatException e)
                     {
-                        Debug.Log(src);
-                        Debug.Log(str);
+                        Debug.LogFormat("src={0}, str={1}, e={2}", src, str, e);
                     }
                 }
             }
@@ -171,8 +170,7 @@ namespace Ihaiu.Assets
                     }
                     catch(FormatException e)
                     {
-                        Debug.Log(src);
-                        Debug.Log(str);
+                        Debug.LogFormat("src={0}, str={1}, e={2}", src, str, e);
                     }
                 }
             }

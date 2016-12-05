@@ -4,7 +4,7 @@ using UnityEditor;
 using Games;
 
 
-namespace Ihaiu.Assets
+namespace com.ihaiu
 {
 
 

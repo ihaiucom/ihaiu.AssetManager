@@ -4,7 +4,7 @@ using System.IO;
 using UnityEditor;
 using System.Collections.Generic;
 
-namespace Ihaiu.Assets
+namespace com.ihaiu
 {
     public class LoadAssetListCsv 
     {

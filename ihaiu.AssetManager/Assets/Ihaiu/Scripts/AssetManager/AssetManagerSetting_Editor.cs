@@ -5,7 +5,7 @@ using UnityEditor;
 using System.IO;
 using System;
 
-namespace Ihaiu.Assets
+namespace com.ihaiu
 {
     public partial class AssetManagerSetting 
     {

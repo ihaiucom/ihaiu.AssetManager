@@ -1,7 +1,8 @@
 using UnityEngine;
 using System.Collections;
 using System.IO;
-using Ihaiu.Assets;
+using com.ihaiu;
+
 
 namespace Games
 {

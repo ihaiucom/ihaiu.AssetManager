@@ -2,7 +2,7 @@
 using System.Collections;
 using System.IO;
 
-namespace Ihaiu.Assets
+namespace com.ihaiu
 {
     public partial class AssetManagerSetting 
     {

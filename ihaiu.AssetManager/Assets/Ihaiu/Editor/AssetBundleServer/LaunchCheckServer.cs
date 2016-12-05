@@ -10,7 +10,7 @@ using System.Threading;
 using UnityEditor.Utils;
 using System.Net.Sockets;
 
-namespace Ihaiu.Assets
+namespace com.ihaiu
 {
     internal class LaunchCheckServer : ScriptableSingleton<LaunchCheckServer>
 	{

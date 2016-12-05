@@ -1,10 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
 using Games;
-using Ihaiu.Assets;
+
 using System;
 using System.Reflection;
 using System.Collections.Generic;
+using com.ihaiu;
 
 public class DebugGameConstConfigPanel : MonoBehaviour {
     public GameConstConfig config;

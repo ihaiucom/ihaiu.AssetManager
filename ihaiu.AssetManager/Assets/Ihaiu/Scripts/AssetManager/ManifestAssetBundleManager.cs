@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using UnityEditor;
 #endif
 
-namespace Ihaiu.Assets
+namespace com.ihaiu
 {
     public class ManifestAssetBundleManager : IAssetBundleManager 
     {

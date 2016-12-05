@@ -1,6 +1,8 @@
 using UnityEngine;
 using System.Collections;
 using System.IO;
+using com.ihaiu;
+using UnityEngine.SceneManagement;
 
 namespace Ihaiu.Debugs
 {
@@ -31,11 +33,12 @@ namespace Ihaiu.Debugs
     		info += "\nApplication.internetReachability=" + Application.internetReachability ;
 
     		
-            info += "\nApplication.levelCount=" + Application.levelCount ;
-    		info += "\nApplication.loadedLevel=" + Application.loadedLevel ;
+            info += "\nSceneManager.sceneCountInBuildSettings=" + SceneManager.sceneCountInBuildSettings ;
+            info += "\nSceneManager.GetActiveScene().name=" + SceneManager.GetActiveScene().name ;
+            info += "\nSceneManager.GetActiveScene().path=" + SceneManager.GetActiveScene().path ;
+            info += "\nSceneManager.GetActiveScene().isLoaded=" + SceneManager.GetActiveScene().isLoaded ;
+            info += "\nSceneManager.GetActiveScene().IsValid()=" + SceneManager.GetActiveScene().IsValid() ;
 
-    		info += "\nApplication.loadedLevelName=" + Application.loadedLevelName ;
-    		info += "\nApplication.isLoadingLevel=" + Application.isLoadingLevel ;
     		info += "\nApplication.isPlaying=" + Application.isPlaying ;
     		info += "\nApplication.isWebPlayer=" + Application.isWebPlayer ;
     		info += "\nApplication.runInBackground=" + Application.runInBackground ;
@@ -66,7 +69,6 @@ namespace Ihaiu.Debugs
     		info += "\nSystemInfo.deviceUniqueIdentifier : " + SystemInfo.deviceUniqueIdentifier;
     		info += "\nSystemInfo.graphicsDeviceName : " + SystemInfo.graphicsDeviceName;
     		info += "\nSystemInfo.graphicsMemorySize : " + SystemInfo.graphicsMemorySize+ "MB";
-    		info += "\nSystemInfo.graphicsPixelFillrate : " + SystemInfo.graphicsPixelFillrate;
     		info += "\nSystemInfo.graphicsShaderLevel : " + SystemInfo.graphicsShaderLevel;
     		info += "\nSystemInfo.maxTextureSize : " + SystemInfo.maxTextureSize;
     		info += "\nSystemInfo.npotSupport : " + SystemInfo.npotSupport;
@@ -90,7 +92,7 @@ namespace Ihaiu.Debugs
             info += "\n";
             info += Games.GameConst.GetInfo();
             info += "\n";
-            info += Ihaiu.Assets.AssetManagerSetting.GetInfo();
+            info += AssetManagerSetting.GetInfo();
     	
     		info += "\n";
     		#if LUA_ZIP

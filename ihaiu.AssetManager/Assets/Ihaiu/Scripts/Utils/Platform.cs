@@ -37,11 +37,6 @@ public class Platform {
 				return true;
 			}
 
-			if(IsWeb)
-			{
-				return true;
-			}
-
 			return false;
 		}
 	}
@@ -59,18 +54,6 @@ public class Platform {
 		}
 	}
 
-	public static bool IsWeb
-	{
-		get
-		{
-			if (Application.platform 	== RuntimePlatform.OSXWebPlayer 
-			    || Application.platform == RuntimePlatform.WindowsWebPlayer)
-			{
-				return true;
-			}
-			return false;
-		}
-	}
 
     public static RuntimePlatform[] runtimePlatformEnums = new RuntimePlatform[]{RuntimePlatform.Android, RuntimePlatform.IPhonePlayer, RuntimePlatform.OSXPlayer, RuntimePlatform.WindowsPlayer  };
     public static string[] runtimePlatformNames = new string[]{"Android", "IOS", "OSX", "Windows"  };
@@ -173,7 +156,6 @@ public class Platform {
             {
                 _PlatformDirectorDict = new Dictionary<RuntimePlatform, string>();
                 _PlatformDirectorDict.Add(RuntimePlatform.Android, "Android");
-                _PlatformDirectorDict.Add(RuntimePlatform.BlackBerryPlayer, "BlackBerry");
                 _PlatformDirectorDict.Add(RuntimePlatform.IPhonePlayer, "IOS");
                 _PlatformDirectorDict.Add(RuntimePlatform.PS3, "PS3");
                 _PlatformDirectorDict.Add(RuntimePlatform.PS4, "PS4");

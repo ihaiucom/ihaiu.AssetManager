@@ -2,7 +2,7 @@
 using System.Collections;
 using UnityEngine.SceneManagement;
 
-namespace Ihaiu.Assets
+namespace com.ihaiu
 {
 	public class AssetBundleLoadLevelOperation : AssetBundleLoadOperation
 	{

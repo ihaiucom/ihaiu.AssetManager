@@ -4,7 +4,7 @@ using UnityEditor;
 using System.IO;
 
 
-namespace Ihaiu.Assets
+namespace com.ihaiu
 {
     public class AssetMenuItems 
     {

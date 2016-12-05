@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 
-namespace Ihaiu.Assets
+namespace com.ihaiu
 {
 	public partial class AssetManager 
 	{
@@ -218,8 +218,8 @@ namespace Ihaiu.Assets
 			}
 		}
 
-		bool isAssetBundleCacheChecking = false;
-		Coroutine assetBundleCheckCacheCoroutiner;
+        private bool isAssetBundleCacheChecking = false;
+        private Coroutine assetBundleCheckCacheCoroutiner;
 		IEnumerator OnCheckAssetBundleCache()
 		{
 			LoadedAssetBundleCache loaded;

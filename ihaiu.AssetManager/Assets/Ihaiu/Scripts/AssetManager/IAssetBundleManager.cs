@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Ihaiu.Assets
+namespace com.ihaiu
 {
 	public interface IAssetBundleManager
 	{

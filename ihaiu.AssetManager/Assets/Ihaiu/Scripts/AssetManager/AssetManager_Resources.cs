@@ -3,7 +3,7 @@ using System.Collections;
 using System;
 using System.Collections.Generic;
 
-namespace Ihaiu.Assets
+namespace com.ihaiu
 {
     public partial class AssetManager 
     {
@@ -182,7 +182,7 @@ namespace Ihaiu.Assets
                 }
                 catch(Exception e)
                 {
-
+                    Debug.LogError("AssetManager_Resoures UnloadLoadedResourceCache e=" + e);
                 }
             }
 

@@ -2,7 +2,7 @@
 using System.Collections;
 using System;
 
-namespace Ihaiu.Assets
+namespace com.ihaiu
 {
     public class LoadedResource
     {

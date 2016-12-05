@@ -107,14 +107,15 @@ namespace Ihaiu.Debugs
             vo.stackTrace = "";
             vo.logType = LogType.Log;
             logQueue.Enqueue(vo);
-            Application.RegisterLogCallback(CatchLogInfo);
+            Application.logMessageReceived          += CatchLogInfo;
+            Application.logMessageReceivedThreaded  += CatchLogInfo;
         }
 
 		private DebugLogVO preVO;
     
         private void CatchLogInfo(string logString, string stackTrace, LogType type)
         {
-			if(preVO != null && preVO.logString == logString && preVO.stackTrace == stackTrace && type == type)
+            if(preVO != null && preVO.logString == logString && preVO.stackTrace == stackTrace && preVO.logType == type)
 			{
 				return;
 			}
