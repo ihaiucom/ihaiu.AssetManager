@@ -1,12 +1,8 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Ihaiu/Scripts/AssetManager/ManifestAssetBundleManager.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Ihaiu/Scripts/AssetManager/AssetManager.cs">
     <Files>
-      <File FileName="Assets/Ihaiu/Scripts/AssetManager/AssetBundleLoadAssetOperationFull.cs" Line="51" Column="68" />
-      <File FileName="Assets/Ihaiu/Scripts/AssetManager/IAssetBundleManager.cs" Line="28" Column="1" />
-      <File FileName="Assets/Ihaiu/Scripts/AssetManager/ManifestAssetBundleManager.cs" Line="255" Column="10" />
-      <File FileName="Assets/Ihaiu/Scripts/AssetManager/AssetBundleLoadLevelOperation.cs" Line="28" Column="129" />
-      <File FileName="Assets/Game/Scripts/_Test/TestCreateItem.cs" Line="27" Column="13" />
+      <File FileName="Assets/Ihaiu/Scripts/AssetManager/AssetManager.cs" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

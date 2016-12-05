@@ -233,6 +233,8 @@ namespace com.ihaiu
             // 检测依赖的资源包是否加载完成
             foreach(var dependency in dependencies)
             {
+                if(string.IsNullOrEmpty(dependency)) continue;
+
                 // 检测到依赖的资源加载出错，返回自己的资源，并返回依赖的资源错误,
                 if (m_DownloadingErrors.TryGetValue(assetBundleName, out error) )
                 {
@@ -413,6 +415,8 @@ namespace com.ihaiu
             // Loop dependencies.
             foreach(var dependency in dependencies)
             {
+                if(string.IsNullOrEmpty(dependency)) continue;
+                
                 UnloadAssetBundleInternal(dependency);
             }
 
