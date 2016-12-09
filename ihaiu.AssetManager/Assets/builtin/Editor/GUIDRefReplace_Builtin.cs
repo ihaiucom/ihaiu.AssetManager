@@ -184,7 +184,7 @@ public class GUIDRefReplace_Builtin : EditorWindow
     private bool isPreview = false;
 
 
-    [MenuItem("builtin/GUIDRefReplaceWin (Builitin) ")]   // 菜单开启并点击的   处理
+    [MenuItem("Window/GUIDRefReplaceWin (Builitin) ")]   // 菜单开启并点击的   处理
     public static void GUIDRefReplaceWin()
     {
 
@@ -200,8 +200,9 @@ public class GUIDRefReplace_Builtin : EditorWindow
     public enum TabType
     {
         Material,
-
         Sprite,
+        Texture,
+        Shader,
     }
 
 
@@ -215,6 +216,8 @@ public class GUIDRefReplace_Builtin : EditorWindow
                 _tabGroupData = new HGUILayout.TabGroupData<TabType>();
                 _tabGroupData.AddTab("Material", TabType.Material);
                 _tabGroupData.AddTab("Sprite", TabType.Sprite);
+                _tabGroupData.AddTab("Texture", TabType.Texture);
+                _tabGroupData.AddTab("Shader", TabType.Shader);
             }
             return _tabGroupData;
         }
@@ -231,18 +234,25 @@ public class GUIDRefReplace_Builtin : EditorWindow
 
         // 要被替换的（需要移除的）
         GUILayout.Space(20);
-//
-//        // 在那些类型中查找（.unity\.prefab\.mat）
-        GUILayout.Label("要在哪些类型中查找替换：");
-        EditorGUILayout.BeginHorizontal();
+
+        switch (tabType)
+        {
+
+            case TabType.Material:
+            case TabType.Sprite:
+                // 在那些类型中查找（.unity\.prefab\.mat）
+                GUILayout.Label("要在哪些类型中查找替换：");
+                EditorGUILayout.BeginHorizontal();
 
 
-        isContainScene = GUILayout.Toggle(isContainScene, ".unity");
-        isContainPrefab = GUILayout.Toggle(isContainPrefab, ".prefab");
-        isContainMat = tabType== TabType.Material ? false :  GUILayout.Toggle(isContainMat, ".mat");
-        isContainAsset = GUILayout.Toggle(isContainAsset, ".asset");
+                isContainScene = GUILayout.Toggle(isContainScene, ".unity");
+                isContainPrefab = GUILayout.Toggle(isContainPrefab, ".prefab");
+                isContainMat = tabType == TabType.Material ? false : GUILayout.Toggle(isContainMat, ".mat");
+                isContainAsset = GUILayout.Toggle(isContainAsset, ".asset");
 
-        EditorGUILayout.EndHorizontal();
+                EditorGUILayout.EndHorizontal();
+                break;
+            }
 
 
         scrollPos = EditorGUILayout.BeginScrollView(scrollPos);
@@ -252,11 +262,71 @@ public class GUIDRefReplace_Builtin : EditorWindow
             case TabType.Material:
                 GUI_MaterialList();
                 break;
+            case TabType.Sprite:
+                GUI_SpriteList();
+                break;
+            case TabType.Texture:
+                GUI_SpriteList();
+                break;
+            case TabType.Shader:
+                if (GUILayout.Button("替换内建Shader!"))
+                {
+                    RefreshMaterialShader.RefreshMat();
+                }
+                break;
         }
+
+
 
         GUILayout.Space(20);
         EditorGUILayout.EndScrollView();
     }
+
+
+
+    string Sprite_GUID_NEW = "{fileID: 10905, guid: __GUID__, type: 0}";
+
+    void GUI_SpriteList()
+    {
+        
+    }
+
+    void GUI_SpriteItem(string spriteName, Material newMaterial, string oladGuid)
+    {
+        EditorGUILayout.BeginVertical(boxStyle);
+
+        newMaterial = (Material) EditorGUILayout.ObjectField(spriteName, newMaterial, typeof(Material), true);
+
+        string newGuid = "";
+        if (newMaterial != null)
+        {
+            newGuid = MATERIAL_GUID_NEW.Replace("__GUID__", AssetDatabase.AssetPathToGUID(AssetDatabase.GetAssetPath(newMaterial)));
+        }
+
+        GUILayout.Space(10);
+        oladGuid = EditorGUILayout.TextField("old:", oladGuid);
+        GUILayout.Space(5);
+        newGuid = EditorGUILayout.TextField("new:", newGuid);
+
+
+        GUILayout.Space(10);
+        if (GUILayout.Button("查找预览!"))
+        {
+            OnClickReplace(oladGuid, newGuid, true);
+        }
+
+        GUILayout.Space(10);
+        if (GUILayout.Button("开始替换!"))
+        {
+            OnClickReplace(oladGuid, newGuid, false);
+        }
+
+
+        EditorGUILayout.EndVertical();
+    }
+
+
+
 
 
 
@@ -278,10 +348,10 @@ public class GUIDRefReplace_Builtin : EditorWindow
 
     void GUI_MaterialList()
     {
-//        if (Sprites_Default == null)
-//        {
+        if (Sprites_Default == null)
+        {
             Sprites_Default = AssetDatabase.LoadAssetAtPath<Material>("Assets/builtin/builtin_materials/Sprites-Default.mat");
-//        }
+        }
 
         if (Default_Material == null)
         {
@@ -348,7 +418,6 @@ public class GUIDRefReplace_Builtin : EditorWindow
 
 
         EditorGUILayout.EndVertical();
-        Sprites_Default = newMaterial;
     }
 
 

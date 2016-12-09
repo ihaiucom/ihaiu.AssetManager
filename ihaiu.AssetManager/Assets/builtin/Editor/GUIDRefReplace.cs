@@ -33,7 +33,7 @@ public class GUIDRefReplace : EditorWindow
     private bool isPreview = false;
 
 
-    [MenuItem("builtin/GUIDRefReplaceWin")]   // 菜单开启并点击的   处理
+    [MenuItem("Window/GUIDRefReplaceWin")]   // 菜单开启并点击的   处理
     public static void GUIDRefReplaceWin()
     {
 
@@ -206,7 +206,7 @@ public class GUIDRefReplace : EditorWindow
                 }
                 else
                 {
-                    Debug.Log(file);
+//                    Debug.Log(file);
                 }
 
                 startIndex++;

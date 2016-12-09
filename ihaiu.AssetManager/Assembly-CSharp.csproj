@@ -111,6 +111,7 @@
      <Compile Include="Assets\_ZF\TestFor.cs" />
      <Compile Include="Assets\_ZF\TestIEnumerator.cs" />
      <Compile Include="Assets\_ZF\TestPathFileName.cs" />
+     <Compile Include="Assets\builtin\TestAssetGUID.cs" />
      <None Include="Assets\builtin\builtin_shaders\DefaultResourcesExtra\Illumin-BumpSpec.shader" />
      <None Include="Assets\builtin\builtin_shaders\DefaultResourcesExtra\Reflect-Parallax.shader" />
      <None Include="Assets\builtin\builtin_shaders\DefaultResourcesExtra\UI\UI-Lit-Detail.shader" />

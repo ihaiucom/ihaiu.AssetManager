@@ -6,8 +6,8 @@ public class RefreshMaterialShader
 {
 
 
-    [MenuItem("builtin/Refresh Material Shader", false, 501)]
-    static void RefreshMat() {
+//    [MenuItem("builtin/Refresh Material Shader", false, 501)]
+    public static void RefreshMat() {
         var guids = AssetDatabase.FindAssets("t:Material");
         foreach (var guid in guids) {
             var path = AssetDatabase.GUIDToAssetPath(guid);
