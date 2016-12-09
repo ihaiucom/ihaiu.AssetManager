@@ -40,6 +40,10 @@ public class TestCreateItem : MonoBehaviour
             text.alignment = TextAnchor.MiddleCenter;
             text.color = Color.white;
             text.font = font;
+
+            if (sprite.name == "pic")
+            {
+            }
         }
 	}
 	
