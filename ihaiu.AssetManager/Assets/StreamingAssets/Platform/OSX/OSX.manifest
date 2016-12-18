@@ -1,0 +1,24 @@
+ManifestFileVersion: 0
+CRC: 2491974713
+AssetBundleManifest:
+  AssetBundleInfos:
+    Info_0:
+      Name: btn-assetbundle
+      Dependencies: {}
+    Info_1:
+      Name: modules/moduleb-assetbundle
+      Dependencies:
+        Dependency_0: assets/game/art/component/window-assetbundle
+        Dependency_1: assets/game/art/ui/icon-assetbundle
+    Info_2:
+      Name: assets/game/art/component/window-assetbundle
+      Dependencies: {}
+    Info_3:
+      Name: assets/game/art/ui/icon-assetbundle
+      Dependencies: {}
+    Info_4:
+      Name: modules/modulea-assetbundle
+      Dependencies:
+        Dependency_0: btn-assetbundle
+        Dependency_1: assets/game/art/component/window-assetbundle
+        Dependency_2: assets/game/art/ui/icon-assetbundle

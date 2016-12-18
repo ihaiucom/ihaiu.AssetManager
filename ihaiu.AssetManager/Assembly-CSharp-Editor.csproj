@@ -60,6 +60,11 @@
      <Compile Include="Assets\Ihaiu\Editor\AssetManager\DontUnloadAssetListCsv.cs" />
      <Compile Include="Assets\Ihaiu\Editor\AssetManager\FilesCsvForStreamingAssets.cs" />
      <Compile Include="Assets\Ihaiu\Editor\AssetManager\LoadAssetListCsv.cs" />
+     <Compile Include="Assets\Ihaiu\Editor\VersionPushWindow\CenterSwitcher.cs" />
+     <Compile Include="Assets\Ihaiu\Editor\VersionPushWindow\ShFile.cs" />
+     <Compile Include="Assets\Ihaiu\Editor\VersionPushWindow\Shell.cs" />
+     <Compile Include="Assets\Ihaiu\Editor\VersionPushWindow\VersionPushWindow.cs" />
+     <Compile Include="Assets\Ihaiu\Editor\VersionPushWindow\VersionPushWindow_StepMethod.cs" />
      <Compile Include="Assets\Ihaiu\Editor\VersionWindow\AssetBundleServerGUI.cs" />
      <Compile Include="Assets\Ihaiu\Editor\VersionWindow\HGUILayout_Common.cs" />
      <Compile Include="Assets\Ihaiu\Editor\VersionWindow\HGUILayout_Style.cs" />
