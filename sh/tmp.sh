@@ -1,34 +1,6 @@
-#!/usr/bin/expect  -f   
+#!/bin/bash  
 
 
-cd /Users/zengfeng/workspaces/www/githubpages/ihaiu.AssetManager/ihaiu.AssetManager/Assets/../../../test.version.git/
+cd /Users/macserver/zf/workspaces/unity/github/ihaiu.AssetManager/ihaiu.AssetManager/Assets/../../../test.version/
 
-spawn git push origin osx
-expect "Password:"
-send "git\r"
-interact
-
-spawn git push origin  :refs/tags/osx_ver1.0.1_official
-expect "Password:"
-send "git\r"
-interact
-
-spawn git push origin  :refs/tags/osx_ver1.0.1_xiaomi
-expect "Password:"
-send "git\r"
-interact
-
-spawn git push origin  :refs/tags/osx_ver1.0.1_weixin
-expect "Password:"
-send "git\r"
-interact
-
-spawn git push origin  :refs/tags/osx_ver1.0.1_uc
-expect "Password:"
-send "git\r"
-interact
-
-spawn git push origin --tags
-expect "Password:"
-send "git\r"
-interact
+git push origin osx

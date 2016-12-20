@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using com.ihaiu;
 
 public class CenterSwitcher 
 {
@@ -11,6 +12,7 @@ public class CenterSwitcher
 		public string 	gitTag;
 		public int 		gitTagMaxIndex;
 		public string	gitTagUse;
+        public VersionInfo versionInfo;
 
 		public string gitTagLast
 		{

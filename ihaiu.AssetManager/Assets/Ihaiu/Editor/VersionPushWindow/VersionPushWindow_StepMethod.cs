@@ -24,16 +24,11 @@ namespace com.ihaiu
             }
         }
 
-        string  branchTag;
-        int     branchTagMaxIndex = 0;
-        string  branchLastTag
+        string  branchTag
         {
             get
             {
-                if (string.IsNullOrEmpty(branchTag))
-                    return GetBranchTag();
-                
-                return branchTagMaxIndex > 0 ? branchTag + "-" + branchTagMaxIndex : branchTag;
+                return GetBranchTag() + "_date" + DateTime.Now.ToString("yyyyMMddHHmmss");
             }
         }
 
@@ -134,7 +129,11 @@ namespace com.ihaiu
 					tmp.WriteLine("cd " + gitRoot);
 					tmp.WriteLine(string.Format("git pull origin {0}",  branch),   gitNeedPassword, gitPassword);
 					tmp.Save();
-					Shell.RunFile(Shell.sh_tmp, true);
+
+                    if (gitPullVisiableWindow)
+                        Shell.RunFile(Shell.sh_tmp, true);
+                    else
+                        Shell.RunTmp(Shell.sh_tmp);
 
 					if(!EditorUtility.DisplayDialog("git pull origin " + branch, "请检查拉取远程分支信息!  如果没有错误点‘继续’,否则点'终止'!!", "继续执行", "终止执行"))
 					{
@@ -149,7 +148,11 @@ namespace com.ihaiu
 					tmp.WriteLine("cd " + gitRoot);
 					tmp.WriteLine(string.Format("git pull origin {1} 2>&1 | tee {0}",  Shell.txt_vertmp, branch));
 					tmp.Save();
-					Shell.RunFile(Shell.sh_tmp, true);
+
+                    if (gitPullVisiableWindow)
+                        Shell.RunFile(Shell.sh_tmp, true);
+                    else
+                        Shell.RunTmp(Shell.sh_tmp);
 				}
 
 
@@ -229,7 +232,6 @@ namespace com.ihaiu
         /** 检测tag */
         void Step_CheckTag()
         {
-            Debug.Log("Step_CheckTag");
             tmp.Clear();
             tmp.WriteLine("cd " + gitRoot);
             tmp.WriteLine("git tag > "+Shell.txt_vertmp);
@@ -272,9 +274,9 @@ namespace com.ihaiu
             }
 
             hasAlreadyExistTag = false;
-            for(int i = 0; i < CenterSwitcher.centerItemList.Length; i ++)
+            for(int i = 0; i < centerList.Count; i ++)
             {
-                CenterSwitcher.CenterItem item = CenterSwitcher.centerItemList[i];
+                CenterSwitcher.CenterItem item = centerList[i];
 
                 if (item.gitToggle)
                 {
@@ -289,12 +291,7 @@ namespace com.ihaiu
                 }
             }
 
-            branchTag = GetBranchTag();
-            branchTagMaxIndex = tagIndexDict.ContainsKey(branchTag) ? tagIndexDict[branchTag] + 1 : 0;
-            if (branchTagMaxIndex > 0)
-            {
-                LogWarning(string.Format("已经存在tag={0}", branchTag));
-            }
+
 
             if (hasAlreadyExistTag)
             {
@@ -313,10 +310,10 @@ namespace com.ihaiu
             switch(copyType)
             {
                 case CopyType.Update:
-                    AssetBundleServerData.CopyUpdateAsset(gitVerresRoot);
+                    AssetBundleServerData.CopyUpdateAsset(gitServerEditor.gitVerresRoot);
                     break;
                 case CopyType.All:
-                    AssetBundleServerData.CopyAlleAsset(gitVerresRoot);
+                    AssetBundleServerData.CopyAlleAsset(gitServerEditor.gitVerresRoot);
                     break;
             }
         }
@@ -324,7 +321,7 @@ namespace com.ihaiu
 
 
         /** 提交分支 */
-        void Step_CommitBranch()
+        void Step_CommitBranch(bool isAddTag = false)
         {
             Debug.Log("Step_CommitBranch");
             // 切换分支
@@ -351,31 +348,34 @@ namespace com.ihaiu
             Debug.Log("git commit -am");
             tmp.Clear();
             tmp.WriteLine("cd " + gitRoot);
-            tmp.WriteLine(string.Format("git commit -am \"commit {1}\" 2>&1 | tee {0}", Shell.txt_vertmp, branchLastTag));
+            tmp.WriteLine(string.Format("git commit -am \"commit {1}\" 2>&1 | tee {0}", Shell.txt_vertmp, branchTag));
             tmp.Save();
             Shell.RunTmp(Shell.sh_tmp);
             txt = File.ReadAllText(Shell.txt_vertmp);
             if (txt.IndexOf("error:") != -1 || txt.IndexOf("fatal:") != -1)
             {
-                EditorUtility.DisplayDialog(string.Format("git commit -am \"commit {0}\"", branchLastTag), "错误： 建议先用git工具处理好再执行!\n" + txt, "终止执行");
+                EditorUtility.DisplayDialog(string.Format("git commit -am \"commit {0}\"", branchTag), "错误： 建议先用git工具处理好再执行!\n" + txt, "终止执行");
 
                 stepIsContinue = false;
                 return;
             }
 
-            Debug.Log("git tag -a");
-            tmp.Clear();
-            tmp.WriteLine("cd " + gitRoot);
-            tmp.WriteLine(string.Format("git tag -a {1} -m\"add tag {1}\" 2>&1 | tee {0}", Shell.txt_vertmp, branchLastTag));
-            tmp.Save();
-            Shell.RunTmp(Shell.sh_tmp);
-            txt = File.ReadAllText(Shell.txt_vertmp);
-            if (txt.IndexOf("error:") != -1 || txt.IndexOf("fatal:") != -1)
+            if (isAddTag)
             {
-                EditorUtility.DisplayDialog(string.Format("git tag -a {0} -m \"add tag {0}\"", branchLastTag), "错误： 建议先用git工具处理好再执行!\n" + txt, "终止执行");
+                Debug.Log("git tag -a");
+                tmp.Clear();
+                tmp.WriteLine("cd " + gitRoot);
+                tmp.WriteLine(string.Format("git tag -a {1} -m\"add tag {1}\" 2>&1 | tee {0}", Shell.txt_vertmp, branchTag));
+                tmp.Save();
+                Shell.RunTmp(Shell.sh_tmp);
+                txt = File.ReadAllText(Shell.txt_vertmp);
+                if (txt.IndexOf("error:") != -1 || txt.IndexOf("fatal:") != -1)
+                {
+                    EditorUtility.DisplayDialog(string.Format("git tag -a {0} -m \"add tag {0}\"", branchTag), "错误： 建议先用git工具处理好再执行!\n" + txt, "终止执行");
 
-                stepIsContinue = false;
-                return;
+                    stepIsContinue = false;
+                    return;
+                }
             }
 
         }
@@ -383,32 +383,48 @@ namespace com.ihaiu
 
 		void Step_AddTag()
 		{
-			GameConstConfig gameConstConfig = GameConstConfig.Load(gitGameConstPath);
+            GameConstConfig gameConstConfig = GameConstConfig.Load(gitServerEditor.gitGameConstPath);
 
-			for(int i = 0; i < CenterSwitcher.centerItemList.Length; i ++)
+            for(int i = 0; i < centerList.Count; i ++)
 			{
-				CenterSwitcher.CenterItem item = CenterSwitcher.centerItemList[i];
+                CenterSwitcher.CenterItem item = centerList[i];
 
 				if (item.gitToggle)
 				{
+
+
+
+                    item.gitTagUse = alreadyExistTagPlan == AlreadyExistTagPlan.Suffix ? item.gitTagLast : item.gitTag;
+
+
+
+
 					gameConstConfig.CenterName = item.name;
-					gameConstConfig.Save(gitGameConstPath);
+                    gameConstConfig.Save(gitServerEditor.gitGameConstPath);
+
+                    string verinfoPath = gitServerEditor.GetGitVerinfoPath(item.name, true);
+                    VersionInfo versionInfo = VersionInfo.Load(verinfoPath);
+                    versionInfo.version = gameConstConfig.Version;
+                    versionInfo.updateLoadUrl = gitServerEditor.GetGitHostUpdateUrlRoot(item.gitTagUse);
+                    versionInfo.Save(verinfoPath);
+
 
 					tmp.Clear();
-					tmp.WriteLine("cd " + gitRoot);
+                    tmp.WriteLine("cd " + gitRoot);
+
+                    if(item.gitTagMaxIndex > 0)
+                    {
+                        switch(alreadyExistTagPlan)
+                        {
+                            case AlreadyExistTagPlan.Replace:
+                                tmp.WriteLine(string.Format("git tag -d {1} 2>&1 | tee -a {0}", Shell.txt_vertmp, item.gitTag));
+                                break;
+                        }
+                    }
+
+                    tmp.WriteLine(string.Format("git add . 2>&1 | tee -a {0}", Shell.txt_vertmp));
 					tmp.WriteLine(string.Format("git commit -am \" 修改GameConstConfig.centerName= {1}\" 2>&1 | tee -a {0}", Shell.txt_vertmp, item.name));
 
-					if(item.gitTagMaxIndex > 0)
-					{
-						switch(alreadyExistTagPlan)
-						{
-						case AlreadyExistTagPlan.Replace:
-							tmp.WriteLine(string.Format("git tag -d {1} 2>&1 | tee -a {0}", Shell.txt_vertmp, item.gitTag));
-							break;
-						}
-					}
-
-					item.gitTagUse = alreadyExistTagPlan == AlreadyExistTagPlan.Suffix ? item.gitTagLast : item.gitTag;
 					string cmd = string.Format("git tag -a {1} -m \"add tag {1}\"  2>&1 | tee -a {0}", Shell.txt_vertmp, item.gitTagUse); 
 					tmp.WriteLine(cmd);
 
@@ -437,13 +453,13 @@ namespace com.ihaiu
                 return;
 
 
-			tmp.Clear(true);
+            tmp.Clear(gitNeedPassword);
 			tmp.WriteLine("cd " + gitRoot);
 			tmp.WriteLine(string.Format("git push origin {0}",  branch)    , gitNeedPassword, gitPassword);
 
-			for(int i = 0; i < CenterSwitcher.centerItemList.Length; i ++)
+            for(int i = 0; i < centerList.Count; i ++)
 			{
-				CenterSwitcher.CenterItem item = CenterSwitcher.centerItemList[i];
+                CenterSwitcher.CenterItem item = centerList[i];
 
 				if (item.gitToggle)
 				{
@@ -457,6 +473,54 @@ namespace com.ihaiu
 
             tmp.Save();
             Shell.RunFile(Shell.sh_tmp);
+        }
+
+
+        /** 推送分支 */
+        void Step_PushBranch()
+        {
+            // 切换分支
+            if (!CheckoutBranch())
+                return;
+
+
+            tmp.Clear(gitNeedPassword);
+            tmp.WriteLine("cd " + gitRoot);
+            tmp.WriteLine(string.Format("git push origin {0}",  branch)    , gitNeedPassword, gitPassword);
+            tmp.WriteLine(string.Format("git push origin --tags")    , gitNeedPassword, gitPassword);
+            tmp.Save();
+            Shell.RunFile(Shell.sh_tmp);
+        }
+
+
+        /** verinfo 将test转正 */
+        void Step_Verinfo_CopyFromTest()
+        {
+
+            tmp.Clear(gitNeedPassword);
+            tmp.WriteLine("cd " + gitRoot);
+
+
+            for (int i = 0; i < centerList.Count; i++)
+            {
+                CenterSwitcher.CenterItem item = centerList[i];
+
+                if (item.gitToggle)
+                {
+
+
+                    string verinfoPath_Test = gitServerEditor.GetGitVerinfoPath(item.name, true);
+                    string verinfoPath =gitServerEditor.GetGitVerinfoPath(item.name, false);
+
+                    tmp.WriteLine(string.Format("cp {0} {1}", verinfoPath_Test, verinfoPath));
+
+
+                }
+            }
+
+
+            tmp.Save();
+            Shell.RunTmp(Shell.sh_tmp);
         }
 
 
@@ -505,7 +569,7 @@ namespace com.ihaiu
 
 			if(!string.IsNullOrEmpty(txt))
 			{
-				tmp.Clear(true);
+                tmp.Clear(gitNeedPassword);
 				tmp.WriteLine("cd " + gitRoot);
 				for(int i = 0; i < tags.Length; i ++)
 				{

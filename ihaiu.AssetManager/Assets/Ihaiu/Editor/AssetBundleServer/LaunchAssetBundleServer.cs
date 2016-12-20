@@ -167,7 +167,7 @@ namespace com.ihaiu
             gameConstConfig.WebUrl_Develop = downloadURL;
             gameConstConfig.Save();
 
-            VersionInfo versionInfo = VersionInfo.Load(ServerRootPath);
+            VersionInfo versionInfo = VersionInfo.Load(ServerRootPath + "/" + AssetManagerSetting.VersionInfoName);
             versionInfo.version = gameConstConfig.Version;
             if (ServerRootPath == AssetManagerSetting.EditorAssetBundleServerRoot_StreamingAssets)
             {

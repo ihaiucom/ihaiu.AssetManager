@@ -5,7 +5,7 @@
     "AppPrefix": "ihaiu_",
     "WebUrl_Release": "http://www.ihaiu.com/",
     "WebUrl_Develop": "http://127.0.0.1:8080/",
-    "Version": "1.0.1",
+    "Version": "1.0.5",
     "CenterName": "Official",
     "IsCacheResourceAsset": false,
     "ForcedResourceAsynLoadWaitFrame": true

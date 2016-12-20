@@ -11,7 +11,7 @@ namespace com.ihaiu
     public partial class VersionReleaseWindow : EditorWindow
     {
         public static VersionReleaseWindow window;
-        [MenuItem ("资源管理/版本设置面板", false, 900)]
+//        [MenuItem ("资源管理/版本设置面板", false, 900)]
         public static void Open () 
         {
             window = EditorWindow.GetWindow <VersionReleaseWindow>("版本设置");

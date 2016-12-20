@@ -21,10 +21,8 @@ namespace com.ihaiu
 
 
         #if UNITY_EDITOR
-        public static VersionInfo Load(string serverRoot)
+        public static VersionInfo Load(string path)
         {
-            string path = serverRoot + "/" + AssetManagerSetting.VersionInfoName;
-
             var f = new FileInfo(path);
             if (f.Exists)
             {
@@ -40,6 +38,7 @@ namespace com.ihaiu
                 return new VersionInfo();
             }
         }
+
 
 
         public void Save(string filesPath)

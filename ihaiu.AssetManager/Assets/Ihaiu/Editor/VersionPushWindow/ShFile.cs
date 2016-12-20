@@ -4,6 +4,20 @@ using System.IO;
 
 public class ShFile
 {
+    private static ShFile _tmp;
+    public static ShFile tmp
+    {
+        get
+        {
+            if (_tmp == null)
+            {
+                _tmp = new ShFile(Shell.sh_vertmp);;
+            }
+
+            return _tmp;
+        }
+    }
+
     public string       path;
     public StringWriter sw = new StringWriter();
 

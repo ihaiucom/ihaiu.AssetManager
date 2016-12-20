@@ -154,7 +154,6 @@ public class Shell
 
     public static void RunTmp(string sh)
     {
-        UnityEngine.Debug.Log(sh);
         System.Diagnostics.Process.Start("/bin/bash", sh_chmod_x + " " + sh);
         Process p = System.Diagnostics.Process.Start("/bin/bash", sh);
         p.WaitForExit();
@@ -163,7 +162,6 @@ public class Shell
 
     public static void RunFile(string sh, bool isWaitExit = false)
     {
-        UnityEngine.Debug.Log(sh);
         System.Diagnostics.Process.Start("/bin/bash", sh_chmod_x + " " + sh);
         string command = "/Applications/Utilities/Terminal.app/Contents/MacOS/Terminal"; 
         Process p = System.Diagnostics.Process.Start(command, sh);

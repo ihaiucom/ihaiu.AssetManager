@@ -8,7 +8,28 @@ namespace com.ihaiu
 {
     public class AssetMenuItems 
     {
-       
+
+
+        [MenuItem ("资源管理/版本设置面板", false, 900)]
+        public static void VersionReleaseWindowMenu()
+        {
+            VersionReleaseWindow.Open();
+        }
+
+
+        [MenuItem ("资源管理/版本推送面板", false, 900)]
+        public static void VersionPushWindowMenu()
+        {
+            VersionPushWindow.Open();
+        }
+
+        [MenuItem ("资源管理/版本信息编辑面板", false, 900)]
+        public static void VersionInfoWindowMenu()
+        {
+            VersionInfoWindow.Open();
+        }
+
+
 
 
 

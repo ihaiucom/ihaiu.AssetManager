@@ -53,8 +53,6 @@ namespace com.ihaiu
         }
 
 
-		/** 目录--Git版本 */
-		public static string EditorGitRoot        = Application.dataPath + "/../../../test.version.git/" ;
 
         /** 资源列表--Resources */
         public static string EditorFileCsvForResource = "Assets/Game/Resources/files.csv";
