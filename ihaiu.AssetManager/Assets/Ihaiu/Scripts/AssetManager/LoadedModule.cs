@@ -27,9 +27,9 @@ namespace com.ihaiu
 //                        _name = config.name;
 //                    }
 //                    else
-                    {
+//                    {
                         _name = "未知";
-                    }
+//                    }
                 }
 
                 return _name;
@@ -70,8 +70,8 @@ namespace com.ihaiu
             {
                 if (!AssetManagerSetting.dontUnloadAssetFileList.Has(kvp.Key))
                 {
-                    //                    assetManager.Unload(kvp.Value.assetInfo.name, kvp.Value.referencedCount, moduleId == MenuType.WarScene);
-                    assetManager.Unload(kvp.Value.assetInfo.name, kvp.Value.referencedCount);
+//					assetManager.Unload(kvp.Value.assetInfo.name, kvp.Value.referencedCount, moduleId == MenuType.WarScene);
+					assetManager.Unload(kvp.Value.assetInfo.name, kvp.Value.referencedCount, false);
                     LoadedModuleAsset.Despawn(kvp.Value);
                     willRemoveKeys.Add(kvp.Key);
                 }

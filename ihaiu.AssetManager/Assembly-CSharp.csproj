@@ -65,6 +65,7 @@
      <Compile Include="Assets\Ihaiu\Debug\DebugPanel.cs" />
      <Compile Include="Assets\Ihaiu\Debug\DebugPanelSwitch.cs" />
      <Compile Include="Assets\Ihaiu\Debug\GMMethod.cs" />
+     <Compile Include="Assets\Ihaiu\Scripts\AssetManager\AndroidAssetLoadSDK.cs" />
      <Compile Include="Assets\Ihaiu\Scripts\AssetManager\AssetBundleLoadAssetOperation.cs" />
      <Compile Include="Assets\Ihaiu\Scripts\AssetManager\AssetBundleLoadAssetOperationFull.cs" />
      <Compile Include="Assets\Ihaiu\Scripts\AssetManager\AssetBundleLoadAssetOperationSimulation.cs" />
@@ -72,26 +73,39 @@
      <Compile Include="Assets\Ihaiu\Scripts\AssetManager\AssetBundleLoadLevelSimulationOperation.cs" />
      <Compile Include="Assets\Ihaiu\Scripts\AssetManager\AssetBundleLoadManifestOperation.cs" />
      <Compile Include="Assets\Ihaiu\Scripts\AssetManager\AssetBundleLoadOperation.cs" />
+     <Compile Include="Assets\Ihaiu\Scripts\AssetManager\AssetCollect.cs" />
      <Compile Include="Assets\Ihaiu\Scripts\AssetManager\AssetInfo.cs" />
+     <Compile Include="Assets\Ihaiu\Scripts\AssetManager\AssetLoadSdk.cs" />
      <Compile Include="Assets\Ihaiu\Scripts\AssetManager\AssetManager.cs" />
      <Compile Include="Assets\Ihaiu\Scripts\AssetManager\AssetManagerSetting.cs" />
      <Compile Include="Assets\Ihaiu\Scripts\AssetManager\AssetManagerSetting_Editor.cs" />
+     <Compile Include="Assets\Ihaiu\Scripts\AssetManager\AssetManagerSetting_FileName.cs" />
      <Compile Include="Assets\Ihaiu\Scripts\AssetManager\AssetManager_AssetBundle.cs" />
+     <Compile Include="Assets\Ihaiu\Scripts\AssetManager\AssetManager_AssetBundle_Sync.cs" />
      <Compile Include="Assets\Ihaiu\Scripts\AssetManager\AssetManager_AssetInfo.cs" />
      <Compile Include="Assets\Ihaiu\Scripts\AssetManager\AssetManager_AssetInfo_LoadOperate.cs" />
+     <Compile Include="Assets\Ihaiu\Scripts\AssetManager\AssetManager_AssetInfo_Sync.cs" />
      <Compile Include="Assets\Ihaiu\Scripts\AssetManager\AssetManager_Config.cs" />
      <Compile Include="Assets\Ihaiu\Scripts\AssetManager\AssetManager_Editor.cs" />
+     <Compile Include="Assets\Ihaiu\Scripts\AssetManager\AssetManager_Lua.cs" />
      <Compile Include="Assets\Ihaiu\Scripts\AssetManager\AssetManager_Module.cs" />
      <Compile Include="Assets\Ihaiu\Scripts\AssetManager\AssetManager_Resources.cs" />
+     <Compile Include="Assets\Ihaiu\Scripts\AssetManager\AssetManager_Resources_Sync.cs" />
+     <Compile Include="Assets\Ihaiu\Scripts\AssetManager\AssetManager_Sync.cs" />
      <Compile Include="Assets\Ihaiu\Scripts\AssetManager\AssetManager_WWW.cs" />
+     <Compile Include="Assets\Ihaiu\Scripts\AssetManager\CallbackStruct.cs" />
      <Compile Include="Assets\Ihaiu\Scripts\AssetManager\IAssetBundleManager.cs" />
      <Compile Include="Assets\Ihaiu\Scripts\AssetManager\LoadedAssetBundle.cs" />
      <Compile Include="Assets\Ihaiu\Scripts\AssetManager\LoadedAssetBundleCache.cs" />
      <Compile Include="Assets\Ihaiu\Scripts\AssetManager\LoadedModule.cs" />
      <Compile Include="Assets\Ihaiu\Scripts\AssetManager\LoadedModuleAsset.cs" />
      <Compile Include="Assets\Ihaiu\Scripts\AssetManager\LoadedResource.cs" />
+     <Compile Include="Assets\Ihaiu\Scripts\AssetManager\LoadedWWWCache.cs" />
      <Compile Include="Assets\Ihaiu\Scripts\AssetManager\ManifestAssetBundleManager.cs" />
+     <Compile Include="Assets\Ihaiu\Scripts\AssetManager\ManifestAssetBundleManager_Sync.cs" />
+     <Compile Include="Assets\Ihaiu\Scripts\AssetManager\ZipHelper.cs" />
      <Compile Include="Assets\Ihaiu\Scripts\Attributes\HelpAttribute.cs" />
+     <Compile Include="Assets\Ihaiu\Scripts\Utils\DateTimeUtils.cs" />
      <Compile Include="Assets\Ihaiu\Scripts\Utils\ListUtil.cs" />
      <Compile Include="Assets\Ihaiu\Scripts\Utils\PathUtil.cs" />
      <Compile Include="Assets\Ihaiu\Scripts\Utils\Platform.cs" />
@@ -105,8 +119,11 @@
      <Compile Include="Assets\Ihaiu\Scripts\Version\Version.cs" />
      <Compile Include="Assets\Ihaiu\Scripts\Version\VersionCheck.cs" />
      <Compile Include="Assets\Ihaiu\Scripts\Version\VersionCheckState.cs" />
+     <Compile Include="Assets\Ihaiu\Scripts\Version\VersionData.cs" />
      <Compile Include="Assets\Ihaiu\Scripts\Version\VersionInfo.cs" />
+     <Compile Include="Assets\Ihaiu\Scripts\Version\VersionLocalInfo.cs" />
      <Compile Include="Assets\Ihaiu\Scripts\Version\VersionManager.cs" />
+     <Compile Include="Assets\Ihaiu\Scripts\Version\VersionManager_Sync.cs" />
      <Compile Include="Assets\Ihaiu\Scripts\Version\VersionStages.cs" />
      <Compile Include="Assets\Ihaiu\Scripts\Version\VersionType.cs" />
      <Compile Include="Assets\_ZF\TestFor.cs" />
@@ -276,6 +293,9 @@
  </Reference>
  <Reference Include="UnityEngine.VR">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/UnityVR/RuntimeEditor/UnityEngine.VR.dll</HintPath>
+ </Reference>
+ <Reference Include="ICSharpCode.SharpZipLib">
+ <HintPath>C:/zengfeng/github/ihaiu.AssetManager/ihaiu.AssetManager/Assets/Plugins/General/ICSharpCode.SharpZipLib.dll</HintPath>
  </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

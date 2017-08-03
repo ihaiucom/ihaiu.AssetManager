@@ -146,24 +146,72 @@ public class Shell
     }
 
 
+	public static string PATH_GIT_LOCAL
+	{
+		get 
+		{
+			return Environment.GetFolderPath (Environment.SpecialFolder.LocalApplicationData).Replace("\\", "/") + "/Atlassian/SourceTree/git_local/";
+		}
+	}
+
+	public static string PATH_BASH
+	{
+		get
+		{
+			#if UNITY_EDITOR_WIN
+			return PATH_GIT_LOCAL + "bin/bash.exe";
+			#else
+			return "/bin/bash";
+			#endif
+		}
+	}
+
+	public static string PATH_TERMINAL
+	{
+		get 
+		{
+
+			#if UNITY_EDITOR_WIN
+			return PATH_GIT_LOCAL + "bin/bash.exe";
+			#else
+			return  "/Applications/Utilities/Terminal.app/Contents/MacOS/Terminal"; 
+			#endif
+		}
+	}
+
+
     public static void RunCmd(string cmd)
     {
-        System.Diagnostics.Process.Start("/bin/bash", cmd);
+		System.Diagnostics.Process.Start(PATH_BASH, cmd);
     }
 
 
     public static void RunTmp(string sh)
     {
-        System.Diagnostics.Process.Start("/bin/bash", sh_chmod_x + " " + sh);
-        Process p = System.Diagnostics.Process.Start("/bin/bash", sh);
+		System.Diagnostics.Process.Start(PATH_BASH, sh_chmod_x + " " + sh);
+		Process p = System.Diagnostics.Process.Start(PATH_BASH, sh);
         p.WaitForExit();
         p.Close();
     }
 
     public static void RunFile(string sh, bool isWaitExit = false)
     {
-        System.Diagnostics.Process.Start("/bin/bash", sh_chmod_x + " " + sh);
-        string command = "/Applications/Utilities/Terminal.app/Contents/MacOS/Terminal"; 
+
+		#if UNITY_EDITOR_WIN
+		if (isWaitExit)
+		{
+			StringWriter sw = new StringWriter ();
+			sw.Write (File.ReadAllText (sh));
+			sw.WriteLine ("read -n 1 -p 'Press any key to exit...' INP ");
+			sw.WriteLine ("if [[ $INP != '' ]] ; then ");
+			sw.WriteLine ("    echo -ne '\b \n' ");
+			sw.WriteLine ("fi ");
+			File.WriteAllText (sh, sw.ToString ());
+		}
+		#endif
+
+		System.Diagnostics.Process.Start(PATH_BASH, sh_chmod_x + " " + sh);
+		string command = PATH_TERMINAL; 
         Process p = System.Diagnostics.Process.Start(command, sh);
         if (isWaitExit)
         {

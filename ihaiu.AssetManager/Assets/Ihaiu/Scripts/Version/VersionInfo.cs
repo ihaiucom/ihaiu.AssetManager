@@ -10,6 +10,19 @@ namespace com.ihaiu
     {
         public string version = "0.0.0";
 
+
+		/** Zip版本 */
+		public string zipVersion    		= "0.0.0";
+		/** Zip MD5码 */
+		public string zipMD5        		= "";
+		/** Zip 版本号检测前几位,默认2 */
+		public int    zipCheckDigit 		= 2;
+		/** Zip 加载面板是否一开始就显示 */
+		public bool   zipPanelStarShow 		= false;
+		/** Zip 文件网址 */
+		public string zipLoadUrl        	= "http://192.168.31.202/git/mbcr/GameCR/Workspace/Android/res.zip";
+
+
         public string downLoadUrl   = "http://127.0.0.1:8080/app.apk";
         public string updateLoadUrl = "http://127.0.0.1:8080/StreamingAssets/";
 
@@ -18,6 +31,7 @@ namespace com.ihaiu
 
 		public int isClose = 0;
 
+		public bool isChangeGameConstVersion = true;
 
 
         #if UNITY_EDITOR

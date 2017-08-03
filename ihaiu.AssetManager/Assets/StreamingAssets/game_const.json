@@ -1,12 +1,13 @@
 {
-    "DevelopMode": false,
+    "DevelopMode": true,
     "TestVersionMode": false,
     "AppName": "ihaiu",
     "AppPrefix": "ihaiu_",
     "WebUrl_Release": "http://www.ihaiu.com/",
     "WebUrl_Develop": "http://127.0.0.1:8080/",
-    "Version": "1.0.5",
+    "Version": "1.0.0",
     "CenterName": "Official",
     "IsCacheResourceAsset": false,
-    "ForcedResourceAsynLoadWaitFrame": true
+    "ForcedResourceAsynLoadWaitFrame": true,
+    "updateEnableChangeCenterName": false
 }

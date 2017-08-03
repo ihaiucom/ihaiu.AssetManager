@@ -231,6 +231,45 @@ public class AssetNode
 
         assetBundleName =  path.Replace(resourceRoot + "/", "").ToLower();
 
+        // 特殊AssetBundle合并设定
+        if (assetBundleName.StartsWith("assets/art/text/"))
+        {
+            assetBundleName = "assets_art_text";
+        }
+        else if(assetBundleName.StartsWith("assets/game/arts_effect/texiao/"))
+        {
+            assetBundleName = "assets_arts_effect_texiao";
+        }
+        else if(assetBundleName.StartsWith("assets/game/arts_effect/tietu/materials/"))
+        {
+            assetBundleName = "assets_arts_effect_tietu_materials";
+        }
+        else if(assetBundleName.StartsWith("assets/game/arts_effect/tietu/"))
+        {
+            assetBundleName = "assets_arts_effect_tietu";
+        }
+//        else if(assetBundleName.StartsWith("assets/builtin/"))
+//        {
+//            assetBundleName = "assets_builtin";
+//        }
+//        else if(assetBundleName.StartsWith("materials/"))
+//        {
+//            assetBundleName = "materials_state";
+//        }
+        else if(assetBundleName.StartsWith("faces/"))
+        {
+            assetBundleName = "faces";
+        }
+//        else if(assetBundleName.StartsWith("shaders/"))
+//        {
+//            assetBundleName = "shaders";
+//        }
+        else if(assetBundleName.StartsWith("effect_ui/"))
+        {
+            assetBundleName = "effect_ui";
+        }
+
+
         assetBundleName = PathUtil.ChangeExtension(assetBundleName, ext);
         return assetBundleName;
     }

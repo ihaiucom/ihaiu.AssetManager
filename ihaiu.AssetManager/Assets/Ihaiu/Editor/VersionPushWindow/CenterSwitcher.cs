@@ -6,6 +6,7 @@ public class CenterSwitcher
 {
 	public class CenterItem
 	{
+		public GitId gitId;
 		public string 	name;
 		public string 	cnName;
 		public bool 	gitToggle = true;

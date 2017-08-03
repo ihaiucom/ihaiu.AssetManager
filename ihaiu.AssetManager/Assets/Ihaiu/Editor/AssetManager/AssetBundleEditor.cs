@@ -8,10 +8,10 @@ namespace com.ihaiu
 {
     public class AssetBundleEditor 
     {
-        public static string resourceRoot = AssetManagerSetting.EditorRootMResources;
+        public static string resourceRoot = AssetManagerSetting.EditorRoot.MResources;
         static string[] resourcesPaths = new string[]{
             resourceRoot,
-            //        "Assets/Ihaiu/AssetManagerExampleFiles/Component"
+    //        "Assets/Ihaiu/AssetManagerExampleFiles/Component"
 
         };
 
@@ -23,7 +23,7 @@ namespace com.ihaiu
         static List<string> imageExts = new List<string>{".png", ".jpg", ".jpeg", ".bmp", "gif", ".tga", ".tiff", ".psd"};
         static bool isSpriteTag = true;
 
-        public static List<string> exts = new List<string>(new string[]{ ".prefab", ".png", ".jpg", ".jpeg", ".bmp", "gif", ".tga", ".tiff", ".psd", ".mat", ".mp3", ".wav" });
+        public static List<string> exts = new List<string>(new string[]{ ".prefab", ".png", ".jpg", ".jpeg", ".bmp", "gif", ".tga", ".tiff", ".psd", ".mat", ".mp3", ".wav" , ".shader", ".ttf"});
 
 
         public static void ClearAssetBundleNames()
@@ -70,7 +70,7 @@ namespace com.ihaiu
 
 
             // 强制设置某些节点为Root节点，删掉被依赖
-            AssetNodeUtil.ForcedSetRoots(nodeDict, list);
+            AssetNodeUtil.ForcedSetRoots(nodeDict, list, imageExts);
 
 
             // 寻找入度为0的节点
@@ -119,18 +119,23 @@ namespace com.ihaiu
 
         public static void BuildAssetBundles()
         {
-            string outputPath = AssetManagerSetting.EditorRootPlatform;
+//            string outputPath = AssetManagerSetting.EditorRoot.StreamPlatform;
+            string outputPath = AssetManagerSetting.EditorRoot.WorkspaceStreamPlatform;
+            if (outputPath.EndsWith("/"))
+            {
+                outputPath = outputPath.Substring(0, outputPath.Length - 1);
+            }
             PathUtil.CheckPath(outputPath, false);
             Debug.Log("outputPath=" + outputPath);
 
-            BuildPipeline.BuildAssetBundles (outputPath, BuildAssetBundleOptions.None, EditorUserBuildSettings.activeBuildTarget);
+			BuildPipeline.BuildAssetBundles (outputPath, BuildAssetBundleOptions.DeterministicAssetBundle, EditorUserBuildSettings.activeBuildTarget);
 
             AssetDatabase.Refresh();
         }
 
         public static void ClearManifestHelpFile()
         {
-            string outputPath = AssetManagerSetting.EditorRootPlatform;
+            string outputPath = AssetManagerSetting.EditorRoot.StreamPlatform;
 
             List<string> fileList = new List<string>();
             PathUtil.RecursiveFile(outputPath, fileList, new List<string>(new string[]{".manifest"}));
@@ -143,58 +148,6 @@ namespace com.ihaiu
             EditorUtility.ClearProgressBar();
         }
 
-        public static AssetBundleInfoList GeneratorAssetBundleInfo()
-        {
-            AssetBundleInfoList infoList = new AssetBundleInfoList();
-
-            List<string> list = new List<string>();
-            PathUtil.RecursiveFile(resourceRoot, list, exts);
-
-            for(int i = 0; i < list.Count; i ++)
-            {
-                string path = list[i];
-                AssetImporter importer = AssetImporter.GetAtPath(path);
-
-                if (string.IsNullOrEmpty(importer.assetBundleName))
-                {
-                    Debug.LogWarningFormat("MResource资源没有设置AssetBundleName  path={0}", path);
-                    continue;
-                }
-
-                AssetBundleInfo item = new AssetBundleInfo();
-                item.path = path;
-                item.assetBundleName = importer.assetBundleName;
-                item.assetName = PathUtil.ChangeExtension(Path.GetFileName(path), string.Empty);
-
-
-
-                string ext = Path.GetExtension(path).ToLower();
-                if (ext == ".prefab")
-                {
-                    item.objType = AssetManagerSetting.ObjType_GameObject;
-                }
-                else if (path.IndexOf("map/terrain") != -1)
-                {
-                    item.objType = AssetManagerSetting.ObjType_Texture;
-                }
-                else if (imageExts.IndexOf(ext) != -1)
-                {
-                    TextureImporter textureImporter = TextureImporter.GetAtPath(path) as TextureImporter;
-                    if (textureImporter.textureType == TextureImporterType.Sprite)
-                    {
-                        item.objType = AssetManagerSetting.ObjType_Sprite;
-                    }
-                }
-
-
-                infoList.Add(item);
-            }
-
-            EditorUtility.ClearProgressBar();
-            infoList.Save(AssetManagerSetting.EditorGetAbsoluteStreamPath(AssetManagerSetting.AssetBundleListName));
-            AssetDatabase.Refresh();
-
-            return infoList;
-        }
+       
     }
 }

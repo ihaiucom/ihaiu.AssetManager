@@ -17,7 +17,7 @@ namespace com.ihaiu
         private Dictionary<string, AssetInfo> assetInfoDict = new Dictionary<string, AssetInfo>();
         private IEnumerator ReadFiles()
         {
-            string path = AssetManagerSetting.LoadAssetListURL;
+            string path = AssetManagerSetting.FileURL.AssetListLoaMap;
             WWW www = new WWW(path);
             yield return www;
 
@@ -25,8 +25,9 @@ namespace com.ihaiu
             {
                 ParseInfo(www.text);
             }
+            www.Dispose();
 
-            path = AssetManagerSetting.DontUnloadAssetListURL;
+            path = AssetManagerSetting.FileURL.AssetListDontUnload;
             www = new WWW(path);
             yield return www;
 
@@ -34,10 +35,12 @@ namespace com.ihaiu
             {
                 AssetManagerSetting.dontUnloadAssetFileList = AssetFileList.Deserialize(www.text);
             }
+            www.Dispose();
         }
 
         private void ParseInfo(string p)
         {
+            assetInfoDict.Clear();
             AssetLoadType loadType;
             string path,  objType, assetBundleName, assetName, ext;
             string filename;
@@ -64,7 +67,7 @@ namespace com.ihaiu
                         ext             = length > 5 ? seg[5] : string.Empty;
                         if (AssetManagerSetting.EditorSimulateAssetBundle)
                         {
-                            path = string.Format(path, AssetManagerSetting.EditorRootMResources) + ext;
+                            path = string.Format(path, AssetManagerSetting.EditorRoot.MResources) + ext;
                         }
                         else
                         #endif
@@ -92,17 +95,17 @@ namespace com.ihaiu
                     }
                 }
             }
-
+           
 
         }
 
-
+      
 
         //-----------------------------------
 
         Type tmpObjType = typeof(System.Object);
 
-
+       
 
         /// <summary>
         /// 加载
@@ -176,6 +179,28 @@ namespace com.ihaiu
                 return;
             }
 
+			if (IsWebFile(filename))
+            {
+                LoadWWWAsync(filename, type, callback, callbackArgs);
+                return;
+            }
+
+            if (AssetManagerSetting.SyncLoadType)
+            {
+                LoadSync(filename, callback, callbackArgs, type);
+                return;
+            }
+
+
+            if (string.IsNullOrEmpty(filename))
+            {
+                if (callback != null)
+                    callback(filename, null, callbackArgs);
+
+                Debug.LogErrorFormat("Load filename=" + filename);
+                return;
+            }
+           
             if(AssetManagerSetting.IsConfigFile(filename))
             {
                 LoadConfig(filename, callback, callbackArgs);
@@ -187,7 +212,7 @@ namespace com.ihaiu
             AssetInfo fileInfo;
             if(!assetInfoDict.TryGetValue(filenameLower, out fileInfo))
             {
-                //                Debug.LogError("[AssetMananger]资源配置不存在或者加载出错 name="+filenameLower + "   assetInfo=" + fileInfo );
+//                Debug.LogError("[AssetMananger]资源配置不存在或者加载出错 name="+filenameLower + "   assetInfo=" + fileInfo );
                 if (callback != null && fileInfo == null)
                 {
                     LoadResourceAsync(filename, type, callback, callbackArgs);
@@ -235,7 +260,7 @@ namespace com.ihaiu
         }
 
 
-
+       
 
         public void Unload(string filename)
         {
@@ -263,6 +288,12 @@ namespace com.ihaiu
 
         public void Unload(string filename, Type type, int count, bool isSetLastTime)
         {
+			if (IsWebFile(filename))
+			{
+				UnloadWWWCache(filename);
+				return;
+			}
+
             UnloadOperation(filename, isSetLastTime);
 
             string filenameLower = filename.ToLower();
@@ -304,6 +335,11 @@ namespace com.ihaiu
             }
             return true;
         }
+
+		public bool IsWebFile(string filename)
+		{
+			return filename.StartsWith("http://") || filename.StartsWith("file:///") || filename.StartsWith("https://");
+		}
 
     }
 }

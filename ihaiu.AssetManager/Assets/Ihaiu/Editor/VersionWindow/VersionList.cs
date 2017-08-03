@@ -46,7 +46,7 @@ namespace com.ihaiu
             appVersionList.Clear();
             lastAppRevisedDict.Clear();
 
-            string root = AssetManagerSetting.EditorRootVersion;
+            string root = AssetManagerSetting.EditorRoot.WorkspaceVersion;
 
             PathUtil.CheckPath(root, false);
 

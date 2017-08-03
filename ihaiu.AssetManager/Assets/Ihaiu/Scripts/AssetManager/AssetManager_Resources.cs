@@ -20,6 +20,7 @@ namespace com.ihaiu
             }
         }
 
+        /** 异步加载 */
         public void LoadResourceAsync(string path, System.Type type, Action<string, object, object[]> callback, params object[] callbackArgs)
         {
             if (AssetManagerSetting.IsCacheResourceAsset)
@@ -64,11 +65,11 @@ namespace com.ihaiu
 
             if(callback != null)
             {
-                callback(path, resourceRequest.asset, callbackArgs);
+				callback(path, resourceRequest.asset, callbackArgs);
             }
         }
 
-
+      
 
         LoadedResource GetLoadedResource(string path, Type type)
         {
@@ -182,7 +183,7 @@ namespace com.ihaiu
                 }
                 catch(Exception e)
                 {
-                    Debug.LogError("AssetManager_Resoures UnloadLoadedResourceCache e=" + e);
+                    
                 }
             }
 

@@ -91,8 +91,6 @@ namespace Ihaiu.Debugs
 
             info += "\n";
             info += Games.GameConst.GetInfo();
-            info += "\n";
-            info += AssetManagerSetting.GetInfo();
     	
     		info += "\n";
     		#if LUA_ZIP

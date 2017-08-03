@@ -9,8 +9,9 @@ namespace com.ihaiu
     {
         public const string ROOT_WWW                = "www";
         public const string ROOT_StreamingAssets    = "Assets/StreamingAssets";
+        public const string ROOT_Workspace          = "Workspace/XXX/StreamingAssets";
         public int index = -1;
-        public string[] serverRoots = new string[]{ROOT_WWW, ROOT_StreamingAssets};
+        public string[] serverRoots = new string[]{ROOT_WWW, ROOT_StreamingAssets, ROOT_Workspace};
         public string selectRoot;
         public void OnGUI()
         {
@@ -39,9 +40,13 @@ namespace com.ihaiu
                 {
                     selectRoot = AssetManagerSetting.EditorAssetBundleServerRoot_WWW;
                 }
-                else
+                else if (index == 1)
                 {
                     selectRoot = AssetManagerSetting.EditorAssetBundleServerRoot_StreamingAssets;
+                }
+                else
+                {
+                    selectRoot = AssetManagerSetting.EditorAssetBundleServerRoot_Workspace;
                 }
             }
             GUILayout.EndHorizontal();

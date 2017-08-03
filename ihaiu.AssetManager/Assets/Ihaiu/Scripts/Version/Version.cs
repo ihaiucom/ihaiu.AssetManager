@@ -37,6 +37,21 @@ namespace com.ihaiu
 //            SetNowDatetime();
         }
 
+        public Version(int master, int minor, int revised)
+        {
+            this.master = master;
+            this.minor = minor;
+            this.revised = revised;
+        }
+
+        public bool IsZero
+        {
+            get
+            {
+                return master == 0 && minor == 0 && revised == 0;
+            }
+        }
+
 
         public void SetNowDatetime()
         {
@@ -77,6 +92,15 @@ namespace com.ihaiu
             }
 
             return datetime > b.datetime ? 1 : -1;
+        }
+
+        public Version Sub(Version target)
+        {
+            Version sub = new Version();
+            sub.master  = master - target.master;
+            sub.minor   = minor - target.minor;
+            sub.revised = revised - target.revised;
+            return sub;
         }
 
         public void Copy(Version b)

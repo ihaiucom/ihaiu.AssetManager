@@ -8,6 +8,7 @@ namespace com.ihaiu
 {
     public class AssetFileList
     {
+        public string savePath ;
         public List<AssetFile> list = new List<AssetFile>();
 
         private Dictionary<string, AssetFile> _dict;
@@ -44,33 +45,49 @@ namespace com.ihaiu
             return null;
         }
 
-        public void Add(AssetFile item)
+        public AssetFile Add(AssetFile item)
         {
             if (dict.ContainsKey(item.path))
             {
                 dict[item.path].md5 = item.md5;
+
+                dict[item.path].verMaster = item.verMaster;
+                dict[item.path].verMinor = item.verMinor;
+                dict[item.path].verRevised = item.verRevised;
+                return dict[item.path];
             }
             else
             {
                 dict.Add(item.path, item);
                 list.Add(item);
+                return item;
             }
         }
 
 
-        public void Add(string path, string md5)
+        public AssetFile Add(string path, string md5)
+        {
+            return Add(path, md5, null);
+        }
+
+        public AssetFile Add(string path, string md5, string ver)
         {
             if (dict.ContainsKey(path))
             {
                 dict[path].md5 = md5;
+                dict[path].SetVer(ver);
+
+                return dict[path];
             }
             else
             {
                 AssetFile asset = new AssetFile();
                 asset.path = path;
                 asset.md5 = md5;
+                asset.SetVer(ver);
                 dict.Add(path, asset);
                 list.Add(asset);
+                return asset;
             }
         }
 
@@ -84,6 +101,23 @@ namespace com.ihaiu
             }
         }
 
+
+        public AssetFileList SetSavePath(string path)
+        {
+            this.savePath = path;
+            return this;
+        }
+
+        public void Save()
+        {
+            if (string.IsNullOrEmpty(savePath))
+            {
+                Debug.Log("AssetFileList savePath=" + savePath);
+                return;
+            }
+
+            Save(savePath);
+        }
 
         public void Save(string path)
         {
@@ -105,7 +139,7 @@ namespace com.ihaiu
         public static AssetFileList Read(string path)
         {
             if (!File.Exists(path))
-                return new AssetFileList();
+                return new AssetFileList().SetSavePath(path);
             
             using (FileStream fsRead = new FileStream(path, FileMode.Open))
             {
@@ -114,7 +148,7 @@ namespace com.ihaiu
                 fsRead.Read(heByte, 0, heByte.Length);
                 string txt = System.Text.Encoding.UTF8.GetString(heByte);
 
-                return Deserialize(txt);
+                return  Deserialize(txt).SetSavePath(path);
             } 
         }
 
@@ -145,7 +179,7 @@ namespace com.ihaiu
                     if(!string.IsNullOrEmpty(line))
                     {
                         string[] seg = line.Split(';');
-                        list.Add(seg[0], seg[1]);
+                        list.Add(seg[0], seg[1], seg.Length > 2 ? seg[2] : null);
                     }
                 }
             }
@@ -165,7 +199,7 @@ namespace com.ihaiu
             {
                 AssetFile item = update.list[i];
 
-                if (item.path == AssetManagerSetting.GameConstName)
+                if (item.path == AssetManagerSetting.FileName.GameConst)
                 {
                     gameConstItem = item;
                     continue;
@@ -187,7 +221,7 @@ namespace com.ihaiu
             }
             else
             {
-                diffs.Add(new AssetFile(AssetManagerSetting.GameConstName, "md5"));
+                diffs.Add(new AssetFile(AssetManagerSetting.FileName.GameConst, "md5"));
             }
 
             return diffs;
@@ -205,7 +239,7 @@ namespace com.ihaiu
             {
                 AssetFile item = update.list[i];
 
-                if (item.path == AssetManagerSetting.GameConstName)
+                if (item.path == AssetManagerSetting.FileName.GameConst)
                 {
                     gameConstItem = item;
                     continue;
@@ -227,7 +261,7 @@ namespace com.ihaiu
             }
             else
             {
-                diffs.Add(new AssetFile(AssetManagerSetting.GameConstName, "md5"));
+                diffs.Add(new AssetFile(AssetManagerSetting.FileName.GameConst, "md5"));
             }
 
             return diffs;

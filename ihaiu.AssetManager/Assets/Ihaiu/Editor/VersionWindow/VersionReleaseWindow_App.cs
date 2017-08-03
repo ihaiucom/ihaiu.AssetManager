@@ -2,6 +2,8 @@
 using System.Collections;
 using UnityEditor;
 using Games;
+using Games;
+using System.IO;
 
 
 namespace com.ihaiu
@@ -29,6 +31,10 @@ namespace com.ihaiu
         /** App */
         void OnGUI_App()
         {
+
+
+
+
             Version version = appVersion;
 
 
@@ -40,7 +46,7 @@ namespace com.ihaiu
                 VersionList.Read(true);
 
                 version.Copy(VersionList.lastAppVersion);
-                version.revised = 0;
+//                version.revised = 0;
                 version.verType = VersionType.App;
             }
 
@@ -49,14 +55,17 @@ namespace com.ihaiu
                 VersionList.Read(true);
 
                 version.Copy(VersionList.lastAppVersion);
-                version.minor++;
-                version.revised = 0;
+                //                version.minor++;
+                //                version.revised = 0;
+                version.revised++;
                 version.verType = VersionType.App;
             }
             GUILayout.EndVertical();
             GUILayout.EndHorizontal();
 
             GUILayout.Space(20);
+
+
 
 
             HGUILayout.BeginCenterHorizontal();
@@ -66,6 +75,12 @@ namespace com.ihaiu
 
 
                 bool isRefresh = false;
+
+                if (currentDvancedSettingData.GetValue(DvancedSettingType.ClearWorkspacePlatformDirctory))
+                {
+                    ClearWorkspacePlatformDirctory(runtimePlatform);
+                }
+
                 if (currentDvancedSettingData.GetValue(DvancedSettingType.ClearAllPlatformDirctory))
                 {
                     PathUtil.ClearAllPlatformDirctory();
@@ -130,12 +145,12 @@ namespace com.ihaiu
 
                 if (currentDvancedSettingData.GetValue(DvancedSettingType.GeneratorLoadAssetListCsv))
                 {
-                    LoadAssetListCsv.Generator();
+                    AssetListCsvLoadMap.Generator(false);
                 }
 
                 if (currentDvancedSettingData.GetValue(DvancedSettingType.GeneratorStreamingAssetsFilesCSV))
                 {
-                    FilesCsvForStreamingAssets.Generator();
+                    AssetListCsvFile.Generator();
                 }
 
 
@@ -151,15 +166,32 @@ namespace com.ihaiu
 
                 if (currentDvancedSettingData.GetValue(DvancedSettingType.GenerateVersionInfo))
                 {
-                    FilesCsvForStreamingAssets.CopyStreamFilesCsvToVersion(version);
+                    AssetListCsvFile.CopyStreamFilesCsvToVersion(version);
                 }
 
 
                 if (currentDvancedSettingData.GetValue(DvancedSettingType.GeneratorUpdateAssetList))
                 {
-                    FilesCsvForStreamingAssets.GeneratorUpdateList(null);
+                    AssetListCsvFile.GeneratorUpdateList(null);
                 }
 
+
+                if (currentDvancedSettingData.GetValue(DvancedSettingType.GenerateResZip))
+                {
+                    ResZipEditor.Install.Generator();
+                }
+
+
+                if (currentDvancedSettingData.GetValue(DvancedSettingType.CopyWorkspaceStreamToStreamingAssets_UnResZip))
+                {
+                    ResZipEditor.Install.CopyToStreaming_UnZip();
+                }
+
+
+                if (currentDvancedSettingData.GetValue(DvancedSettingType.CopyWorkspaceStreamToStreamingAssets_All))
+                {
+                    ResZipEditor.Install.CopyToStreaming_All();
+                }
             }
             HGUILayout.EndCenterHorizontal();
 

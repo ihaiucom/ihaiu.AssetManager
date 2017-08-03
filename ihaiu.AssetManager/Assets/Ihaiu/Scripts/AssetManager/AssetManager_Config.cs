@@ -25,6 +25,21 @@ namespace com.ihaiu
 
         }
 
+
+        public string LoadConfigSync(string filename)
+        {
+            TextAsset textAsset = LoadConfig(filename);
+            if(textAsset != null)
+            {
+                return textAsset.text;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+
         public TextAsset LoadConfig(string filename)
         {
             #if UNITY_EDITOR

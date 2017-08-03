@@ -5,37 +5,76 @@ using System.IO;
 namespace com.ihaiu
 {
     public partial class AssetManagerSetting 
-    {
-        /** 是否是测试版本模式 */
-        public static bool TestVersionMode = true;
-        /** 加载超时(秒) */
-        public static int LoadTimeOut           = 10;
+	{
+		/** 是否是测试版本模式 */
+		public static bool TestVersionMode = true;
+		/** 加载超时(秒) */
+        public static int LoadTimeOut           = 20;
+        /** WWW加载网络资源最多缓存多少个 */
+        public static int WWWCacheMaxNum        = 50;
+        /** 是否是同步加载方式 */
+        public static bool SyncLoadType         = true;
 
         public static string BytesExt           = ".txt";
         public static string AssetbundleExt     = "-assetbundle";
+        public static string RootConfigBytes    = "Assets/Game/ConfigBytes";
 
-        public static string ConfigAssetBundleName  = "config" + AssetbundleExt;
-        public static string LuaAssetBundleName     = "luacode" + AssetbundleExt;
-
-        public static string PersistentAssetListName    = "PersistentAssetList.csv";
-        public static string FilesName                  = "files.csv";
-        public static string AssetBundleListName        = "AssetBundleList.csv";
-        public static string AssetListName              = "AssetList.csv";
-        public static string UpdateAssetListName        = "UpdateAssetList.csv";
-        public static string LoadAssetListName          = "LoadAssetList.csv";
-        public static string DontUnloadAssetListName          = "DontUnloadAssetList.csv";
-        public static string GameConstName              = "game_const.json";
-        public static string VersionInfoName            = "version";
-
-        public static string RootConfigBytes            = "Assets/Game/ConfigBytes";
-
-
-        public static string AssetFileListPath              = RootPathPersistent + AssetListName;
-        public static string PersistentAssetFileListPath    = RootPathPersistent + PersistentAssetListName;
-
-
-        public static AssetFileList persistentAssetFileList = new AssetFileList();
+        /** 永久缓存资源列表 */
         public static AssetFileList dontUnloadAssetFileList = new AssetFileList();
+
+
+        /** 加载文件指向目录 RootPathPersistent */
+        private static AssetFileList _persistentAssetFileList;
+        public static AssetFileList persistentAssetFileList
+        {
+            get
+            {
+                if (_persistentAssetFileList == null)
+                {
+                    _persistentAssetFileList = AssetFileList.Read(PersistentFilePath.AssetListPersistentLoad);
+                }
+
+                return _persistentAssetFileList;
+            }
+        }
+
+        /** 用来检测资源版本，是否需要更新 */
+        private static AssetFileList _versionAssetFileList;
+        public static AssetFileList versionAssetFileList
+        {
+            get
+            {
+                if (_versionAssetFileList == null)
+                {
+                    _versionAssetFileList = AssetFileList.Read(PersistentFilePath.AssetListVersion);
+                }
+
+                return _versionAssetFileList;
+            }
+        }
+
+
+
+        /** Zip里的资源 */
+        private static AssetFileList _zipAssetFileList;
+        public static AssetFileList zipAssetFileList
+        {
+            get
+            {
+                if (_zipAssetFileList == null)
+                {
+                    _zipAssetFileList = AssetFileList.Read(PersistentFilePath.AssetListZip);
+                }
+
+                return _zipAssetFileList;
+            }
+        }
+
+
+        /** 资源加载情况收集 */
+        public static AssetCollect  collect            = new AssetCollect();
+        /** 是否开启资源加载情况收集 */
+        public static bool          IsCollect          = true;
 
         public static string RootPathStreaming
         {
@@ -98,12 +137,6 @@ namespace com.ihaiu
             }
         }
 
-        public static string GameConstUrl_Streaming     = RootUrlStreaming      + GameConstName;
-        public static string GameConstUrl_Persistent    = RootUrlPersistent     + GameConstName;
-
-
-        public static string GameConstPath = RootPathPersistent + GameConstName;
-
 
 
         /** 强制异步加载,等待一帧(Resource.AsyLoad) */
@@ -137,6 +170,13 @@ namespace com.ihaiu
          */
         public static string GetAbsoluteURL(string path)
         {
+            #if UNITY_EDITOR
+            if(!TestVersionMode)
+            {
+                return RootUrlStreaming + path;
+            }
+            #endif
+
             if (persistentAssetFileList.Has(path))
             {
                 return RootUrlPersistent + path;
@@ -160,12 +200,61 @@ namespace com.ihaiu
 
         public static string GetAbsoluteAssetBundleURL(string assetBundleName)
         {
-            #if UNITY_IPHONE
-            return GetAbsoluteURL(Platform.PlatformDirectory + "/" + assetBundleName).Replace(" ", "%20");
+#if UNITY_IPHONE
+			return GetAbsoluteURL(Platform.PlatformDirectory + "/" + assetBundleName).Replace(" ", "%20");
+#else
+			return GetAbsoluteURL(Platform.PlatformDirectory + "/" + assetBundleName);
+#endif
+        }
+
+        public static string GetAbsoluteAssetBundlePath(string assetBundleName)
+        {
+
+
+            string path = Platform.PlatformDirectory + "/" + assetBundleName;
+
+            #if UNITY_ANDROID && !UNITY_EDITOR
+            if (persistentAssetFileList.Has(path))
+            {
+                return RootPathPersistent + path;
+            }
+            else
+            {
+                return Application.dataPath + "!assets/" + path;
+            }
             #else
-            return GetAbsoluteURL(Platform.PlatformDirectory + "/" + assetBundleName);
+            if (persistentAssetFileList.Has(path))
+            {
+                return RootPathPersistent + path;
+            }
+            else
+            {
+                return RootPathStreaming + path;
+            }
             #endif
         }
+
+        public static string GetSdkPlatformPath(string path)
+        {
+            return GetSdkPath(GetPlatformPath(path));
+        }
+
+        public static string GetSdkPath(string path)
+        {
+            if (persistentAssetFileList.Has(path))
+            {
+                return RootPathPersistent + path;
+            }
+            else
+            {
+                #if UNITY_ANDROID && !UNITY_EDITOR
+                return path;
+                #else
+                return RootPathStreaming + path;
+                #endif
+            }
+        }
+
 
 
 
@@ -203,11 +292,6 @@ namespace com.ihaiu
         }
 
 
-        public static string GetAbsoluteAssetBundlePath(string assetBundleName)
-        {
-            return GetAbsolutePath(Platform.PlatformDirectory + "/" + assetBundleName);
-        }
-
 
 
 
@@ -226,90 +310,15 @@ namespace com.ihaiu
             return string.Format(path, Platform.PlatformDirectory);
         }
 
-        /** AssetBundleManifest文件路径 */
-        public static string ManifestURL
-        {
-            get
-            {
-                return GetAbsolutePlatformURL("{0}/" + Platform.PlatformDirectoryName);
-            }
-        }
-
-        #region files.csv
-
-
-        /** 资源列表文件路径
-         * return "StreamingAssets/Platform/IOS/files.csv"
-         * return "Res/Platform/IOS/files.csv"
+        /** 获取平台（参数）相对路径
+         * path = "Platform/IOS/config.assetbundle"
+         * return "{0}/config.assetbundle"
          */
-        public static string FilesCsvForStreaming
+        public static string ToPlatformPath(string path)
         {
-            get
-            {
-                return GetAbsolutePlatformURL("{0}/" + FilesName);
-            }
+            return path.Replace(Platform.PlatformDirectory, "{0}");
         }
 
-        /** 资源列表文件路径
-         * return "StreamingAssets/Platform/IOS/LoadAssetList.csv"
-         * return "Res/Platform/IOS/LoadAssetList.csv"
-         */
-        public static string LoadAssetListURL
-        {
-            get
-            {
-                return GetAbsolutePlatformURL("{0}/" + LoadAssetListName);
-            }
-        }
-
-        /** 资源列表文件路径
-         * return "StreamingAssets/Platform/IOS/DontUnloadAssetList.csv"
-         * return "Res/Platform/IOS/DontUnloadAssetList.csv"
-         */
-        public static string DontUnloadAssetListURL
-        {
-            get
-            {
-                return GetAbsolutePlatformURL("{0}/" + DontUnloadAssetListName);
-            }
-        }
-
-
-
-        /** 服务器资源更新列表URL
-         * root =  "http://112.126.75.68:8080/StreamingAssets/"
-         * return  "http://112.126.75.68:8080/StreamingAssets/Platform/XXX/UpdateAssetList.csv"
-         */
-        public static string GetServerFilesCsvURL(string root)
-        {
-            return root + GetPlatformPath("{0}/" + UpdateAssetListName);
-        }
-        #endregion files.csv
-
-        /** 获取服务器版本信息URL */
-        public static string GetServerVersionInfoURL(string root, string centerName)
-        {
-            return root + "/versioninfo/" + Platform.PlatformDirectoryName.ToLower() + "/" + centerName + "/" + AssetManagerSetting.VersionInfoName;
-        }
-
-
-        public static string ConfigAssetBundleURL
-        {
-            get
-            {
-                return GetAbsolutePlatformURL("{0}/" + ConfigAssetBundleName);
-            }
-        }
-
-
-
-        public static string LuaAssetBundleURL
-        {
-            get
-            {
-                return GetAbsolutePlatformURL("{0}/" + LuaAssetBundleName);
-            }
-        }
 
         /** 获取配置文件的AssetName
          * filename = "config/skill";
@@ -337,14 +346,14 @@ namespace com.ihaiu
 
 
 
-        public const string ObjType_Texture      = "Texture";
-        public const string ObjType_Sprite         = "Sprite";
-        public const string ObjType_GameObject     = "GameObject";
+        public const string ObjType_Texture         = "Texture";
+        public const string ObjType_Sprite          = "Sprite";
+        public const string ObjType_GameObject      = "GameObject";
 
-        private static System.Type tmpSpriteType = typeof(Sprite);
-        private static System.Type tmpGameObjectType = typeof(GameObject);
-        private static System.Type tmpTextureType = typeof(Texture);
-        private static System.Type tmpObjectType = typeof(System.Object);
+        public static System.Type tmpSpriteType = typeof(Sprite);
+        public static System.Type tmpGameObjectType = typeof(GameObject);
+        public static System.Type tmpTextureType = typeof(Texture);
+        public static System.Type tmpObjectType = typeof(System.Object);
 
         /** 获取资源Type */
         public static System.Type GetObjType(string objType)
@@ -364,58 +373,6 @@ namespace com.ihaiu
                     return tmpObjectType;
             }
         }
-
-
-        public static string GetInfo()
-        {
-            string info = "";
-            info += "\nAssetManagerSetting.ForcedResourceAsynLoadWaitFrame : " + ForcedResourceAsynLoadWaitFrame;
-            info += "\nAssetManagerSetting.IsCacheResourceAsset : " + IsCacheResourceAsset;
-            info += "\n";
-            info += "\nAssetManagerSetting.TestVersionMode : " + TestVersionMode;
-            info += "\nAssetManagerSetting.LoadTimeOut : " + LoadTimeOut;
-            info += "\nAssetManagerSetting.AssetbundleExt : " + AssetbundleExt;
-            info += "\nAssetManagerSetting.ConfigAssetBundleName : " + ConfigAssetBundleName;
-            info += "\nAssetManagerSetting.LuaAssetBundleName : " + LuaAssetBundleName;
-
-            info += "\n";
-            info += "\nAssetManagerSetting.FilesName : " + FilesName;
-            info += "\nAssetManagerSetting.PersistentAssetListName : " + PersistentAssetListName;
-            info += "\nAssetManagerSetting.AssetListName : " + AssetListName;
-            info += "\nAssetManagerSetting.UpdateAssetListName : " + UpdateAssetListName;
-            info += "\nAssetManagerSetting.LoadAssetListName : " + LoadAssetListName;
-            info += "\nAssetManagerSetting.DontUnloadAssetListName : " + DontUnloadAssetListName;
-            info += "\nAssetManagerSetting.GameConstName : " + GameConstName;
-            info += "\nAssetManagerSetting.VersionInfoName : " + VersionInfoName;
-
-
-            info += "\n";
-            info += "\nAssetManagerSetting.RootPathStreaming : " + RootPathStreaming;
-            info += "\nAssetManagerSetting.RootPathPersistent : " + RootPathPersistent;
-            info += "\nAssetManagerSetting.RootUrlStreaming : " + RootUrlStreaming;
-            info += "\nAssetManagerSetting.RootUrlPersistent : " + RootUrlPersistent;
-            info += "\n";
-            info += "\nAssetManagerSetting.AssetFileListPath : " + AssetFileListPath;
-            info += "\nAssetManagerSetting.PersistentAssetFileListPath : " + PersistentAssetFileListPath;
-            info += "\n";
-            info += "\nAssetManagerSetting.GameConstUrl_Streaming : " + GameConstUrl_Streaming;
-            info += "\nAssetManagerSetting.GameConstUrl_Persistent : " + GameConstUrl_Persistent;
-            info += "\nAssetManagerSetting.GameConstPath : " + GameConstPath;
-
-            info += "\n";
-            info += "\nAssetManagerSetting.FilesCsvForStreaming : " + FilesCsvForStreaming;
-            info += "\nAssetManagerSetting.ManifestURL : " + ManifestURL;
-            info += "\nAssetManagerSetting.ConfigAssetBundleURL : " + ConfigAssetBundleURL;
-
-            #if UNITY_EDITOR
-            info += "\n";
-            info += EditorToString();
-            #endif
-
-
-            return info;
-        }
-
 
     }
 }

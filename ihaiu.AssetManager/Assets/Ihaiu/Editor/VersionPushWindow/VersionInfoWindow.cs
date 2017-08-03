@@ -19,7 +19,7 @@ namespace com.ihaiu
         public static void Open () 
         {
             window = EditorWindow.GetWindow <VersionInfoWindow>(true, "版本信息编辑" );
-            window.minSize = new Vector2(500, 700);
+            window.minSize = new Vector2(800, 700);
             window.Show();
         }
 
@@ -60,8 +60,9 @@ namespace com.ihaiu
                     {
                         _versionInfo = new VersionInfo();
                     }
-                }
 
+                    _versionInfo = new VersionInfo();
+                }
                 return _versionInfo;
             }
         }
@@ -120,87 +121,385 @@ namespace com.ihaiu
             GUILayout.Space(30);
 
 
-
             // global
             foldout_global = EditorGUILayout.Foldout(foldout_global, "全局");
             if (foldout_global)
             {
-                if (GUILayout.Button("刷新", GUILayout.MinHeight(25)))
-                {
-                    _versionInfo = null;
-                }
-                GUILayout.Space(30);
+//                if (GUILayout.Button("刷新", GUILayout.MinHeight(25)))
+//                {
+//                    _versionInfo = null;
+//                }
+//                GUILayout.Space(30);
+//
+//
+//                GUILayout.BeginVertical(HGUILayout.boxMPStyle, GUILayout.ExpandWidth(true));
+//                versionInfo.version = EditorGUILayout.TextField("版本号: ", versionInfo.version, GUILayout.ExpandWidth(true));
+//                if (GUILayout.Button("修改选择的发行商", GUILayout.MinHeight(25), GUILayout.MaxWidth(200)))
+//                {
+//                    for(int i = 0; i < CenterSwitcher.centerItemList.Length; i ++)
+//                    {
+//                        CenterSwitcher.CenterItem item = CenterSwitcher.centerItemList[i];
+//                        if (item.gitToggle)
+//                        {
+//                            VersionInfo itemVerInfo = VersionInfo.Load(gitServerEditor.GetGitVerinfoPath(item.name, true));
+//                            itemVerInfo.version = versionInfo.version;
+//                            itemVerInfo.Save(gitServerEditor.GetGitVerinfoPath(item.name, true));
+//                        }
+//                    }
+//                }
+//                GUILayout.Space(30);
+//
+//
+//                versionInfo.isChangeGameConstVersion = EditorGUILayout.ToggleLeft("更新完是否修改GameConst.Version", versionInfo.isChangeGameConstVersion);
+//                if (GUILayout.Button("修改选择的发行商", GUILayout.MinHeight(25), GUILayout.MaxWidth(200)))
+//                {
+//                    for(int i = 0; i < CenterSwitcher.centerItemList.Length; i ++)
+//                    {
+//                        CenterSwitcher.CenterItem item = CenterSwitcher.centerItemList[i];
+//                        if (item.gitToggle)
+//                        {
+//                            VersionInfo itemVerInfo = VersionInfo.Load(gitServerEditor.GetGitVerinfoPath(item.name, true));
+//                            itemVerInfo.isChangeGameConstVersion = versionInfo.isChangeGameConstVersion;
+//                            itemVerInfo.Save(gitServerEditor.GetGitVerinfoPath(item.name, true));
+//                        }
+//                    }
+//                }
+//                GUILayout.Space(30);
+//
+//
+//
+//                versionInfo.zipVersion = EditorGUILayout.TextField("Zip版本号: ", versionInfo.zipVersion, GUILayout.ExpandWidth(true));
+//                if (GUILayout.Button("修改选择的发行商", GUILayout.MinHeight(25), GUILayout.MaxWidth(200)))
+//                {
+//                    for(int i = 0; i < CenterSwitcher.centerItemList.Length; i ++)
+//                    {
+//                        CenterSwitcher.CenterItem item = CenterSwitcher.centerItemList[i];
+//                        if (item.gitToggle)
+//                        {
+//                            VersionInfo itemVerInfo = VersionInfo.Load(gitServerEditor.GetGitVerinfoPath(item.name, true));
+//                            itemVerInfo.zipVersion = versionInfo.zipVersion;
+//                            itemVerInfo.Save(gitServerEditor.GetGitVerinfoPath(item.name, true));
+//                        }
+//                    }
+//                }
+//                GUILayout.Space(30);
+//
+//
+//
+//                versionInfo.zipCheckDigit = EditorGUILayout.IntField("Zip 版本验证前几位: ", versionInfo.zipCheckDigit, GUILayout.ExpandWidth(true));
+//                if (GUILayout.Button("修改选择的发行商", GUILayout.MinHeight(25), GUILayout.MaxWidth(200)))
+//                {
+//                    for(int i = 0; i < CenterSwitcher.centerItemList.Length; i ++)
+//                    {
+//                        CenterSwitcher.CenterItem item = CenterSwitcher.centerItemList[i];
+//                        if (item.gitToggle)
+//                        {
+//                            VersionInfo itemVerInfo = VersionInfo.Load(gitServerEditor.GetGitVerinfoPath(item.name, true));
+//                            itemVerInfo.zipCheckDigit = versionInfo.zipCheckDigit;
+//                            itemVerInfo.Save(gitServerEditor.GetGitVerinfoPath(item.name, true));
+//                        }
+//                    }
+//                }
+//                GUILayout.Space(30);
+//
+//
+//                versionInfo.zipLoadUrl = EditorGUILayout.TextField("Zip URL: ", versionInfo.zipLoadUrl, GUILayout.ExpandWidth(true));
+//                if (GUILayout.Button("修改选择的发行商", GUILayout.MinHeight(25), GUILayout.MaxWidth(200)))
+//                {
+//                    for(int i = 0; i < CenterSwitcher.centerItemList.Length; i ++)
+//                    {
+//                        CenterSwitcher.CenterItem item = CenterSwitcher.centerItemList[i];
+//                        if (item.gitToggle)
+//                        {
+//                            VersionInfo itemVerInfo = VersionInfo.Load(gitServerEditor.GetGitVerinfoPath(item.name, true));
+//                            itemVerInfo.zipLoadUrl = versionInfo.zipLoadUrl;
+//                            itemVerInfo.Save(gitServerEditor.GetGitVerinfoPath(item.name, true));
+//                        }
+//                    }
+//                }
+//                GUILayout.Space(30);
+//
+//
+//
+//                versionInfo.zipMD5 = EditorGUILayout.TextField("Zip MD5: ", versionInfo.zipMD5, GUILayout.ExpandWidth(true));
+//                if (GUILayout.Button("修改选择的发行商", GUILayout.MinHeight(25), GUILayout.MaxWidth(200)))
+//                {
+//                    for(int i = 0; i < CenterSwitcher.centerItemList.Length; i ++)
+//                    {
+//                        CenterSwitcher.CenterItem item = CenterSwitcher.centerItemList[i];
+//                        if (item.gitToggle)
+//                        {
+//                            VersionInfo itemVerInfo = VersionInfo.Load(gitServerEditor.GetGitVerinfoPath(item.name, true));
+//                            itemVerInfo.zipMD5 = versionInfo.zipMD5;
+//                            itemVerInfo.Save(gitServerEditor.GetGitVerinfoPath(item.name, true));
+//                        }
+//                    }
+//                }
+//                GUILayout.Space(30);
+//
+//
+//
+//
+//                versionInfo.zipPanelStarShow = EditorGUILayout.ToggleLeft("Zip 下载在热更新前启动: ", versionInfo.zipPanelStarShow);
+//                if (GUILayout.Button("修改选择的发行商", GUILayout.MinHeight(25), GUILayout.MaxWidth(200)))
+//                {
+//                    for(int i = 0; i < CenterSwitcher.centerItemList.Length; i ++)
+//                    {
+//                        CenterSwitcher.CenterItem item = CenterSwitcher.centerItemList[i];
+//                        if (item.gitToggle)
+//                        {
+//                            VersionInfo itemVerInfo = VersionInfo.Load(gitServerEditor.GetGitVerinfoPath(item.name, true));
+//                            itemVerInfo.zipPanelStarShow = versionInfo.zipPanelStarShow;
+//                            itemVerInfo.Save(gitServerEditor.GetGitVerinfoPath(item.name, true));
+//                        }
+//                    }
+//                }
+//                GUILayout.Space(30);
+//
+//
+//
+//
+//                EditorGUILayout.LabelField("大版本更新通知:");
+//                versionInfo.noteAll = EditorGUILayout.TextArea(versionInfo.noteAll, GUILayout.ExpandWidth(true), GUILayout.Height(60));
+//                if (GUILayout.Button("修改选择的发行商", GUILayout.MinHeight(25), GUILayout.MaxWidth(200)))
+//                {
+//                    for(int i = 0; i < CenterSwitcher.centerItemList.Length; i ++)
+//                    {
+//                        CenterSwitcher.CenterItem item = CenterSwitcher.centerItemList[i];
+//                        if (item.gitToggle)
+//                        {
+//                            VersionInfo itemVerInfo = VersionInfo.Load(gitServerEditor.GetGitVerinfoPath(item.name, true));
+//                            itemVerInfo.noteAll = versionInfo.noteAll;
+//                            itemVerInfo.Save(gitServerEditor.GetGitVerinfoPath(item.name, true));
+//                        }
+//                    }
+//                }
+//
+//                GUILayout.Space(30);
+//                EditorGUILayout.LabelField("热更新通知:");
+//                versionInfo.noteLite = EditorGUILayout.TextArea(versionInfo.noteLite,  GUILayout.ExpandWidth(true), GUILayout.Height(60));
+//                if (GUILayout.Button("修改选择的发行商", GUILayout.MinHeight(25), GUILayout.MaxWidth(200)))
+//                {
+//                    for(int i = 0; i < CenterSwitcher.centerItemList.Length; i ++)
+//                    {
+//                        CenterSwitcher.CenterItem item = CenterSwitcher.centerItemList[i];
+//                        if (item.gitToggle)
+//                        {
+//                            VersionInfo itemVerInfo = VersionInfo.Load(gitServerEditor.GetGitVerinfoPath(item.name, true));
+//                            itemVerInfo.noteLite = versionInfo.noteLite;
+//                            itemVerInfo.Save(gitServerEditor.GetGitVerinfoPath(item.name, true));
+//                        }
+//                    }
+//                }
+//
+//
+//
+//                GUILayout.Space(30);
+//                versionInfo.isClose = EditorGUILayout.ToggleLeft("是否停服", versionInfo.isClose == 1) ? 1 : 0;
+//                if (GUILayout.Button("修改选择的发行商", GUILayout.MinHeight(25), GUILayout.MaxWidth(200)))
+//                {
+//                    for(int i = 0; i < CenterSwitcher.centerItemList.Length; i ++)
+//                    {
+//                        CenterSwitcher.CenterItem item = CenterSwitcher.centerItemList[i];
+//                        if (item.gitToggle)
+//                        {
+//                            VersionInfo itemVerInfo = VersionInfo.Load(gitServerEditor.GetGitVerinfoPath(item.name, true));
+//                            itemVerInfo.isClose = versionInfo.isClose;
+//                            itemVerInfo.Save(gitServerEditor.GetGitVerinfoPath(item.name, true));
+//                        }
+//                    }
+//                }
+//
+//                GUILayout.Space(30);
+//                EditorGUILayout.LabelField("停服公告:");
+//                versionInfo.noteClose = EditorGUILayout.TextArea(versionInfo.noteClose, GUILayout.ExpandWidth(true), GUILayout.Height(60));
+//                if (GUILayout.Button("修改选择的发行商", GUILayout.MinHeight(25), GUILayout.MaxWidth(200)))
+//                {
+//                    for(int i = 0; i < CenterSwitcher.centerItemList.Length; i ++)
+//                    {
+//                        CenterSwitcher.CenterItem item = CenterSwitcher.centerItemList[i];
+//                        if (item.gitToggle)
+//                        {
+//                            VersionInfo itemVerInfo = VersionInfo.Load(gitServerEditor.GetGitVerinfoPath(item.name, true));
+//                            itemVerInfo.noteClose = versionInfo.noteClose;
+//                            itemVerInfo.Save(gitServerEditor.GetGitVerinfoPath(item.name, true));
+//                        }
+//                    }
+//                }
+//
+//
+//                GUILayout.Space(30);
+//                versionInfo.UploadVideo = EditorGUILayout.TextField("战斗视频上传URL: ", versionInfo.UploadVideo, GUILayout.ExpandWidth(true));
+//                if (GUILayout.Button("修改选择的发行商", GUILayout.MinHeight(25), GUILayout.MaxWidth(200)))
+//                {
+//                    for(int i = 0; i < CenterSwitcher.centerItemList.Length; i ++)
+//                    {
+//                        CenterSwitcher.CenterItem item = CenterSwitcher.centerItemList[i];
+//                        if (item.gitToggle)
+//                        {
+//                            VersionInfo itemVerInfo = VersionInfo.Load(gitServerEditor.GetGitVerinfoPath(item.name, true));
+//                            itemVerInfo.UploadVideo = versionInfo.UploadVideo;
+//                            itemVerInfo.Save(gitServerEditor.GetGitVerinfoPath(item.name, true));
+//                        }
+//                    }
+//                }
+//
+//                GUILayout.Space(30);
+//                versionInfo.loginAddress = EditorGUILayout.TextField("登录服务器IP: ", versionInfo.loginAddress, GUILayout.ExpandWidth(true));
+//                if (GUILayout.Button("修改选择的发行商", GUILayout.MinHeight(25), GUILayout.MaxWidth(200)))
+//                {
+//                    for(int i = 0; i < CenterSwitcher.centerItemList.Length; i ++)
+//                    {
+//                        CenterSwitcher.CenterItem item = CenterSwitcher.centerItemList[i];
+//                        if (item.gitToggle)
+//                        {
+//                            VersionInfo itemVerInfo = VersionInfo.Load(gitServerEditor.GetGitVerinfoPath(item.name, true));
+//                            itemVerInfo.loginAddress = versionInfo.loginAddress;
+//                            itemVerInfo.Save(gitServerEditor.GetGitVerinfoPath(item.name, true));
+//                        }
+//                    }
+//                }
+//
+//                GUILayout.Space(30);
+//                versionInfo.crashReportLink = EditorGUILayout.TextField("上传错误日志URL: ", versionInfo.crashReportLink, GUILayout.ExpandWidth(true));
+//                if (GUILayout.Button("修改选择的发行商", GUILayout.MinHeight(25), GUILayout.MaxWidth(200)))
+//                {
+//                    for(int i = 0; i < CenterSwitcher.centerItemList.Length; i ++)
+//                    {
+//                        CenterSwitcher.CenterItem item = CenterSwitcher.centerItemList[i];
+//                        if (item.gitToggle)
+//                        {
+//                            VersionInfo itemVerInfo = VersionInfo.Load(gitServerEditor.GetGitVerinfoPath(item.name, true));
+//                            itemVerInfo.crashReportLink = versionInfo.crashReportLink;
+//                            itemVerInfo.Save(gitServerEditor.GetGitVerinfoPath(item.name, true));
+//                        }
+//                    }
+//                }
+//
+//                GUILayout.Space(30);
+//                versionInfo.downloadShareLink = EditorGUILayout.TextField("分享链接URL: ", versionInfo.downloadShareLink, GUILayout.ExpandWidth(true));
+//                if (GUILayout.Button("修改选择的发行商", GUILayout.MinHeight(25), GUILayout.MaxWidth(200)))
+//                {
+//                    for(int i = 0; i < CenterSwitcher.centerItemList.Length; i ++)
+//                    {
+//                        CenterSwitcher.CenterItem item = CenterSwitcher.centerItemList[i];
+//                        if (item.gitToggle)
+//                        {
+//                            VersionInfo itemVerInfo = VersionInfo.Load(gitServerEditor.GetGitVerinfoPath(item.name, true));
+//                            itemVerInfo.downloadShareLink = versionInfo.downloadShareLink;
+//                            itemVerInfo.Save(gitServerEditor.GetGitVerinfoPath(item.name, true));
+//                        }
+//                    }
+//                }
+//
+//
+//                GUILayout.Space(30);
+//                versionInfo.isShareOpen = EditorGUILayout.ToggleLeft("分享是否开放", versionInfo.isShareOpen == 1) ? 1 : 0;
+//                if (GUILayout.Button("修改选择的发行商", GUILayout.MinHeight(25), GUILayout.MaxWidth(200)))
+//                {
+//                    for(int i = 0; i < CenterSwitcher.centerItemList.Length; i ++)
+//                    {
+//                        CenterSwitcher.CenterItem item = CenterSwitcher.centerItemList[i];
+//                        if (item.gitToggle)
+//                        {
+//                            VersionInfo itemVerInfo = VersionInfo.Load(gitServerEditor.GetGitVerinfoPath(item.name, true));
+//                            itemVerInfo.isShareOpen = versionInfo.isShareOpen;
+//                            itemVerInfo.Save(gitServerEditor.GetGitVerinfoPath(item.name, true));
+//                        }
+//                    }
+//                }
+//
+//
+//
+//                GUILayout.Space(30);
+//                versionInfo.noticeBoard.qqGroupKey = EditorGUILayout.TextField("QQ Group Key: ", versionInfo.noticeBoard.qqGroupKey, GUILayout.ExpandWidth(true));
+//                if (GUILayout.Button("修改选择的发行商", GUILayout.MinHeight(25), GUILayout.MaxWidth(200)))
+//                {
+//                    for(int i = 0; i < CenterSwitcher.centerItemList.Length; i ++)
+//                    {
+//                        CenterSwitcher.CenterItem item = CenterSwitcher.centerItemList[i];
+//                        if (item.gitToggle)
+//                        {
+//                            VersionInfo itemVerInfo = VersionInfo.Load(gitServerEditor.GetGitVerinfoPath(item.name, true));
+//                            itemVerInfo.noticeBoard.qqGroupKey = versionInfo.noticeBoard.qqGroupKey;
+//                            itemVerInfo.Save(gitServerEditor.GetGitVerinfoPath(item.name, true));
+//                        }
+//                    }
+//                }
+//
+//
+//                GUILayout.Space(30);
+//                versionInfo.noticeBoard.qqNumber = EditorGUILayout.TextField("QQ Group: ", versionInfo.noticeBoard.qqNumber, GUILayout.ExpandWidth(true));
+//                if (GUILayout.Button("修改选择的发行商", GUILayout.MinHeight(25), GUILayout.MaxWidth(200)))
+//                {
+//                    for(int i = 0; i < CenterSwitcher.centerItemList.Length; i ++)
+//                    {
+//                        CenterSwitcher.CenterItem item = CenterSwitcher.centerItemList[i];
+//                        if (item.gitToggle)
+//                        {
+//                            VersionInfo itemVerInfo = VersionInfo.Load(gitServerEditor.GetGitVerinfoPath(item.name, true));
+//                            itemVerInfo.noticeBoard.qqNumber = versionInfo.noticeBoard.qqNumber;
+//                            itemVerInfo.Save(gitServerEditor.GetGitVerinfoPath(item.name, true));
+//                        }
+//                    }
+//                }
+//
+//
+//                GUILayout.Space(30);
+//                EditorGUILayout.LabelField("通知内容:");
+//                versionInfo.noticeBoard.content = EditorGUILayout.TextArea(versionInfo.noticeBoard.content, GUILayout.ExpandWidth(true), GUILayout.Height(60));
+//                if (GUILayout.Button("修改选择的发行商", GUILayout.MinHeight(25), GUILayout.MaxWidth(200)))
+//                {
+//                    for(int i = 0; i < CenterSwitcher.centerItemList.Length; i ++)
+//                    {
+//                        CenterSwitcher.CenterItem item = CenterSwitcher.centerItemList[i];
+//                        if (item.gitToggle)
+//                        {
+//                            VersionInfo itemVerInfo = VersionInfo.Load(gitServerEditor.GetGitVerinfoPath(item.name, true));
+//                            itemVerInfo.noticeBoard.content = versionInfo.noticeBoard.content;
+//                            itemVerInfo.Save(gitServerEditor.GetGitVerinfoPath(item.name, true));
+//                        }
+//                    }
+//                }
+//
+//
+//                GUILayout.Space(30);
+//                versionInfo.dnum = EditorGUILayout.IntField("协议验证码: ", versionInfo.dnum, GUILayout.ExpandWidth(true));
+//                if (GUILayout.Button("修改选择的发行商", GUILayout.MinHeight(25), GUILayout.MaxWidth(200)))
+//                {
+//                    for(int i = 0; i < CenterSwitcher.centerItemList.Length; i ++)
+//                    {
+//                        CenterSwitcher.CenterItem item = CenterSwitcher.centerItemList[i];
+//                        if (item.gitToggle)
+//                        {
+//                            VersionInfo itemVerInfo = VersionInfo.Load(gitServerEditor.GetGitVerinfoPath(item.name, true));
+//                            itemVerInfo.dnum = versionInfo.dnum;
+//                            itemVerInfo.Save(gitServerEditor.GetGitVerinfoPath(item.name, true));
+//                        }
+//                    }
+//                }
+//
+//				GUILayout.Space(30);
+//				versionInfo.remoteOpenFlag = EditorGUILayout.IntField("远程开启标志位集合: ", versionInfo.remoteOpenFlag, GUILayout.ExpandWidth(true));
+//				if (GUILayout.Button("修改选择的发行商", GUILayout.MinHeight(25), GUILayout.MaxWidth(200)))
+//				{
+//					for(int i = 0; i < CenterSwitcher.centerItemList.Length; i ++)
+//					{
+//						CenterSwitcher.CenterItem item = CenterSwitcher.centerItemList[i];
+//						if (item.gitToggle)
+//						{
+//							VersionInfo itemVerInfo = VersionInfo.Load(gitServerEditor.GetGitVerinfoPath(item.name, true));
+//							itemVerInfo.remoteOpenFlag = versionInfo.remoteOpenFlag;
+//							itemVerInfo.Save(gitServerEditor.GetGitVerinfoPath(item.name, true));
+//						}
+//					}
+//				}
 
+                GUILayout.Space(10);
 
-                GUILayout.BeginVertical(HGUILayout.boxMPStyle, GUILayout.ExpandWidth(true));
-                versionInfo.version = EditorGUILayout.TextField("版本号: ", versionInfo.version, GUILayout.ExpandWidth(true));
-                if (GUILayout.Button("修改选择的应用商", GUILayout.MinHeight(25), GUILayout.MaxWidth(200)))
-                {
-                    for(int i = 0; i < CenterSwitcher.centerItemList.Length; i ++)
-                    {
-                        CenterSwitcher.CenterItem item = CenterSwitcher.centerItemList[i];
-                        if (item.gitToggle)
-                        {
-                            VersionInfo itemVerInfo = VersionInfo.Load(gitServerEditor.GetGitVerinfoPath(item.name, true));
-                            itemVerInfo.version = versionInfo.version;
-                            itemVerInfo.Save(gitServerEditor.GetGitVerinfoPath(item.name, true));
-                        }
-                    }
-                }
-                GUILayout.Space(30);
-
-                EditorGUILayout.LabelField("大版本更新通知:");
-                versionInfo.noteDownApp = EditorGUILayout.TextArea(versionInfo.noteDownApp, GUILayout.ExpandWidth(true), GUILayout.Height(60));
-                if (GUILayout.Button("修改选择的应用商", GUILayout.MinHeight(25), GUILayout.MaxWidth(200)))
-                {
-                    for(int i = 0; i < CenterSwitcher.centerItemList.Length; i ++)
-                    {
-                        CenterSwitcher.CenterItem item = CenterSwitcher.centerItemList[i];
-                        if (item.gitToggle)
-                        {
-                            VersionInfo itemVerInfo = VersionInfo.Load(gitServerEditor.GetGitVerinfoPath(item.name, true));
-                            itemVerInfo.noteDownApp = versionInfo.noteDownApp;
-                            itemVerInfo.Save(gitServerEditor.GetGitVerinfoPath(item.name, true));
-                        }
-                    }
-                }
-
-                GUILayout.Space(30);
-                EditorGUILayout.LabelField("热更新通知:");
-                versionInfo.noteHostUpdate = EditorGUILayout.TextArea(versionInfo.noteHostUpdate,  GUILayout.ExpandWidth(true), GUILayout.Height(60));
-                if (GUILayout.Button("修改选择的应用商", GUILayout.MinHeight(25), GUILayout.MaxWidth(200)))
-                {
-                    for(int i = 0; i < CenterSwitcher.centerItemList.Length; i ++)
-                    {
-                        CenterSwitcher.CenterItem item = CenterSwitcher.centerItemList[i];
-                        if (item.gitToggle)
-                        {
-                            VersionInfo itemVerInfo = VersionInfo.Load(gitServerEditor.GetGitVerinfoPath(item.name, true));
-                            itemVerInfo.noteHostUpdate = versionInfo.noteHostUpdate;
-                            itemVerInfo.Save(gitServerEditor.GetGitVerinfoPath(item.name, true));
-                        }
-                    }
-                }
-
-
-
-                GUILayout.Space(30);
-                versionInfo.isClose = EditorGUILayout.ToggleLeft("是否停服", versionInfo.isClose == 1) ? 1 : 0;
-                if (GUILayout.Button("修改选择的应用商", GUILayout.MinHeight(25), GUILayout.MaxWidth(200)))
-                {
-                    for(int i = 0; i < CenterSwitcher.centerItemList.Length; i ++)
-                    {
-                        CenterSwitcher.CenterItem item = CenterSwitcher.centerItemList[i];
-                        if (item.gitToggle)
-                        {
-                            VersionInfo itemVerInfo = VersionInfo.Load(gitServerEditor.GetGitVerinfoPath(item.name, true));
-                            itemVerInfo.isClose = versionInfo.isClose;
-                            itemVerInfo.Save(gitServerEditor.GetGitVerinfoPath(item.name, true));
-                        }
-                    }
-                }
                 GUILayout.EndVertical();
             }
+
 
 
             // center list
@@ -232,23 +531,91 @@ namespace com.ihaiu
 
                     if (item.versionInfo == null)
                     {
-                        item.versionInfo = VersionInfo.Load(gitServerEditor.GetGitVerinfoPath(item.name, true));
+//                        item.versionInfo = VersionInfo.Load(gitServerEditor.GetGitVerinfoPath(item.name, true));
                     }
 
 
-                    item.versionInfo.version = EditorGUILayout.TextField("版本号: ", item.versionInfo.version, GUILayout.ExpandWidth(true));
-                    GUILayout.Space(10);
-
-                    EditorGUILayout.LabelField("大版本更新通知:");
-                    item.versionInfo.noteDownApp = EditorGUILayout.TextArea(item.versionInfo.noteDownApp, GUILayout.ExpandWidth(true), GUILayout.Height(60));
-                    GUILayout.Space(10);
-
-                    EditorGUILayout.LabelField("热更新通知:");
-                    item.versionInfo.noteHostUpdate = EditorGUILayout.TextArea(item.versionInfo.noteHostUpdate, GUILayout.ExpandWidth(true), GUILayout.Height(60));
-                    GUILayout.Space(10);
-
-                    item.versionInfo.isClose = EditorGUILayout.ToggleLeft("是否停服", item.versionInfo.isClose == 1) ? 1 : 0;
-                    GUILayout.Space(10);
+//                    item.versionInfo.version = EditorGUILayout.TextField("版本号: ", item.versionInfo.version, GUILayout.ExpandWidth(true));
+//                    GUILayout.Space(10);
+//
+//
+//                    item.versionInfo.isChangeGameConstVersion = EditorGUILayout.ToggleLeft("更新完是否修改GameConst.Version", item.versionInfo.isChangeGameConstVersion);
+//                    GUILayout.Space(10);
+//
+//
+//                    item.versionInfo.zipVersion = EditorGUILayout.TextField("Zip 版本号: ", item.versionInfo.zipVersion, GUILayout.ExpandWidth(true));
+//                    GUILayout.Space(10);
+//
+//                    item.versionInfo.zipCheckDigit = EditorGUILayout.IntField("Zip 版本验证前几位: ", item.versionInfo.zipCheckDigit, GUILayout.ExpandWidth(true));
+//                    GUILayout.Space(10);
+//
+//
+//                    item.versionInfo.zipLoadUrl = EditorGUILayout.TextField("Zip URL: ", item.versionInfo.zipLoadUrl, GUILayout.ExpandWidth(true));
+//                    GUILayout.Space(10);
+//
+//                    item.versionInfo.zipMD5 = EditorGUILayout.TextField("Zip MD5: ", item.versionInfo.zipMD5, GUILayout.ExpandWidth(true));
+//                    GUILayout.Space(10);
+//
+//                    item.versionInfo.zipPanelStarShow = EditorGUILayout.ToggleLeft("Zip 下载在热更新前启动: ", item.versionInfo.zipPanelStarShow);
+//                    GUILayout.Space(10);
+//
+//
+//                    EditorGUILayout.LabelField("大版本更新通知:");
+//                    item.versionInfo.noteAll = EditorGUILayout.TextArea(item.versionInfo.noteAll, GUILayout.ExpandWidth(true), GUILayout.Height(60));
+//                    GUILayout.Space(10);
+//
+//                    EditorGUILayout.LabelField("热更新通知:");
+//                    item.versionInfo.noteLite = EditorGUILayout.TextArea(item.versionInfo.noteLite, GUILayout.ExpandWidth(true), GUILayout.Height(60));
+//                    GUILayout.Space(10);
+//
+//                    item.versionInfo.isClose = EditorGUILayout.ToggleLeft("是否停服", item.versionInfo.isClose == 1) ? 1 : 0;
+//                    GUILayout.Space(10);
+//
+//
+//                    EditorGUILayout.LabelField("停服公告:");
+//                    item.versionInfo.noteClose = EditorGUILayout.TextArea(item.versionInfo.noteClose, GUILayout.ExpandWidth(true), GUILayout.Height(60));
+//                    GUILayout.Space(10);
+//
+//
+//
+//                    item.versionInfo.downLoadUrl = EditorGUILayout.TextField("downLoadUrl: ", item.versionInfo.downLoadUrl, GUILayout.ExpandWidth(true));
+//
+//                    item.versionInfo.updateLoadUrl = EditorGUILayout.TextField("downLoadUrl: ", item.versionInfo.updateLoadUrl, GUILayout.ExpandWidth(true));
+//
+//
+//                    item.versionInfo.UploadVideo = EditorGUILayout.TextField("战斗视频上传URL: ", item.versionInfo.UploadVideo, GUILayout.ExpandWidth(true));
+//                   
+//
+//                    item.versionInfo.loginAddress = EditorGUILayout.TextField("登录服务器IP: ", item.versionInfo.loginAddress, GUILayout.ExpandWidth(true));
+//
+//                    item.versionInfo.crashReportLink = EditorGUILayout.TextField("上传错误日志URL: ", item.versionInfo.crashReportLink, GUILayout.ExpandWidth(true));
+//
+//                    item.versionInfo.downloadShareLink = EditorGUILayout.TextField("分享链接URL: ", item.versionInfo.downloadShareLink, GUILayout.ExpandWidth(true));
+//
+//
+//                    GUILayout.Space(10);
+//                    item.versionInfo.isShareOpen = EditorGUILayout.ToggleLeft("分享是否开放", item.versionInfo.isShareOpen == 1) ? 1 : 0;
+//
+//
+//
+//
+//                    GUILayout.Space(10);
+//                    item.versionInfo.noticeBoard.qqGroupKey = EditorGUILayout.TextField("QQ Group Key: ", item.versionInfo.noticeBoard.qqGroupKey, GUILayout.ExpandWidth(true));
+//                  
+//
+//
+//                    GUILayout.Space(10);
+//                    item.versionInfo.noticeBoard.qqNumber = EditorGUILayout.TextField("QQ Group: ", item.versionInfo.noticeBoard.qqNumber, GUILayout.ExpandWidth(true));
+//                  
+//
+//
+//                    GUILayout.Space(10);
+//                    EditorGUILayout.LabelField("通知内容:");
+//                    item.versionInfo.noticeBoard.content = EditorGUILayout.TextArea(item.versionInfo.noticeBoard.content, GUILayout.ExpandWidth(true), GUILayout.Height(60));
+//                   
+//
+//                    GUILayout.Space(10);
+//                    item.versionInfo.dnum = EditorGUILayout.IntField("协议验证码: ", item.versionInfo.dnum, GUILayout.ExpandWidth(true));
 
                     HGUILayout.BeginCenterHorizontal();
 
@@ -585,7 +952,6 @@ namespace com.ihaiu
                     string verinfoPath =gitServerEditor.GetGitVerinfoPath(item.name, false);
 
                     ShFile.tmp.WriteLine(string.Format("cp {0} {1}", verinfoPath_Test, verinfoPath));
-
                 }
             }
 

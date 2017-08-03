@@ -1,17 +1,9 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Ihaiu\Scripts\AssetManager\ManifestAssetBundleManager.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Ihaiu\Editor\VersionWindow\VersionReleaseWindow.cs">
     <Files>
-      <File FileName="Assets\Ihaiu\Scripts\AssetManager\AssetBundleLoadAssetOperation.cs" Line="1" Column="1" />
-      <File FileName="Assets\Ihaiu\Scripts\AssetManager\AssetBundleLoadAssetOperationFull.cs" Line="1" Column="1" />
-      <File FileName="Assets\Ihaiu\Scripts\AssetManager\AssetBundleLoadLevelSimulationOperation.cs" Line="1" Column="1" />
-      <File FileName="Assets\Ihaiu\Scripts\AssetManager\AssetManager_AssetBundle.cs" Line="1" Column="1" />
-      <File FileName="Assets\Ihaiu\Scripts\AssetManager\LoadedAssetBundle.cs" Line="1" Column="1" />
-      <File FileName="Assets\Ihaiu\Scripts\AssetManager\LoadedAssetBundleCache.cs" Line="1" Column="1" />
-      <File FileName="Assets\Ihaiu\Scripts\AssetManager\LoadedModule.cs" Line="1" Column="1" />
-      <File FileName="Assets\Ihaiu\Scripts\AssetManager\LoadedModuleAsset.cs" Line="1" Column="1" />
-      <File FileName="Assets\Ihaiu\Scripts\AssetManager\LoadedResource.cs" Line="1" Column="1" />
-      <File FileName="Assets\Ihaiu\Scripts\AssetManager\ManifestAssetBundleManager.cs" Line="1" Column="1" />
+      <File FileName="Assets\Ihaiu\Editor\VersionWindow\VersionReleaseWindow.cs" Line="282" Column="124" />
+      <File FileName="Assets\Ihaiu\Editor\VersionWindow\VersionReleaseWindow_App.cs" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

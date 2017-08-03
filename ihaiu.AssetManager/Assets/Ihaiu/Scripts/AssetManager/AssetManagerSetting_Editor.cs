@@ -16,54 +16,113 @@ namespace com.ihaiu
 
 
         /** 服务器--执行文件 */
-        public static string EditorCheckServerExe = "Ihaiu/Editor/AssetBundleServer/UdpServer.exe";
+        public static string EditorCheckServerExe       = "Game/Scripts/CC/Editor/AssetBundleServer/UdpServer.exe";
         /** 服务器--执行文件 */
-        public static string EditorAssetBundleServerExe = "Ihaiu/Editor/AssetBundleServer/AssetBundleServer.exe";
+        public static string EditorAssetBundleServerExe = "Game/Scripts/CC/Editor/AssetBundleServer/AssetBundleServer.exe";
         /** 服务器--目录 */
         public static string EditorAssetBundleServerRoot_WWW                = Path.Combine (Application.dataPath.Substring(0, Application.dataPath.LastIndexOf('/')), "www");
         /** 服务器--目录 */
         public static string EditorAssetBundleServerRoot_StreamingAssets    = Application.streamingAssetsPath;
-
-        /** 目录--Resources */
-        public static string EditorRootResources      = "Assets/Game/Resources";
-
-        /** 目录--MResources */
-        public static string EditorRootMResources      = "Assets/Game/MResources";
-
-        /** 目录--Config */
-        public static string EditorRootConfig           = "Assets/Game/Config";
-
-        /** 目录--Lua */
-        public static string EditorRootLua              = "Assets/Game/Lua";
-        public static string EditorRootLuaBytes         = "Assets/Game/LuaBytes";
-
-        /** 目录--StreamingAssets */
-        public static string EditorRootStream         = "Assets/StreamingAssets";
+        /** 服务器--目录 */
+        public static string EditorAssetBundleServerRoot_Workspace          = EditorRoot.WorkspaceStream;
 
 
-        /** 目录--StreamingAssets/Platform/XXX */
-        public static string EditorRootPlatform        = EditorRootStream + "/" + Platform.PlatformDirectory;
-
-        public static string EditorRootVersion
+        public class EditorRoot
         {
-            get
+            /** 目录--Resources */
+            public static string Resources      = "Assets/Game/Resources";
+
+            /** 目录--MResources */
+            public static string MResources      = "Assets/Game/MResources";
+
+            /** 目录--Config */
+            public static string Config           = "Assets/Game/Config";
+
+            /** 目录--Lua */
+            public static string Lua              = "Assets/Game/Lua";
+            public static string LuaBytes         = "Assets/Game/LuaBytes";
+
+            /** 目录--StreamingAssets */
+            public static string Stream             = "Assets/StreamingAssets/";
+
+            /** 目录--StreamingAssets/Platform/XXX */
+            public static string StreamPlatform     = Stream + Platform.PlatformDirectory + "/";
+
+
+
+            /** 目录--Workspace */
+            public static string Workspace                  = "Workspace/";
+
+            /** 目录--Workspace/IOS/ */
+            public static string WorkspacePlaforom          = Workspace + Platform.PlatformDirectoryName + "/";
+
+            /** 目录--Workspace/IOS/StreamingAssets/ */
+            public static string WorkspaceStream            = WorkspacePlaforom + "StreamingAssets/";
+
+            /** 目录--Workspace/IOS/StreamingAssets/Platform/XXX */
+            public static string WorkspaceStreamPlatform    = WorkspaceStream + Platform.PlatformDirectory + "/";
+
+            /** 目录--分包资源--Workspace/IOS/res/ */
+            public static string WorkspaceResZip            = WorkspacePlaforom + "res/";
+
+            /** 目录--Workspace/IOS/NoCenter/ */
+            public static string WorkspaceVersion
             {
-                return "version/" + Platform.PlatformDirectoryName + "/" + Games.GameConstConfig.Load().CenterName;
+                get
+                {
+                    return WorkspacePlaforom + "Version/"+  Games.GameConstConfig.Load().CenterName + "/";
+                }
             }
+
+
+
+
+            /** 目录--Workspace/Tmp/ */
+            public static string WorkspaceTmp                   = Workspace + "Tmp/";
+
+            /** 目录--Workspace/Tmp/AssetCollect/ */
+            public static string WorkspaceAssetCollect          = WorkspaceTmp + "AssetCollect/";
+        }
+
+        public class EditorWorkspaceFilePath
+        {
+            /** 资源列表--game_const.json */
+            public static string GameConst              = EditorRoot.WorkspaceStream + FileName.GameConst;
+
+            /** 资源列表--AssetList_File.csv */
+            public static string AssetListFile          = EditorRoot.WorkspaceStreamPlatform + FileName.AssetList_File;
+            /** 资源列表--AssetList_Update.csv */
+            public static string AssetListUpdate        = EditorRoot.WorkspaceStreamPlatform + FileName.AssetList_Update;
+            /** 资源列表--AssetList_LoadMap.csv */
+            public static string AssetListLoadMap       = EditorRoot.WorkspaceStreamPlatform + FileName.AssetList_LoadMap;
+            /** 资源列表--AssetList_DontUnload.csv */
+            public static string AssetListDontUnload    = EditorRoot.WorkspaceStreamPlatform + FileName.AssetList_DontUnload;
+
+            /** 分包资源 res.zip */
+            public static string ResZip                 = EditorRoot.WorkspacePlaforom + FileName.ResZip;
+            /** 分包资源 AssetList_Zip.json */
+            public static string AssetListZip           = EditorRoot.WorkspacePlaforom + FileName.AssetList_Zip;
+            /** 分包资源 AssetList_App.csv */
+            public static string AssetListApp           = EditorRoot.WorkspacePlaforom + FileName.AssetList_App;
+
+            /** 资源列表--Workspace/IOS/AssetCollect_Guide.json */
+            public static string AssetCollectGuide      = EditorRoot.WorkspacePlaforom + "AssetCollect_Guide.json";
         }
 
 
 
-        /** 资源列表--Resources */
-        public static string EditorFileCsvForResource = "Assets/Game/Resources/files.csv";
-        /** 资源列表--StreamingAssets */
-        public static string EditorFileCsvForStreaming = EditorRootPlatform + "/files.csv";
-        /** 资源列表--UpdateList */
-        public static string EditorUpdateAssetListPath     = EditorRootPlatform + "/UpdateAssetList.csv";
-        /** 资源列表--LoadList */
-        public static string EditorLoadAssetListPath     = EditorRootPlatform + "/LoadAssetList.csv";
-        /** 资源列表--DontUnloadList */
-        public static string EditorDontUnloadAssetListPath     = EditorRootPlatform + "/DontUnloadAssetList.csv";
+        public class EditorStreamFilePath
+        {
+            /** 资源列表--game_const.json */
+            public static string GameConst              = EditorRoot.Stream + FileName.GameConst;
+            /** 资源列表--AssetList_LoadMap.csv */
+            public static string AssetListLoadMap       = EditorRoot.StreamPlatform + FileName.AssetList_LoadMap;
+            /** 资源列表--AssetList_DontUnload.csv */
+            public static string AssetListDontUnload    = EditorRoot.StreamPlatform + FileName.AssetList_DontUnload;
+
+        }
+
+
 
 
         /** 获取绝对路径--StreamingAssets
@@ -72,7 +131,7 @@ namespace com.ihaiu
          */
         public static string EditorGetAbsoluteStreamPath(string path)
         {
-            return EditorRootStream + "/" + path;
+            return EditorRoot.Stream + path;
         }
 
 
@@ -83,15 +142,25 @@ namespace com.ihaiu
         */
         public static string EditorGetAbsolutePlatformPath(string assetBundleName)
         {
-            return EditorRootPlatform + "/" + assetBundleName;
+            return EditorRoot.StreamPlatform + assetBundleName;
         }
 
 
+        /** 获取AssetBundle的存放路径
+         * assetBundleName="config-assetbundle"
+         * return Workspace/IOS/StreamingAssets/Platform/IOS/config-assetbundle
+        */
+        public static string EditorGetAbsoluteWorkspaceStreamPlatformPath(string assetBundleName)
+        {
+            return EditorRoot.WorkspaceStreamPlatform + "/" + assetBundleName;
+        }
+
+       
         /** 获取Config文件路径 */
         public static string EditorGetConfigPath(string path)
         {
 
-            path = path.Replace("Config/", EditorRootConfig + "/");
+            path = path.Replace("Config/", EditorRoot.Config + "/");
             string result = path + ".csv";
             if (File.Exists(result))
                 return result;
@@ -104,7 +173,7 @@ namespace com.ihaiu
             result = path + ".txt";
             if (File.Exists(result))
                 return result;
-
+            
             return path;
         }
 
@@ -112,32 +181,9 @@ namespace com.ihaiu
         /** 获取版本文件列表路径 */
         public static string EditorGetVersionFileListPath(string version)
         {
-            return EditorRootVersion + "/"  + version  + ".csv";
+            return EditorRoot.WorkspaceVersion + "/"  + version  + ".csv";
         }
 
-        public static string EditorToString()
-        {
-            string info = "";
-            info += "\nAssetManagerSetting.EditorSimulateConfig : " + EditorSimulateConfig;
-            info += "\nAssetManagerSetting.EditorSimulateAssetBundle : " + EditorSimulateAssetBundle;
-            info += "\n";
-            info += "\nAssetManagerSetting.EditorAssetBundleServerExe : " + EditorAssetBundleServerExe;
-            info += "\nAssetManagerSetting.EditorAssetBundleServerRoot_WWW : " + EditorAssetBundleServerRoot_WWW;
-            info += "\nAssetManagerSetting.EditorAssetBundleServerRoot_StreamingAssets : " + EditorAssetBundleServerRoot_StreamingAssets;
-            info += "\n";
-            info += "\nAssetManagerSetting.EditorRootMResources : " + EditorRootMResources;
-            info += "\nAssetManagerSetting.EditorRootConfig : " + EditorRootConfig;
-            info += "\nAssetManagerSetting.RootConfigBytes : " + RootConfigBytes;
-            info += "\nAssetManagerSetting.EditorRootLua : " + EditorRootLua;
-            info += "\nAssetManagerSetting.EditorRootLuaBytes : " + EditorRootLuaBytes;
-            info += "\nAssetManagerSetting.EditorRootStream : " + EditorRootStream;
-            info += "\nAssetManagerSetting.EditorRootPlatform : " + EditorRootPlatform;
-            info += "\nAssetManagerSetting.EditorRootVersion : " + EditorRootVersion;
-            info += "\nAssetManagerSetting.EditorFileCsvForResource : " + EditorFileCsvForResource;
-            info += "\nAssetManagerSetting.EditorFileCsvForStreaming : " + EditorFileCsvForStreaming;
-            info += "\nAssetManagerSetting.EditorUpdateAssetListPath : " + EditorUpdateAssetListPath;
-            return info;
-        }
     }
 }
 

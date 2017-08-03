@@ -45,5 +45,25 @@ namespace com.ihaiu
 
         }
 
+
+
+        public void UnloadObj()
+        {
+            if (obj != null)
+            {
+                //                Debug.LogFormat("assetBundleName={0}, assetName={1}, objType={2}", assetBundleName, assetName, objType);
+//                if (objType == AssetManagerSetting.tmpGameObjectType)
+//                {
+//                    UnityEngine.Object.DestroyImmediate(obj, true);
+//                }
+//                else
+//                {
+//                    Resources.UnloadAsset(obj);
+//                }
+                obj = null;
+            }
+        }
+
+
     }
 }

@@ -9,13 +9,13 @@ using UnityEditor;
 
 namespace com.ihaiu
 {
-    public class ManifestAssetBundleManager : IAssetBundleManager 
+    public partial class ManifestAssetBundleManager : IAssetBundleManager 
     {
         #region log
         public enum LogMode { All, JustErrors };
         public enum LogType { Info, Warning, Error };
 
-        static LogMode m_LogMode = LogMode.JustErrors;
+		static LogMode m_LogMode = LogMode.JustErrors;
 
         private static void Log(LogType logType, string text)
         {
@@ -44,13 +44,10 @@ namespace com.ihaiu
         public AssetBundleManifest assetBundleManifest {get; set;}
 
 
-        // 清单路径
-        public string manifestPath;
 
-        public ManifestAssetBundleManager(AssetManager assetManager, string manifestPath)
+        public ManifestAssetBundleManager(AssetManager assetManager)
         {
             this.assetManager = assetManager;
-            this.manifestPath = manifestPath;
         }
 
 
@@ -60,8 +57,12 @@ namespace com.ihaiu
         }
 
 
-        public IEnumerator LoadManifest()
+        private AssetBundle abManifest;
+        public IEnumerator LoadManifest(string manifestPath)
         {
+            if (abManifest != null)
+                abManifest.Unload(true);
+            
             WWW www = new WWW(manifestPath);
             yield return www;
 
@@ -71,13 +72,13 @@ namespace com.ihaiu
                 yield break;
             }
 
-            AssetBundle assetBundle = www.assetBundle;
+            abManifest = www.assetBundle;
 
-            AssetBundleRequest  assetBundleRequest  = assetBundle.LoadAssetAsync<AssetBundleManifest>("AssetBundleManifest");
+            AssetBundleRequest  assetBundleRequest  = abManifest.LoadAssetAsync<AssetBundleManifest>("AssetBundleManifest");
             yield return assetBundleRequest;
             assetBundleManifest = (AssetBundleManifest) assetBundleRequest.asset;
 
-            assetManager.OnLoadManifest(this);
+            www.Dispose();
         }
         #endregion
 
@@ -165,96 +166,94 @@ namespace com.ihaiu
             {
                 return m_LoadedAssetBundles;
             }
-		}
+        }
 
-		/** 获取等待加载的依赖文件 */
-		public List<string> GetWaitLoadResDependencies(string assetBundleName)
+        /** 获取等待加载的依赖文件 */
+        public List<string> GetWaitLoadResDependencies(string assetBundleName)
+        {
+            List<string> list = new List<string>();
+            // 检查是否有依赖的“资源包”列表, 如果没有依赖，成功加载返回“资源包信息”
+            string[] dependencies = null;
+            if (m_Dependencies.TryGetValue(assetBundleName, out dependencies) )
+            {
+                // 检测依赖的资源包是否加载完成
+                foreach(var dependency in dependencies)
+                {
+                    if (string.IsNullOrEmpty (dependency))
+                        continue;
+
+                    // 如果依赖的资源还没加载完成，返回null，让操作继续等待
+                    LoadedAssetBundle dependentBundle;
+                    m_LoadedAssetBundles.TryGetValue(dependency, out dependentBundle);
+                    if (dependentBundle == null)
+                    {
+                        list.Add(dependency);
+                    }
+                }
+            }
+
+            return list;
+        }
+
+
+		/** 获取“资源包信息”、检测加载状态 */
+		public LoadedAssetBundle GetLoadedAssetBundle (string assetBundleName, out string error, bool isTryForceGetBundle)
 		{
-			List<string> list = new List<string>();
+			// 如果加载出错，返回空，并返回错
+			if (m_DownloadingErrors.TryGetValue(assetBundleName, out error) )
+			{
+				//              Debug.Log("m_DownloadingErrors="+error+",assetBundleName="+assetBundleName);
+				return null;
+			}
+
+			// 如果”资源信息包“还没找到说明还没加载完成，返回null，让操作继续等待
+			LoadedAssetBundle bundle = null;
+			m_LoadedAssetBundles.TryGetValue(assetBundleName, out bundle);
+			if (bundle == null)
+			{
+				//              Debug.Log("bundle loading="+error+",assetBundleName="+assetBundleName);
+				return null;
+			}
+
+			if (isTryForceGetBundle)
+			{
+				return bundle;
+			}
+
 			// 检查是否有依赖的“资源包”列表, 如果没有依赖，成功加载返回“资源包信息”
 			string[] dependencies = null;
-			if (m_Dependencies.TryGetValue(assetBundleName, out dependencies) )
+			if (!m_Dependencies.TryGetValue(assetBundleName, out dependencies) )
 			{
-				// 检测依赖的资源包是否加载完成
-				foreach(var dependency in dependencies)
-				{
-					if (string.IsNullOrEmpty (dependency))
-						continue;
+				//              Debug.Log("bundle no depend="+error+",assetBundleName="+assetBundleName);
+				return bundle;
+			}
 
-					// 如果依赖的资源还没加载完成，返回null，让操作继续等待
-					LoadedAssetBundle dependentBundle;
-					m_LoadedAssetBundles.TryGetValue(dependency, out dependentBundle);
-					if (dependentBundle == null)
-					{
-						list.Add(dependency);
-					}
+			// 检测依赖的资源包是否加载完成
+			foreach(var dependency in dependencies)
+			{
+				if (string.IsNullOrEmpty (dependency))
+					continue;
+				
+				// 检测到依赖的资源加载出错，返回自己的资源，并返回依赖的资源错误,
+				if (m_DownloadingErrors.TryGetValue(assetBundleName, out error) )
+				{
+					//                  Debug.Log("m_Downloading depend Errors="+error+",assetBundleName="+assetBundleName);
+					return bundle;
+				}
+
+				// 如果依赖的资源还没加载完成，返回null，让操作继续等待
+				LoadedAssetBundle dependentBundle;
+				m_LoadedAssetBundles.TryGetValue(dependency, out dependentBundle);
+				if (dependentBundle == null)
+				{
+					//                  Debug.Log("m_Downloading dependency loading="+error+",assetBundleName="+assetBundleName+",dependentBundle="+dependency);
+					return null;
 				}
 			}
 
-			return list;
+			// 成功加载返回“资源包信息”
+			return bundle;
 		}
-
-
-
-
-
-        /** 获取“资源包信息”、检测加载状态 */
-        public LoadedAssetBundle GetLoadedAssetBundle (string assetBundleName, out string error, bool isTryForceGetBundle)
-        {
-            // 如果加载出错，返回空，并返回错
-            if (m_DownloadingErrors.TryGetValue(assetBundleName, out error) )
-            {
-                //              Debug.Log("m_DownloadingErrors="+error+",assetBundleName="+assetBundleName);
-                return null;
-            }
-
-            // 如果”资源信息包“还没找到说明还没加载完成，返回null，让操作继续等待
-            LoadedAssetBundle bundle = null;
-            m_LoadedAssetBundles.TryGetValue(assetBundleName, out bundle);
-            if (bundle == null)
-            {
-                //              Debug.Log("bundle loading="+error+",assetBundleName="+assetBundleName);
-                return null;
-            }
-
-            if (isTryForceGetBundle)
-            {
-                return bundle;
-            }
-
-            // 检查是否有依赖的“资源包”列表, 如果没有依赖，成功加载返回“资源包信息”
-            string[] dependencies = null;
-            if (!m_Dependencies.TryGetValue(assetBundleName, out dependencies) )
-            {
-                //              Debug.Log("bundle no depend="+error+",assetBundleName="+assetBundleName);
-                return bundle;
-            }
-
-            // 检测依赖的资源包是否加载完成
-            foreach(var dependency in dependencies)
-            {
-                if(string.IsNullOrEmpty(dependency)) continue;
-
-                // 检测到依赖的资源加载出错，返回自己的资源，并返回依赖的资源错误,
-                if (m_DownloadingErrors.TryGetValue(assetBundleName, out error) )
-                {
-                    //                  Debug.Log("m_Downloading depend Errors="+error+",assetBundleName="+assetBundleName);
-                    return bundle;
-                }
-
-                // 如果依赖的资源还没加载完成，返回null，让操作继续等待
-                LoadedAssetBundle dependentBundle;
-                m_LoadedAssetBundles.TryGetValue(dependency, out dependentBundle);
-                if (dependentBundle == null)
-                {
-                    //                  Debug.Log("m_Downloading dependency loading="+error+",assetBundleName="+assetBundleName+",dependentBundle="+dependency);
-                    return null;
-                }
-            }
-
-            // 成功加载返回“资源包信息”
-            return bundle;
-        }
 
         /** 获取资源包别名（高清、标清，中文、英文等版本）*/
         protected string RemapVariantName(string assetBundleName)
@@ -334,31 +333,48 @@ namespace com.ihaiu
             // Already loaded.
             LoadedAssetBundle bundle = null;
             m_LoadedAssetBundles.TryGetValue(assetBundleName, out bundle);
+
+			string url = AssetManagerSetting.GetAbsoluteAssetBundleURL(assetBundleName);
             if (bundle != null)
             {
-                bundle.m_ReferencedCount++;
-                return true;
+				bundle.m_ReferencedCount++;
+				return true;
             }
 
-            //            string path = AssetManagerSetting.GetAbsoluteAssetBundlePath(assetBundleName);
-            //            AssetBundle assetBundle = AssetBundle.LoadFromFile(path);
-            //            m_LoadedAssetBundles.Add(assetBundleName, new LoadedAssetBundle(assetBundle) );
-            //            return false;
+//            string path = AssetManagerSetting.GetAbsoluteAssetBundlePath(assetBundleName);
+//            AssetBundle assetBundle = AssetBundle.LoadFromFile(path);
+//            m_LoadedAssetBundles.Add(assetBundleName, new LoadedAssetBundle(assetBundle) );
+//            return false;
 
             // @TODO: Do we need to consider the referenced count of WWWs?
             // In the demo, we never have duplicate WWWs as we wait LoadAssetAsync()/LoadLevelAsync() to be finished before calling another LoadAssetAsync()/LoadLevelAsync().
             // But in the real case, users can call LoadAssetAsync()/LoadLevelAsync() several times then wait them to be finished which might have duplicate WWWs.
-            if (m_DownloadingWWWs.ContainsKey(assetBundleName) )
-                return true;
+			if (m_DownloadingWWWs.ContainsKey (assetBundleName))
+			{
+				if (m_DownloadingWWWs [assetBundleName].url == url) {
+					return true;
+				} else 
+				{
+					m_DownloadingWWWs [assetBundleName].Dispose ();
+					m_DownloadingWWWs.Remove (assetBundleName);
+				}
+			}
 
             WWW download = null;
-            string url = AssetManagerSetting.GetAbsoluteAssetBundleURL(assetBundleName);
+
+            AssetManagerSetting.collect.OnLoadInternal(assetBundleName);
 
             // For manifest assetbundle, always download it as we don't have hash for it.
             if (isLoadingAssetBundleManifest)
                 download = new WWW(url);
             else
+//                download = new WWW(url);
                 download = WWW.LoadFromCacheOrDownload(url, assetBundleManifest.GetAssetBundleHash(assetBundleName), 0); 
+
+			if (m_DownloadingErrors.ContainsKey (assetBundleName)) 
+			{
+				m_DownloadingErrors.Remove (assetBundleName);
+			}
 
             m_DownloadingWWWs.Add(assetBundleName, download);
 
@@ -385,8 +401,13 @@ namespace com.ihaiu
 
             // Record and load all dependencies.
             m_Dependencies.Add(assetBundleName, dependencies);
-            for (int i=0;i<dependencies.Length;i++)
-                LoadAssetBundleInternal(dependencies[i], false);
+			for (int i = 0; i < dependencies.Length; i++) {
+				
+				if (string.IsNullOrEmpty (dependencies [i]))
+					continue;
+				
+				LoadAssetBundleInternal (dependencies [i], false);
+			}
         }
 
         /** 卸载资源包和他依赖的资源包 */
@@ -415,20 +436,21 @@ namespace com.ihaiu
             // Loop dependencies.
             foreach(var dependency in dependencies)
             {
-                if(string.IsNullOrEmpty(dependency)) continue;
-                
                 UnloadAssetBundleInternal(dependency);
             }
 
             m_Dependencies.Remove(assetBundleName);
         }
 
-        protected void UnloadAssetBundleInternal(string assetBundleName)
+        public void UnloadAssetBundleInternal(string assetBundleName)
         {
             string error;
             LoadedAssetBundle bundle = GetLoadedAssetBundle(assetBundleName, out error, false);
             if (bundle == null)
                 return;
+
+
+            AssetManagerSetting.collect.OnUnloadInteral(assetBundleName);
 
             if (--bundle.m_ReferencedCount == 0)
             {
@@ -436,10 +458,11 @@ namespace com.ihaiu
                 m_LoadedAssetBundles.Remove(assetBundleName);
 
                 LogFormat(LogType.Info, "卸载assetBundleName={0}成功", assetBundleName);
+//                Debug.LogFormat("<color=green>卸载assetBundleName={0}成功</color>", assetBundleName);
             }
         }
 
-
+      
 
         /** 更新检测状态 */
         public void Update()
@@ -455,7 +478,7 @@ namespace com.ihaiu
                 // 如果加载出错，添加到出错列表，添加到将要移除的WWW列表
                 if (download.error != null)
                 {
-                    m_DownloadingErrors.Add(keyValue.Key, string.Format("加载失败 assetBundleName{0}, download.url={1}, download.error={2}", keyValue.Key, download.url, download.error));
+					if(!m_DownloadingErrors.ContainsKey(keyValue.Key)) m_DownloadingErrors.Add(keyValue.Key, string.Format("加载失败 assetBundleName{0}, download.url={1}, download.error={2}", keyValue.Key, download.url, download.error));
                     keysToRemove.Add(keyValue.Key);
                     continue;
                 }
@@ -471,18 +494,29 @@ namespace com.ihaiu
                         continue;
                     }
 
-                    //Debug.Log("Downloading " + keyValue.Key + " is done at frame " + Time.frameCount);
-                    m_LoadedAssetBundles.Add(keyValue.Key, new LoadedAssetBundle(download.assetBundle) );
-                    keysToRemove.Add(keyValue.Key);
+					if (!m_LoadedAssetBundles.ContainsKey (keyValue.Key)) {
+						//Debug.Log("Downloading " + keyValue.Key + " is done at frame " + Time.frameCount);
+						m_LoadedAssetBundles.Add (keyValue.Key, new LoadedAssetBundle (download.assetBundle, download.url));
+						keysToRemove.Add (keyValue.Key);
+					}
+					else 
+					{
+
+						Debug.Log("Downloading " + keyValue.Key + " is done at frame " + Time.frameCount);
+					}
+
                 }
             }
 
             // Remove the finished WWWs.
             foreach( var key in keysToRemove)
             {
-                WWW download = m_DownloadingWWWs[key];
-                m_DownloadingWWWs.Remove(key);
-                download.Dispose();
+				if (m_DownloadingWWWs.ContainsKey (key)) 
+				{
+					WWW download = m_DownloadingWWWs [key];
+					m_DownloadingWWWs.Remove (key);
+					download.Dispose ();
+				}
             }
 
             // Update all in progress operations

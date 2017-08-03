@@ -21,7 +21,7 @@ namespace com.ihaiu
 
         public enum TabType
         {
-            [HelpAttribute("开发")]
+			[HelpAttribute("开发")]
             Develop,
 
             [HelpAttribute("App")]
@@ -42,8 +42,27 @@ namespace com.ihaiu
                     _tabGroupData.AddTab("开发", TabType.Develop);
                     _tabGroupData.AddTab("App", TabType.App);
                     _tabGroupData.AddTab("补丁", TabType.Patch);
+
+                    _tabGroupData.SetSelect(selectTabPrefs);
                 }
                 return _tabGroupData;
+            }
+        }
+
+        public TabType selectTabPrefs
+        {
+            get
+            {
+                if(EditorPrefs.HasKey("VsersionWindow_Tab"))
+                {
+                    return (TabType) EditorPrefs.GetInt("VsersionWindow_Tab");
+                }
+                return TabType.Develop;
+            }
+
+            set
+            {
+                EditorPrefs.SetInt("VsersionWindow_Tab", (int) value);
             }
         }
 
@@ -63,9 +82,9 @@ namespace com.ihaiu
         #region 高级设置
         public enum DvancedSettingType
         {
-            [HelpAttribute("生成LoadAssetList.csv")]
+            [HelpAttribute("生成 AssetList_LoadMap.csv")]
             GeneratorLoadAssetListCsv,
-            [HelpAttribute("生成StreamingAssets files.csv")]
+            [HelpAttribute("生成StreamingAssets AssetList_File.csv")]
             GeneratorStreamingAssetsFilesCSV,
             [HelpAttribute("修改game_const.json")]
             GameConstConfig,
@@ -93,6 +112,8 @@ namespace com.ihaiu
 
 
 
+            [HelpAttribute("清除Workspace平台数据")]
+            ClearWorkspacePlatformDirctory,
             [HelpAttribute("清除所有平台数据")]
             ClearAllPlatformDirctory,
             [HelpAttribute("清理其他平台数据")]
@@ -106,11 +127,20 @@ namespace com.ihaiu
 
             [HelpAttribute("PlayerSettings Version")]
             PlayerSettingsVersion,
+
+            [HelpAttribute("生成资源分包")]
+            GenerateResZip,
+
+            [HelpAttribute("拷贝非资源分包外的资源到APP")]
+            CopyWorkspaceStreamToStreamingAssets_UnResZip,
+
+            [HelpAttribute("拷贝所有的资源到APP")]
+            CopyWorkspaceStreamToStreamingAssets_All,
         }
 
         public string[] davancedSetingNames = new string[]{ 
-            "生成LoadAssetList.csv",
-            "生成StreamingAssets files.csv",
+            "生成 AssetList_LoadMap.csv",
+            "生成StreamingAssets AssetList_File.csv",
             "修改game_const.json",
             "生成版本信息文件",
             "生成更新列表",
@@ -123,12 +153,18 @@ namespace com.ihaiu
             "打包AssetBundle",
 
 
+            "清除Workspace平台数据",
             "清除所有平台数据",
             "清理其他平台数据",
             "清理测试数据",
 
             "PlayerSettings",
             "PlayerSettingsVersion",
+
+
+            "生成资源分包",
+            "拷贝非资源分包外的资源到APP",
+            "拷贝所有的资源到APP",
 
             "",
             "",
@@ -204,8 +240,9 @@ namespace com.ihaiu
 
                     data = new DvancedSettingData(TabType.App);
                     _dvancedSettingDataDict.Add(data.tabType, data);
-                    data.Add(CreateDvancedSettingItem(DvancedSettingType.ClearAllPlatformDirctory, false));
-                    data.Add(CreateDvancedSettingItem(DvancedSettingType.ClearOtherPlatformDirctory, true));
+                    data.Add(CreateDvancedSettingItem(DvancedSettingType.ClearWorkspacePlatformDirctory, false));
+                    data.Add(CreateDvancedSettingItem(DvancedSettingType.ClearAllPlatformDirctory, true));
+                    data.Add(CreateDvancedSettingItem(DvancedSettingType.ClearOtherPlatformDirctory, false));
                     data.Add(CreateDvancedSettingItem(DvancedSettingType.ClearTestData, true));
                     data.Add(CreateDvancedSettingItem(DvancedSettingType.Clear_AssetBundleName));
                     data.Add(CreateDvancedSettingItem(DvancedSettingType.Set_AssetBundleName));
@@ -219,14 +256,18 @@ namespace com.ihaiu
                     data.Add(CreateDvancedSettingItem(DvancedSettingType.PlayerSettingsVersion));
                     data.Add(CreateDvancedSettingItem(DvancedSettingType.GenerateVersionInfo));
                     data.Add(CreateDvancedSettingItem(DvancedSettingType.GeneratorUpdateAssetList, false));
+					data.Add(CreateDvancedSettingItem(DvancedSettingType.GenerateResZip, false));
+					data.Add(CreateDvancedSettingItem(DvancedSettingType.CopyWorkspaceStreamToStreamingAssets_UnResZip, false));
+					data.Add(CreateDvancedSettingItem(DvancedSettingType.CopyWorkspaceStreamToStreamingAssets_All, true));
 
 
                     data = new DvancedSettingData(TabType.Patch);
                     _dvancedSettingDataDict.Add(data.tabType, data);
+                    data.Add(CreateDvancedSettingItem(DvancedSettingType.ClearWorkspacePlatformDirctory, false));
                     data.Add(CreateDvancedSettingItem(DvancedSettingType.ClearAllPlatformDirctory, false));
                     data.Add(CreateDvancedSettingItem(DvancedSettingType.ClearOtherPlatformDirctory, false));
                     data.Add(CreateDvancedSettingItem(DvancedSettingType.ClearTestData, false));
-                    data.Add(CreateDvancedSettingItem(DvancedSettingType.Clear_AssetBundleName));
+                    data.Add(CreateDvancedSettingItem(DvancedSettingType.Clear_AssetBundleName, false));
                     data.Add(CreateDvancedSettingItem(DvancedSettingType.Set_AssetBundleName));
                     data.Add(CreateDvancedSettingItem(DvancedSettingType.AB_AssetBundle));
                     data.Add(CreateDvancedSettingItem(DvancedSettingType.AB_luacode));
@@ -236,6 +277,9 @@ namespace com.ihaiu
                     data.Add(CreateDvancedSettingItem(DvancedSettingType.GeneratorStreamingAssetsFilesCSV));
                     data.Add(CreateDvancedSettingItem(DvancedSettingType.GenerateVersionInfo));
                     data.Add(CreateDvancedSettingItem(DvancedSettingType.GeneratorUpdateAssetList));
+                    data.Add(CreateDvancedSettingItem(DvancedSettingType.GenerateResZip, false));
+                    data.Add(CreateDvancedSettingItem(DvancedSettingType.CopyWorkspaceStreamToStreamingAssets_UnResZip, false));
+                    data.Add(CreateDvancedSettingItem(DvancedSettingType.CopyWorkspaceStreamToStreamingAssets_All, false));
                 }
                 return _dvancedSettingDataDict;
             }
@@ -245,6 +289,12 @@ namespace com.ihaiu
         #endregion
 
 
+        void OnFocus()
+        {
+//            centerSwitcher.OnFocus();
+        }
+
+        public CenterSwitcher centerSwitcher = new CenterSwitcher();
 
         Vector2 scrollPos;
         void OnGUI ()
@@ -254,12 +304,21 @@ namespace com.ihaiu
 
 
             TabType tabType = HGUILayout.TabGroup<TabType>(tabGroupData);
-
+            selectTabPrefs = tabType;
            
            
 
 
             scrollPos = EditorGUILayout.BeginScrollView(scrollPos);
+            switch(tabType)
+            {
+                case TabType.App:
+                case TabType.Patch:
+                    GUILayout.Space(20);
+//                    centerSwitcher.OnGUI();
+                    GUILayout.Space(20);
+                    break;
+            }
 
 
             GUILayout.Space(20);
@@ -303,6 +362,11 @@ namespace com.ihaiu
                     {
                         switch(item.type)
                         {
+
+                            case DvancedSettingType.ClearWorkspacePlatformDirctory:
+                                ClearWorkspacePlatformDirctory(runtimePlatform);
+                                break;
+
                             case DvancedSettingType.ClearAllPlatformDirctory:
                                 PathUtil.ClearAllPlatformDirctory();
                                 AssetDatabase.Refresh();
@@ -384,12 +448,12 @@ namespace com.ihaiu
 
 
                             case DvancedSettingType.GeneratorStreamingAssetsFilesCSV:
-                                FilesCsvForStreamingAssets.Generator();
+                                AssetListCsvFile.Generator();
                                 break;
 
 
                             case DvancedSettingType.GeneratorLoadAssetListCsv:
-                                LoadAssetListCsv.Generator();
+                                AssetListCsvLoadMap.Generator(tabType == TabType.Develop);
                                 break;
 
 
@@ -416,12 +480,12 @@ namespace com.ihaiu
                                 {
                                     case TabType.App:
                                         appVersion.SetNowDatetime();
-                                        FilesCsvForStreamingAssets.CopyStreamFilesCsvToVersion(appVersion);
+                                        AssetListCsvFile.CopyStreamFilesCsvToVersion(appVersion);
                                         break;
 
                                     case TabType.Patch:
                                         patchVersion.SetNowDatetime();
-                                        FilesCsvForStreamingAssets.CopyStreamFilesCsvToVersion(patchVersion);
+                                        AssetListCsvFile.CopyStreamFilesCsvToVersion(patchVersion);
                                         break;
                                 }
                                 break;
@@ -430,13 +494,27 @@ namespace com.ihaiu
                                 switch (tabType)
                                 {
                                     case TabType.App:
-                                        FilesCsvForStreamingAssets.GeneratorUpdateList(null);
+                                        AssetListCsvFile.GeneratorUpdateList(null);
                                         break;
                                     case TabType.Patch:
-                                        FilesCsvForStreamingAssets.GeneratorUpdateList(compareVersion);
+                                        AssetListCsvFile.GeneratorUpdateList(compareVersion);
                                         break;
 
                                 }
+                                break;
+
+
+
+                            case DvancedSettingType.GenerateResZip:
+                                ResZipEditor.Install.Generator();
+                                break;
+
+                            case DvancedSettingType.CopyWorkspaceStreamToStreamingAssets_UnResZip:
+                                ResZipEditor.Install.CopyToStreaming_UnZip();
+                                break;
+
+                            case DvancedSettingType.CopyWorkspaceStreamToStreamingAssets_All:
+                                ResZipEditor.Install.CopyToStreaming_All();
                                 break;
 
                         }
@@ -469,7 +547,6 @@ namespace com.ihaiu
         void SetPlayerSettings(RuntimePlatform platform)
         {
             PlayerSettings.companyName = "mb";
-            PlayerSettings.productName = "空城计-全民竞技";
             PlayerSettings.showUnitySplashScreen = false;
 
 
@@ -482,7 +559,9 @@ namespace com.ihaiu
 
             if(runtimePlatform != RuntimePlatform.Android)
             {
-                PlayerSettings.applicationIdentifier = "com.mb.crsg";
+				GameConstConfig config = GameConstConfig.Load();
+				if (config.CenterName == "NoCenter")
+                	PlayerSettings.applicationIdentifier = "com.mb.crsg";
 
 
 //                Texture2D[] icons = new Texture2D[1];
@@ -499,6 +578,7 @@ namespace com.ihaiu
             {
                 case RuntimePlatform.IPhonePlayer:
                     PlayerSettings.aotOptions = "nrgctx-trampolines=8096,nimt-trampolines=8096,ntrampolines=4048";
+                    PlayerSettings.stripEngineCode = false;
 
                     break;
             }
@@ -571,5 +651,9 @@ namespace com.ihaiu
         }
 
 
+		public static void ClearWorkspacePlatformDirctory(RuntimePlatform p)
+		{
+			PathUtil.ClearDirectory( AssetManagerSetting.EditorRoot.WorkspaceStream  + Platform.GetPlatformDirectory(p));
+		}
     }
 }

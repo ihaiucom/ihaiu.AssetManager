@@ -12,26 +12,26 @@ namespace com.ihaiu
         {
             PathUtil.CheckPath(serverRoot, false);
             string updateAssetListPath = null;
-            if (File.Exists(AssetManagerSetting.EditorUpdateAssetListPath))
+            if (File.Exists(AssetManagerSetting.EditorWorkspaceFilePath.AssetListUpdate))
             {
-                updateAssetListPath = AssetManagerSetting.EditorUpdateAssetListPath;
+                updateAssetListPath = AssetManagerSetting.EditorWorkspaceFilePath.AssetListUpdate;
             }
-            else if(File.Exists(AssetManagerSetting.EditorFileCsvForStreaming))
+            else if(File.Exists(AssetManagerSetting.EditorWorkspaceFilePath.AssetListFile))
             {
-                updateAssetListPath = AssetManagerSetting.EditorFileCsvForStreaming;
+                updateAssetListPath = AssetManagerSetting.EditorWorkspaceFilePath.AssetListFile;
             }
 
             if (!string.IsNullOrEmpty(updateAssetListPath))
             {
                 AssetFileList assetFileList = AssetFileList.Read(updateAssetListPath);
-                assetFileList.Add(new AssetFile("{0}/" + AssetManagerSetting.UpdateAssetListName, ""));
+                assetFileList.Add(new AssetFile("{0}/" + AssetManagerSetting.FileName.AssetList_Update, ""));
 
                 int count = assetFileList.list.Count;
                 for(int i = 0; i < count; i ++)
                 {
                     AssetFile item = assetFileList.list[i];
                     string path = AssetManagerSetting.GetPlatformPath(item.path);
-                    string fromPath = AssetManagerSetting.EditorRootStream + "/"+ path;
+                    string fromPath = AssetManagerSetting.EditorRoot.WorkspaceStream + "/"+ path;
                     string toPath = serverRoot + "/" + path;
 
                     PathUtil.CheckPath(toPath);
@@ -52,7 +52,7 @@ namespace com.ihaiu
         public static void CopyAlleAsset(string serverRoot)
         {
             PathUtil.CheckPath(serverRoot, false);
-            PathUtil.CopyDirectory(AssetManagerSetting.EditorRootStream, serverRoot, new List<string>(new string[]{".meta", ".manifest"}));
+            PathUtil.CopyDirectory(AssetManagerSetting.EditorRoot.Stream, serverRoot, new List<string>(new string[]{".meta", ".manifest"}));
         }
     }
 }

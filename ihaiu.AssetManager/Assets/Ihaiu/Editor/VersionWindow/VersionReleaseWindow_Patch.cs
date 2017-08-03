@@ -128,6 +128,12 @@ namespace com.ihaiu
                 version.SetNowDatetime();
 
                 bool isRefresh = false;
+
+                if (currentDvancedSettingData.GetValue(DvancedSettingType.ClearWorkspacePlatformDirctory))
+                {
+                    ClearWorkspacePlatformDirctory(runtimePlatform);
+                }
+
                 if (currentDvancedSettingData.GetValue(DvancedSettingType.ClearAllPlatformDirctory))
                 {
                     PathUtil.ClearAllPlatformDirctory();
@@ -193,12 +199,12 @@ namespace com.ihaiu
 
                 if (currentDvancedSettingData.GetValue(DvancedSettingType.GeneratorLoadAssetListCsv))
                 {
-                    LoadAssetListCsv.Generator();
+                    AssetListCsvLoadMap.Generator(false);
                 }
 
                 if (currentDvancedSettingData.GetValue(DvancedSettingType.GeneratorStreamingAssetsFilesCSV))
                 {
-                    FilesCsvForStreamingAssets.Generator();
+                    AssetListCsvFile.Generator();
                 }
 
 
@@ -214,13 +220,13 @@ namespace com.ihaiu
 
                 if (currentDvancedSettingData.GetValue(DvancedSettingType.GenerateVersionInfo))
                 {
-                    FilesCsvForStreamingAssets.CopyStreamFilesCsvToVersion(version);
+                    AssetListCsvFile.CopyStreamFilesCsvToVersion(version);
                 }
 
 
                 if (currentDvancedSettingData.GetValue(DvancedSettingType.GeneratorUpdateAssetList))
                 {
-                    FilesCsvForStreamingAssets.GeneratorUpdateList(compareVersion);
+                    AssetListCsvFile.GeneratorUpdateList(compareVersion);
                 }
 
             }

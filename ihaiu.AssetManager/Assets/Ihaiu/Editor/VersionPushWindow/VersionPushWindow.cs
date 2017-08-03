@@ -9,13 +9,22 @@ using System;
 
 namespace com.ihaiu
 {
+
+    public enum GitId
+    {
+        CN,
+        TW,
+        EN
+    }
+
+
     public class GitServerItem
     {
         public string   name;
         public string   rootPath;
         public string   url;
 
-        public string   gitServer       = "git@127.0.0.1:/repositories/test.version.git";
+        public string   gitServer       = "git@112.126.75.68:kcj_res.git";
         public bool     needPassword    = false;
         public string   password        = "git";
 
@@ -35,7 +44,7 @@ namespace com.ihaiu
 
         public string GetHostUpdateUrlRoot(string tag)
         {
-            return "http://127.0.0.1:8080/?p=.git;a=blob_plain;hb=refs/tags/"+ tag +";f="+ Platform.PlatformDirectoryName.ToLower() +"/verres/";
+            return "http://112.126.75.68:8081/?p=kcj_res.git/.git;a=blob_plain;hb=refs/tags/"+ tag +";f="+ Platform.PlatformDirectoryName.ToLower() +"/verres/";
         }
     }
 
@@ -57,11 +66,11 @@ namespace com.ihaiu
                 GitServerItem gitServer;
                 List<string> centerNames;
 
-                gitServer = new GitServerItem("国内服务器", Application.dataPath + "/../../../test.version/");
-                centerNames= new List<string>{"Official", "XiaoMi", "WeiXin", "UC"};
+                gitServer = new GitServerItem("中文服务器", Application.dataPath + "/../../../kcj_res/");
+
                 foreach(CenterSwitcher.CenterItem item in CenterSwitcher.centerItemList)
                 {
-                    if(centerNames.IndexOf(item.name) != -1)
+                    if(item.gitId == GitId.CN)
                     {
                         gitServer.AddCenter(item);
                     }
@@ -70,11 +79,25 @@ namespace com.ihaiu
 
 
 
-                gitServer = new GitServerItem("海外服务器", Application.dataPath + "/../../../test.version/");
+                gitServer = new GitServerItem("台湾服务器", Application.dataPath + "/../../../kcj_res/");
                 centerNames= new List<string>{"Official"};
                 foreach(CenterSwitcher.CenterItem item in CenterSwitcher.centerItemList)
                 {
-                    if(centerNames.IndexOf(item.name) != -1)
+                    if(item.gitId == GitId.TW)
+                    {
+                        gitServer.AddCenter(item);
+                    }
+                }
+                gitServerList.Add(gitServer);
+
+
+
+
+                gitServer = new GitServerItem("英文服务器", Application.dataPath + "/../../../kcj_res/");
+                centerNames= new List<string>{"Official"};
+                foreach(CenterSwitcher.CenterItem item in CenterSwitcher.centerItemList)
+                {
+                    if(item.gitId == GitId.EN)
                     {
                         gitServer.AddCenter(item);
                     }
@@ -98,8 +121,25 @@ namespace com.ihaiu
 
         public void OnGUI()
         {
+            GUILayout.BeginHorizontal();
             gitServerSelectIndex = EditorGUILayout.Popup("git server:", gitServerSelectIndex, gitServerNames);
             gitServer = gitServerList[gitServerSelectIndex];
+
+            if (!Directory.Exists(gitServer.rootPath))
+            {
+                GUILayout.Space(50);
+                if (GUILayout.Button("Clone", GUILayout.Width(100)))
+                {
+                    ShFile tmp = ShFile.tmp;
+                    tmp.Clear();
+                    tmp.WriteLine("cd " + gitRoot.Substring(0, Path.GetDirectoryName(gitRoot).LastIndexOf('/')));
+                    tmp.WriteLine(string.Format("git clone {0}", gitServer.gitServer));
+                    tmp.Save();
+                    Shell.RunFile(tmp.path);
+                }
+            }
+
+            GUILayout.EndHorizontal();
         }
 
 
@@ -271,6 +311,10 @@ namespace com.ihaiu
         bool foldout_res_option2        = false;
         bool foldout_verinfo            = true;
         bool foldout_verinfo_option     = false;
+        bool foldout_tag                = false;
+
+        string[]    tagNames;
+        bool[]      tagSelects;
 
 
         /** 拷贝内容方式 */
@@ -487,13 +531,13 @@ namespace com.ihaiu
 				{
 
 					GUILayout.BeginVertical(HGUILayout.boxMPStyle, GUILayout.Height(50));
-					if (GUILayout.Button("清除所有本地tag", GUILayout.MinHeight(30)))
+                    if (GUILayout.Button("(危险慎用) 清除所有本地tag", GUILayout.MinHeight(30)))
 					{
 						ClearAllTagLoacl();
 					}
 
 
-					if (GUILayout.Button("清除所有服务器tag", GUILayout.MinHeight(30)))
+                    if (GUILayout.Button("(危险慎用) 清除所有服务器tag", GUILayout.MinHeight(30)))
 					{
 						ClearAllTagOrigin();
 					}
@@ -518,7 +562,6 @@ namespace com.ihaiu
                     Step_CommitBranch(true);
                     if (stepIsContinue)
                         Step_PushBranch();
-
 
                 }
 
@@ -561,8 +604,112 @@ namespace com.ihaiu
                 GUILayout.EndVertical();
             }
 
-            EditorGUILayout.EndScrollView();
 
+
+            // tag
+            foldout_tag = EditorGUILayout.Foldout(foldout_tag, "tag");
+            if (foldout_tag)
+            {
+                if (tagNames == null)
+                {
+                    tmp.Clear();
+                    tmp.WriteLine("cd " + gitRoot);
+                    tmp.WriteLine("git tag > " + Shell.txt_vertmp);
+                    tmp.Save();
+                    Shell.RunTmp(Shell.sh_tmp);
+
+                    string txt = File.ReadAllText(Shell.txt_vertmp);
+                    tagNames = txt.Split('\n');
+                    tagSelects = new bool[tagNames.Length];
+                }
+
+
+
+                GUILayout.BeginVertical(HGUILayout.boxMPStyle, GUILayout.Height(50));
+                for(int i = 0; i < tagNames.Length - 1; i ++)
+                {
+                    tagSelects[i] = EditorGUILayout.ToggleLeft(tagNames[i], tagSelects[i], GUILayout.Width(250));
+                }
+
+                GUILayout.Space(20);
+
+                HGUILayout.BeginCenterHorizontal();;
+                if (GUILayout.Button("刷新", GUILayout.MinHeight(30), GUILayout.MaxWidth(200)))
+                {
+                    tagNames = null;
+                }
+
+
+                GUILayout.Space(20);
+                if (GUILayout.Button("全选", GUILayout.MinHeight(30), GUILayout.MaxWidth(200)))
+                {
+
+                    for(int i = 0; i < tagNames.Length - 1; i ++)
+                    {
+                        tagSelects[i] = true;
+                    }
+
+                }
+
+
+                GUILayout.Space(20);
+
+                if (GUILayout.Button("全不选", GUILayout.MinHeight(30), GUILayout.MaxWidth(200)))
+                {
+                    for(int i = 0; i < tagNames.Length - 1; i ++)
+                    {
+                        tagSelects[i] = false;
+                    }
+                }
+                HGUILayout.EndCenterHorizontal();
+
+                GUILayout.Space(30);
+
+
+                HGUILayout.BeginCenterHorizontal();
+
+                if (GUILayout.Button("(危险慎用) 删除选中的服务器tag", GUILayout.MinHeight(30), GUILayout.MaxWidth(200)))
+                {
+                    tmp.Clear(gitNeedPassword);
+                    tmp.WriteLine("cd " + gitRoot);
+                    for(int i = 0; i < tagNames.Length; i ++)
+                    {
+                        if (tagSelects[i])
+                        {
+                            tmp.WriteLine(string.Format("git push origin  :refs/tags/{0}", tagNames[i]), gitNeedPassword, gitPassword);
+                        }
+                    }
+                    tmp.Save();
+                    Shell.RunFile(Shell.sh_tmp);
+                }
+
+
+                GUILayout.Space(20);
+
+                if (GUILayout.Button("(危险慎用) 删除选中的本地tag", GUILayout.MinHeight(30), GUILayout.MaxWidth(200)))
+                {
+
+                    tmp.Clear();
+                    tmp.WriteLine("cd " + gitRoot);
+                    for(int i = 0; i < tagNames.Length; i ++)
+                    {
+                        if (tagSelects[i])
+                        {
+                            tmp.WriteLine(string.Format("git tag -d {0}", tagNames[i]));
+                        }
+                    }
+                    tmp.Save();
+                    Shell.RunFile(Shell.sh_tmp);
+                }
+
+                HGUILayout.EndCenterHorizontal();
+
+                GUILayout.EndVertical();
+
+            }
+
+
+            EditorGUILayout.EndScrollView();
 
         }
 

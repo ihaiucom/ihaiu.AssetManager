@@ -15,6 +15,9 @@ namespace com.ihaiu
             HGUILayout.BeginCenterHorizontal();
             if (GUILayout.Button("生成版本信息", GUILayout.MinHeight(50), GUILayout.MaxWidth(200)))
             {
+				CenterSwitcher centerSwitcher = new CenterSwitcher();
+//				centerSwitcher.DoSwitch(0);
+				
                 if (currentDvancedSettingData.GetValue(DvancedSettingType.GameConstConfig))
                 {
                     GameConstConfig config = GameConstConfig.Load();
@@ -24,11 +27,11 @@ namespace com.ihaiu
                 }
 
 
-                if (currentDvancedSettingData.GetValue(DvancedSettingType.Clear_AssetBundleName))
-                {
-                    AssetBundleEditor.ClearAssetBundleNames();
-                    AssetDatabase.RemoveUnusedAssetBundleNames();
-                }
+//                if (currentDvancedSettingData.GetValue(DvancedSettingType.Clear_AssetBundleName))
+//                {
+//                    AssetBundleEditor.ClearAssetBundleNames();
+//                    AssetDatabase.RemoveUnusedAssetBundleNames();
+//                }
 
 
                 if (currentDvancedSettingData.GetValue(DvancedSettingType.Set_AssetBundleName))
@@ -38,7 +41,7 @@ namespace com.ihaiu
 
                 if (currentDvancedSettingData.GetValue(DvancedSettingType.GeneratorLoadAssetListCsv))
                 {
-                    LoadAssetListCsv.Generator();
+                    AssetListCsvLoadMap.Generator(true);
                 }
 
             }

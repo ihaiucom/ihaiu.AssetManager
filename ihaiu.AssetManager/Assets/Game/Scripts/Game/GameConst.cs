@@ -31,6 +31,7 @@ namespace Games
         public static string   WebUrl_Release  = "http://www.ihaiu.com/";          //更新地址--发布版本
         public static string   WebUrl_Develop  = "http://localhost/";              //更新地址--调试版本
 
+
         public static bool WebUrlIsDevelop
         {
             get

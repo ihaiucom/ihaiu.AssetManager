@@ -52,15 +52,17 @@
      <Compile Include="Assets\Ihaiu\Editor\AssetBundleServer\LaunchAssetBundleServer.cs" />
      <Compile Include="Assets\Ihaiu\Editor\AssetBundleServer\LaunchCheckServer.cs" />
      <Compile Include="Assets\Ihaiu\Editor\AssetManager\AssetBundleEditor.cs" />
+     <Compile Include="Assets\Ihaiu\Editor\AssetManager\AssetListCsvDontUnload.cs" />
+     <Compile Include="Assets\Ihaiu\Editor\AssetManager\AssetListCsvFile.cs" />
+     <Compile Include="Assets\Ihaiu\Editor\AssetManager\AssetListCsvLoadMap.cs" />
      <Compile Include="Assets\Ihaiu\Editor\AssetManager\AssetMenuItems.cs" />
      <Compile Include="Assets\Ihaiu\Editor\AssetManager\AssetNode.cs" />
      <Compile Include="Assets\Ihaiu\Editor\AssetManager\AssetNodeUtil.cs" />
      <Compile Include="Assets\Ihaiu\Editor\AssetManager\BuildAssetBundle.cs" />
      <Compile Include="Assets\Ihaiu\Editor\AssetManager\BuildAssetBundle_Config.cs" />
      <Compile Include="Assets\Ihaiu\Editor\AssetManager\BuildAssetBundle_Lua.cs" />
-     <Compile Include="Assets\Ihaiu\Editor\AssetManager\DontUnloadAssetListCsv.cs" />
-     <Compile Include="Assets\Ihaiu\Editor\AssetManager\FilesCsvForStreamingAssets.cs" />
-     <Compile Include="Assets\Ihaiu\Editor\AssetManager\LoadAssetListCsv.cs" />
+     <Compile Include="Assets\Ihaiu\Editor\AssetManager\ResZipEditor.cs" />
+     <Compile Include="Assets\Ihaiu\Editor\AssetManager\SeeAssetBundleInfoWindow.cs" />
      <Compile Include="Assets\Ihaiu\Editor\VersionPushWindow\CenterSwitcher.cs" />
      <Compile Include="Assets\Ihaiu\Editor\VersionPushWindow\ShFile.cs" />
      <Compile Include="Assets\Ihaiu\Editor\VersionPushWindow\Shell.cs" />
@@ -280,10 +282,9 @@
  <Reference Include="UnityEditor.WindowsStandalone.Extensions">
  <HintPath>C:/Program Files/Unity/Editor/Data/PlaybackEngines/windowsstandalonesupport/UnityEditor.WindowsStandalone.Extensions.dll</HintPath>
  </Reference>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="Assembly-CSharp.csproj">
-      <Project>{73FDD4E6-6A25-52AC-CD3F-2C45930A7E74}</Project>      <Name>Assembly-CSharp</Name>    </ProjectReference>
+ <Reference Include="ICSharpCode.SharpZipLib">
+ <HintPath>C:/zengfeng/github/ihaiu.AssetManager/ihaiu.AssetManager/Assets/Plugins/General/ICSharpCode.SharpZipLib.dll</HintPath>
+ </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

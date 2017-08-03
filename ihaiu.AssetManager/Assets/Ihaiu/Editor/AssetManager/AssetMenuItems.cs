@@ -9,7 +9,6 @@ namespace com.ihaiu
     public class AssetMenuItems 
     {
 
-
         [MenuItem ("资源管理/版本设置面板", false, 900)]
         public static void VersionReleaseWindowMenu()
         {
@@ -28,8 +27,6 @@ namespace com.ihaiu
         {
             VersionInfoWindow.Open();
         }
-
-
 
 
 
@@ -70,23 +67,23 @@ namespace com.ihaiu
         }
 
 
-
-        [MenuItem("资源管理/Generator files.csv(StreamingAssets)")]
+        [MenuItem("资源管理/Generator AssetList_File.csv(StreamingAssets)")]
         public static void GeneratorFilesCsvForStreamingAssets()
         {
-            FilesCsvForStreamingAssets.Generator();
+            AssetListCsvFile.Generator();
         }
 
         [MenuItem("资源管理/Generator LoadAssetList.csv")]
         public static void GeneratorLoadAssetListCsv()
         {
-            LoadAssetListCsv.Generator();
+            
+            AssetListCsvLoadMap.Generator(Games.GameConstConfig.Load().DevelopMode);
         }
 
         [MenuItem("资源管理/Generator DontUnloadAssetList.csv")]
         public static void GeneratorDontUnloadAssetListCsv()
         {
-            DontUnloadAssetListCsv.Generator();
+            AssetListCsvDontUnload.Generator(Games.GameConstConfig.Load().DevelopMode);
         }
 
         [MenuItem("资源管理/Clear Manifest Help File")]
@@ -97,12 +94,6 @@ namespace com.ihaiu
 
 
 
-        [MenuItem("资源管理/Generator AssetBundle Info")]
-        public static void GeneratorAssetBundleInfo()
-        {
-            AssetBundleEditor.GeneratorAssetBundleInfo();
-        }
-
 
 
         [MenuItem("资源管理/CleanCache")]
@@ -111,6 +102,27 @@ namespace com.ihaiu
             Caching.CleanCache();
         }
 
+
+
+
+        [MenuItem("资源管理/查看AssetBundle")]
+        public static void SeeAssetBundle()
+        {
+            SeeAssetBundleInfoWindow.Open();
+        }
+
+        [MenuItem("资源管理/生成ResZip")]
+        public static void GeneratorResZip()
+        {
+            ResZipEditor.Install.Generator();
+        }
+
+
+        [MenuItem("资源管理/删除Zip的StreamingAssets资源")]
+        public static void DeleteResZipForStreamingAssets()
+        {
+            ResZipEditor.Install.DeleteApp();
+        }
 
 
     }

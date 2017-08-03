@@ -23,6 +23,8 @@ namespace Games
             Game.assetManager = gameObject.AddComponent<AssetManager>();
 
             VersionManager versionManager = gameObject.AddComponent<VersionManager>();
+
+			versionManager.CheckFirstSync();
             launchPanel.Show(versionManager);
             yield return versionManager.CheckVersion();
             if (versionManager.yieldbreak)
@@ -45,7 +47,8 @@ namespace Games
 
         IEnumerator InitConfig()
         {
-            string path = AssetManagerSetting.ConfigAssetBundleURL;
+
+			string path = AssetManagerSetting.FileURL.AssetBundleConfig;
             WWW www = new WWW(path);
             yield return www;
 

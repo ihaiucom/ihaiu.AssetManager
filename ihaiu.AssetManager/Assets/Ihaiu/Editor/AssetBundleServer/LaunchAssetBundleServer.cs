@@ -160,6 +160,7 @@ namespace com.ihaiu
                     break;
                 }
             }
+
             downloadURL = "http://"+localIP+":7888/";
             Host = downloadURL;
 
@@ -167,7 +168,8 @@ namespace com.ihaiu
             gameConstConfig.WebUrl_Develop = downloadURL;
             gameConstConfig.Save();
 
-            VersionInfo versionInfo = VersionInfo.Load(ServerRootPath + "/" + AssetManagerSetting.VersionInfoName);
+            string verinfoRelativePath = "/ver_" + gameConstConfig.CenterName.ToLower() + ".txt";
+            VersionInfo versionInfo = VersionInfo.Load(ServerRootPath + verinfoRelativePath);
             versionInfo.version = gameConstConfig.Version;
             if (ServerRootPath == AssetManagerSetting.EditorAssetBundleServerRoot_StreamingAssets)
             {
@@ -178,10 +180,42 @@ namespace com.ihaiu
                 versionInfo.updateLoadUrl = downloadURL + "StreamingAssets/";
             }
 
-
-
-            string versionPath = AssetManagerSetting.GetServerVersionInfoURL(ServerRootPath, gameConstConfig.CenterName) ;
+            string versionPath = ServerRootPath + verinfoRelativePath;
             versionInfo.Save(versionPath);
+        }
+
+
+        //获取内网IP
+        private static string GetInternalIP()
+        {
+            IPHostEntry host;
+            string localIP = "?";
+            host = Dns.GetHostEntry(Dns.GetHostName());
+            foreach (IPAddress ip in host.AddressList)
+            {
+                if (ip.AddressFamily.ToString() == "InterNetwork")
+                {
+                    localIP = ip.ToString();
+                    break;
+                }
+            }
+            return localIP;
+        }
+
+        //获取外网IP
+        private static string GetExternalIP()
+        {
+            string direction = "";
+            WebRequest request = WebRequest.Create("http://blog.ihaiu.com");
+            using (WebResponse response = request.GetResponse())
+            using (StreamReader stream = new StreamReader(response.GetResponseStream()))
+            {
+                direction = stream.ReadToEnd();
+            }
+            int first = direction.IndexOf("Address:") + 9;
+            int last = direction.LastIndexOf("</body>");
+            direction = direction.Substring(first, last - first);
+            return direction;
         }
 
 	}

@@ -22,6 +22,9 @@ namespace Games
         public bool IsCacheResourceAsset                = false;    //是否缓存Resouces加载的对象
         public bool ForcedResourceAsynLoadWaitFrame     = true;     //强制异步加载,等待一帧(Resource.AsyLoad)
 
+		/** 更新时--是否可以修改发行商 */
+		public bool updateEnableChangeCenterName = false;
+
 		public void Set()
 		{
 			GameConst.DevelopMode = DevelopMode;
@@ -54,7 +57,7 @@ namespace Games
         public static GameConstConfig last;
         public static GameConstConfig Load()
         {
-            string filesPath = Application.streamingAssetsPath + "/" + AssetManagerSetting.GameConstName;
+			string filesPath = Application.streamingAssetsPath + "/" + AssetManagerSetting.FileName.GameConst;
             return last = Load(filesPath);
         }
 
@@ -62,7 +65,7 @@ namespace Games
         public void Save()
         {
             last = this;
-            string filesPath = Application.streamingAssetsPath + "/" + AssetManagerSetting.GameConstName;
+			string filesPath = Application.streamingAssetsPath + "/" + AssetManagerSetting.FileName.GameConst;
             Save(filesPath);
             UnityEditor.AssetDatabase.Refresh();
             Debug.Log("[GameConstJsonGenerator]" + filesPath);

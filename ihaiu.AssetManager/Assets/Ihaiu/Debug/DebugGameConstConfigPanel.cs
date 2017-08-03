@@ -24,7 +24,7 @@ public class DebugGameConstConfigPanel : MonoBehaviour {
 
     public void Load()
     {
-        config = GameConstConfig.Load(AssetManagerSetting.GameConstPath);
+		config = GameConstConfig.Load(AssetManagerSetting.PersistentFilePath.GameConst);
 
         Type type = typeof(GameConstConfig);
 
@@ -66,7 +66,7 @@ public class DebugGameConstConfigPanel : MonoBehaviour {
             DebugGameConstConfigItem item = items[i];
             item.fieldInfo.SetValue(config, item.GetObject());
         }
-        config.Save(AssetManagerSetting.GameConstPath);
+		config.Save(AssetManagerSetting.PersistentFilePath.GameConst);
     }
 
     public void Close()

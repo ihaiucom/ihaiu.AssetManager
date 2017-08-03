@@ -8,7 +8,7 @@ using Games;
 
 namespace com.ihaiu
 {
-    public class VersionManager : MonoBehaviour
+    public partial class VersionManager : MonoBehaviour
     {
         public Action<string>       errorCallback;
         public Action<string>       stateCallback;
@@ -24,9 +24,9 @@ namespace com.ihaiu
         public Action<string>       needDownAppCallback;
         public Action               needHostUpdateCallback;
 
-        public Action               finalCallback;
 
         public bool yieldbreak = false;
+        public VersionCheckState state = VersionCheckState.Normal;
         private Version appVer = new Version();
         private Version curVer = new Version();
         private Version serverVer = new Version();
@@ -36,7 +36,6 @@ namespace com.ihaiu
         private GameConstConfig appGameConstConfig;
         private GameConstConfig curGameConstConfig;
 
-        private AssetFileList   assetList;
 
         #region Event
         void OnError(string txt)
@@ -94,11 +93,6 @@ namespace com.ihaiu
                 needHostUpdateCallback();
         }
 
-        void OnFinal()
-        {
-            if (finalCallback != null)
-                finalCallback();
-        }
 
         private bool IsContinueHostUpdate = false;
         public void SetContinueHostUpdate()
@@ -107,8 +101,9 @@ namespace com.ihaiu
         }
         #endregion
 
+       
 
-        public IEnumerator CheckVersion()
+        public IEnumerator CheckFirst()
         {
             yield return StartCoroutine(ReadGameConst_Streaming());
 
@@ -117,44 +112,81 @@ namespace com.ihaiu
 
             if (appGameConstConfig.DevelopMode)
             {
-                OnFinal();
                 yield break;
             }
 
             if(!AssetManagerSetting.TestVersionMode)
             {
                 appGameConstConfig.Set();
-                OnFinal();
                 yield break;
             }
             #endif
 
-
-            yield return StartCoroutine(ReadGameConst_Persistent());
-
             appVer.Parse(appGameConstConfig.Version);
-
-            bool needInitData = false;
-            if (curGameConstConfig == null)
+            VersionLocalInfo.Install.streamVersion.Parse(appGameConstConfig.Version);
+            if (VersionLocalInfo.Install.IsResetAppRes)
             {
                 appGameConstConfig.Set();
-                needInitData = true;
+                curVer.Copy(appVer);
+                yield return StartCoroutine(InitData());
             }
             else
             {
+                yield return StartCoroutine(ReadGameConst_Persistent());
+
                 curGameConstConfig.Set();
                 curVer.Parse(curGameConstConfig.Version);
-                needInitData = VersionCheck.CheckNeedCopy(curVer, appVer);
             }
 
-
-            AssetManagerSetting.persistentAssetFileList = AssetFileList.Read(AssetManagerSetting.PersistentAssetFileListPath);
-
-            if (needInitData)
+            if (VersionLocalInfo.Install.IsNewApp)
             {
-                yield return StartCoroutine(InitData());
-                curVer.Copy(appVer);
+                VersionLocalInfo.Install.localVersion.Parse(appGameConstConfig.Version);
+                VersionLocalInfo.Install.Save();
             }
+
+
+
+//            yield return StartCoroutine(ReadGameConst_Persistent());
+//
+//            appVer.Parse(appGameConstConfig.Version);
+//
+//            bool needInitData = false;
+//            if (curGameConstConfig == null)
+//            {
+//                appGameConstConfig.Set();
+//                needInitData = true;
+//            }
+//            else
+//            {
+//                curGameConstConfig.Set();
+//                curVer.Parse(curGameConstConfig.Version);
+//                needInitData = VersionCheck.CheckNeedCopy(curVer, appVer);
+//            }
+//
+//
+//
+//            if (needInitData)
+//            {
+//                yield return StartCoroutine(InitData());
+//                curVer.Copy(appVer);
+//            }
+//
+        }
+
+
+        public IEnumerator CheckVersion()
+        {
+            #if UNITY_EDITOR
+            if (appGameConstConfig.DevelopMode)
+            {
+                yield break;
+            }
+
+            if(!AssetManagerSetting.TestVersionMode)
+            {
+                yield break;
+            }
+            #endif
 
 
 
@@ -172,7 +204,13 @@ namespace com.ihaiu
 				{
 	                serverVer.Parse(serverVersionInfo.version);
 
-	                VersionCheckState state = VersionCheck.CheckState(curVer, serverVer);
+	                state = VersionCheck.CheckState(curVer, serverVer);
+
+                    if (state != VersionCheckState.DownApp && serverVersionInfo.zipPanelStarShow)
+                    {
+                        VersionLocalInfo.Install.SetServerInfo(serverVersionInfo);
+//                        yield return Coo.downloadZip.CheckExeCoroutine();
+                    }
 
 	                switch(state)
 	                {
@@ -193,18 +231,20 @@ namespace com.ihaiu
 	                        yield return StartCoroutine(UpdateResource(serverVersionInfo.updateLoadUrl));
 	                        yield return StartCoroutine(ReadGameConst_Persistent());
 	                        curGameConstConfig.Set();
-	                        OnFinal();
 	                        break;
 	                    default:
-	                        OnFinal();
 	                        break;
 	                }
 				}
+
+                if (!yieldbreak && !serverVersionInfo.zipPanelStarShow)
+                {
+                    VersionLocalInfo.Install.SetServerInfo(serverVersionInfo).CheckZipExe();
+                }
             }
             else
             {
                 Debug.Log("zj OnFinal");
-                OnFinal();
             }
         }
 
@@ -214,7 +254,7 @@ namespace com.ihaiu
             yield return InitAssetList();
 
             List<string> list = new List<string>();
-            list.Add(AssetManagerSetting.GameConstName);
+            list.Add(AssetManagerSetting.FileName.GameConst);
 
 
 
@@ -258,44 +298,50 @@ namespace com.ihaiu
 
 
 
-            AssetManagerSetting.persistentAssetFileList.Add(AssetManagerSetting.AssetListName, "");
 
-            AssetManagerSetting.persistentAssetFileList.Save(AssetManagerSetting.PersistentAssetFileListPath);
+            AssetManagerSetting.persistentAssetFileList.Save();
 
         }
 
         IEnumerator InitAssetList()
         {
-            string url = AssetManagerSetting.FilesCsvForStreaming;
+            string url = AssetManagerSetting.StreamingFileURL.AssetListApp;
             WWW www = new WWW(url);
             yield return www;
 
-            assetList = AssetFileList.Read(AssetManagerSetting.AssetFileListPath);
-            if(string.IsNullOrEmpty(www.error))
+
+            if (string.IsNullOrEmpty(www.error))
             {
-                string path, md5;
+                InitAssetList(www.text);
+            }
+            else
+            {
+                AssetManagerSetting.versionAssetFileList.Save();
+            }
+        }
 
-                using(StringReader stringReader = new StringReader(www.text))
+
+        void InitAssetList(string txt)
+        {
+
+            if(!string.IsNullOrEmpty(txt))
+            {
+                AssetFileList appAssetFileList = AssetFileList.Deserialize(txt);
+                AssetFile item;
+                AssetFile verItem;
+                for(int i = 0; i < appAssetFileList.list.Count; i ++)
                 {
-                    while(stringReader.Peek() >= 0)
+                    item = appAssetFileList.list[i];
+                    verItem = AssetManagerSetting.versionAssetFileList.Get(item.path);
+                    if (verItem == null || verItem.IsEnableCover(appVer))
                     {
-                        string line = stringReader.ReadLine();
-                        if(!string.IsNullOrEmpty(line))
-                        {
-                            string[] seg = line.Split(';');
-                            path            = seg[0];
-                            md5             = seg[1];
-
-
-                            assetList.Add(path, md5);
-
-                            AssetManagerSetting.persistentAssetFileList.Remove(AssetManagerSetting.GetPlatformPath(path));
-                        }
+                        AssetManagerSetting.versionAssetFileList.Add(item).SetVer(appVer);
+                        AssetManagerSetting.persistentAssetFileList.Remove(AssetManagerSetting.GetPlatformPath(item.path));
                     }
                 }
             }
 
-            assetList.Save(AssetManagerSetting.AssetFileListPath);
+            AssetManagerSetting.versionAssetFileList.Save();
         }
 
 
@@ -305,13 +351,18 @@ namespace com.ihaiu
 
             int isUpdateTest = PlayerPrefsUtil.GetIntSimple(PlayerPrefsKey.Setting_Update);//测试更新
             string centerName = GameConst.CenterName;
-            if (isUpdateTest == 1)
-            {
-                centerName = "Test";
-            }
 
+            string channelName = centerName;
+//            if (centerName == "Quick")
+//            {
+//                if (!string.IsNullOrEmpty(GameConst.QuickChannelName) && GameConst.QuickChannelName != "quick")
+//                {
+//                    channelName += "_" + GameConst.QuickChannelName;
+//                }
+//            }
 
-            string url = AssetManagerSetting.GetServerVersionInfoURL(GameConst.WebUrl, centerName) ;
+            string url = AssetManagerSetting.ServerURL.GetServerVersionInfoURL(GameConst.WebUrl, channelName, isUpdateTest == 1) ;
+            Debug.Log("VersionURL=" + url);
             WWW www = new WWW(url);
             yield return www;
             if(!string.IsNullOrEmpty(www.error))
@@ -321,7 +372,26 @@ namespace com.ihaiu
                 www.Dispose();
                 www = null;
 
-                yield break;
+                if (centerName == "Quick")
+                {
+                    url = AssetManagerSetting.ServerURL.GetServerVersionInfoURL(GameConst.WebUrl, centerName, isUpdateTest == 1);
+
+                    www = new WWW(url);
+                    yield return www;
+                    if (!string.IsNullOrEmpty(www.error))
+                    {
+                        OnError("获取服务器版本号出错");
+                        Debug.LogErrorFormat("获取服务器版本号出错 url={0}, www.error={1}", url, www.error);
+                        www.Dispose();
+                        www = null;
+
+                        yield break;
+                    }
+                }
+                else
+                {
+                    yield break;
+                }
             }
 
             Debug.Log(www.text);
@@ -335,7 +405,7 @@ namespace com.ihaiu
         IEnumerator ReadGameConst_Streaming()
         {   
             OnState("读取streaming game_const.json");
-            string url = AssetManagerSetting.GameConstUrl_Streaming;
+            string url = AssetManagerSetting.StreamingFileURL.GameConst;
             WWW www = new WWW(url);
             yield return www;
             if(string.IsNullOrEmpty(www.error))
@@ -359,7 +429,7 @@ namespace com.ihaiu
         IEnumerator ReadGameConst_Persistent()
         {   
             OnState("读取persistent game_const.json");
-            string url = AssetManagerSetting.GameConstUrl_Persistent;
+            string url = AssetManagerSetting.PersistentFileURL.GameConst;
             WWW www = new WWW(url);
             yield return www;
             if(string.IsNullOrEmpty(www.error))
@@ -387,7 +457,7 @@ namespace com.ihaiu
             //获取服务器端的file.csv
 
             OnState("获取服务器端的file.csv");
-            string updateAssetListUrl = AssetManagerSetting.GetServerFilesCsvURL(rootUrl);
+            string updateAssetListUrl = AssetManagerSetting.ServerURL.GetUpdateCsvURL(rootUrl);
             Debug.Log("UpdateAssetList URL: " + updateAssetListUrl);
             WWW www = new WWW(updateAssetListUrl);
             yield return www;
@@ -407,12 +477,9 @@ namespace com.ihaiu
             //Debug.Log("count: " + files.Length + " text: " + filesText);
 
 
-            OnState("读取" + AssetManagerSetting.AssetFileListPath);
-            if(assetList == null) assetList = AssetFileList.Read(AssetManagerSetting.AssetFileListPath);
 
-            List<AssetFile> diffs = AssetFileList.Diff(assetList, updateAssetList);
+            List<AssetFile> diffs = AssetFileList.Diff(AssetManagerSetting.versionAssetFileList, updateAssetList);
 
-            AssetManagerSetting.persistentAssetFileList = AssetFileList.Read(AssetManagerSetting.PersistentAssetFileListPath);
 
             string path;
             //更新
@@ -445,15 +512,61 @@ namespace com.ihaiu
                 www.Dispose();
                 www = null;
 
-                assetList.Add(item);
+                AssetManagerSetting.versionAssetFileList.Add(item).SetVer(serverVer);
 
                 AssetManagerSetting.persistentAssetFileList.Add(path, item.md5);
             }
             yield return new WaitForEndOfFrame();
 
 
-            assetList.Save(AssetManagerSetting.AssetFileListPath);
-            AssetManagerSetting.persistentAssetFileList.Save(AssetManagerSetting.PersistentAssetFileListPath);
+
+            www = new WWW(AssetManagerSetting.PersistentFileURL.GameConst);
+            yield return www;
+            if(string.IsNullOrEmpty(www.error))
+            {
+                Debug.Log(AssetManagerSetting.PersistentFileURL.GameConst);
+                Debug.Log(www.text);
+
+                bool isSave = false;
+                GameConstConfig gameConstConfig = JsonUtility.FromJson<GameConstConfig>(www.text);
+                if (!gameConstConfig.updateEnableChangeCenterName)
+                {
+                    if (curGameConstConfig != null)
+                    {
+                        gameConstConfig.CenterName = curGameConstConfig.CenterName;
+                    }
+                    else if(appGameConstConfig != null)
+                    {
+                        gameConstConfig.CenterName = appGameConstConfig.CenterName;
+                    }
+                    isSave = true;
+                }
+
+                if (serverVersionInfo.isChangeGameConstVersion)
+                {
+                    gameConstConfig.Version = serverVersionInfo.version;
+                    isSave = true;
+                }
+
+                if (isSave)
+                {
+                    gameConstConfig.Save(AssetManagerSetting.RootPathPersistent + AssetManagerSetting.FileName.GameConst);
+                }
+            }
+            else
+            {
+                Debug.LogFormat("2 读取game_const.json失败 ReadGameConst_Persistent url={0} error={1}", AssetManagerSetting.PersistentFileURL.GameConst, www.error);
+            }
+
+            www.Dispose();
+            www = null;
+
+
+
+
+
+            AssetManagerSetting.versionAssetFileList.Save();
+            AssetManagerSetting.persistentAssetFileList.Save();
 
 
             // 更新完成

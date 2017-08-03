@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System;
+using System.Collections.Generic;
 
 namespace com.ihaiu
 {
@@ -26,7 +27,5 @@ namespace com.ihaiu
         public string assetBundleName;
         public string assetName;
 
-
-        public bool isConfig;
     }
 }
