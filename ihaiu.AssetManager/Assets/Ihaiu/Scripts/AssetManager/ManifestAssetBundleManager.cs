@@ -56,7 +56,7 @@ namespace com.ihaiu
 
         public Coroutine StartCoroutine (IEnumerator routine)
         {
-            return assetManager.StartCoroutine_Auto (routine);
+            return assetManager.StartCoroutine (routine);
         }
 
 

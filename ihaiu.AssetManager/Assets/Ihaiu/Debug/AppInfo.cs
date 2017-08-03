@@ -46,7 +46,7 @@ namespace Ihaiu.Debugs
 
 
     		info += "\nApplication.backgroundLoadingPriority=" + Application.backgroundLoadingPriority ;
-    		info += "\nApplication.bundleIdentifier=" + Application.bundleIdentifier ;
+    		info += "\nApplication.bundleIdentifier=" + Application.identifier ;
     		info += "\nApplication.cloudProjectId=" + Application.cloudProjectId ;
     		info += "\nApplication.companyName=" + Application.companyName ;
     		info += "\nApplication.genuine=" + Application.genuine ;

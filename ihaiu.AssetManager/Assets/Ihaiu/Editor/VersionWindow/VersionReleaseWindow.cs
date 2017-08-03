@@ -482,7 +482,7 @@ namespace com.ihaiu
 
             if(runtimePlatform != RuntimePlatform.Android)
             {
-                PlayerSettings.bundleIdentifier = "com.mb.crsg";
+                PlayerSettings.applicationIdentifier = "com.mb.crsg";
 
 
 //                Texture2D[] icons = new Texture2D[1];

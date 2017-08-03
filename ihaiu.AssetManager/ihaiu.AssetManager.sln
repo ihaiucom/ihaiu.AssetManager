@@ -1,9 +1,9 @@
+﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2008
-
-Project("{ABEBFA54-8E86-8CE6-7530-2BFE7D69E013}") = "ihaiu.AssetManager", "Assembly-CSharp.csproj", "{73FDD4E6-6A25-52AC-CD3F-2C45930A7E74}"
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ihaiu.AssetManager", "Assembly-CSharp.csproj", "{73FDD4E6-6A25-52AC-CD3F-2C45930A7E74}"
 EndProject
-Project("{ABEBFA54-8E86-8CE6-7530-2BFE7D69E013}") = "ihaiu.AssetManager", "Assembly-CSharp-Editor.csproj", "{7F9F7C68-F140-C3D8-E0D5-C54C7CFE3A5A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ihaiu.AssetManager", "Assembly-CSharp-Editor.csproj", "{7F9F7C68-F140-C3D8-E0D5-C54C7CFE3A5A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

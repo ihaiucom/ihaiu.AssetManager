@@ -93,7 +93,7 @@ namespace Ihaiu.Debugs
         {
             int isFlagShowPanel = PlayerPrefsUtil.GetIntSimple(PlayerPrefsKey.Setting_OpenLog);
             Debug.logger.logEnabled = isFlagShowPanel != 0;
-            Transform tran = transform.FindChild("Button--OpenLog/Text");
+            Transform tran = transform.Find("Button--OpenLog/Text");
             if (tran != null)
             {
                 Text text = tran.GetComponent<Text>();
@@ -106,7 +106,7 @@ namespace Ihaiu.Debugs
             PlayerPrefsUtil.UseUserId = false;
             int isFlagShowPanel = PlayerPrefsUtil.GetIntSimple(PlayerPrefsKey.Setting_OpenLog);
             PlayerPrefsUtil.UseUserId = true;
-            Text text = transform.FindChild("Button--OpenLog/Text").GetComponent<Text>();
+            Text text = transform.Find("Button--OpenLog/Text").GetComponent<Text>();
             if (isFlagShowPanel == 0)
             {
                 text.text = "LogEnabled:开启";
@@ -128,7 +128,7 @@ namespace Ihaiu.Debugs
 
         void InitTextWebUrlIsDevelop()
         {
-            Transform tran = transform.FindChild("Button--WebUrlIsDevelop/Text");
+            Transform tran = transform.Find("Button--WebUrlIsDevelop/Text");
             if (tran != null)
             {
                 Text text = tran.GetComponent<Text>();
@@ -140,7 +140,7 @@ namespace Ihaiu.Debugs
         {
 
             GameConst.WebUrlIsDevelop = !GameConst.WebUrlIsDevelop;
-            Text text = transform.FindChild("Button--WebUrlIsDevelop/Text").GetComponent<Text>();
+            Text text = transform.Find("Button--WebUrlIsDevelop/Text").GetComponent<Text>();
 
             text.text = "WebUrl IsDevelop:" + (GameConst.WebUrlIsDevelop ? "开启" : "关闭");
         }

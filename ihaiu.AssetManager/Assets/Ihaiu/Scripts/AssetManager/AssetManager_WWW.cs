@@ -36,9 +36,9 @@ namespace com.ihaiu
                 {
                     obj = www.texture;
                 }
-                else if(www.audioClip != null)
+                else if(www.GetAudioClip() != null)
                 {
-                    obj = www.audioClip;
+                    obj = www.GetAudioClip();
                 }
                 else if(www.assetBundle != null)
                 {
